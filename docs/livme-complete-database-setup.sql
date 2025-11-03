@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT NOT NULL,
   bio TEXT DEFAULT '未設定',
   avatar TEXT,
+  link TEXT,
   images JSONB DEFAULT '[]'::jsonb,
   social_links JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ DEFAULT NOW(),

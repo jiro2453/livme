@@ -67,6 +67,7 @@ interface ProfileModalProps {
   userId?: string;
   currentUserId?: string;
   isOwnProfile: boolean;
+  onSuccess?: () => void;
 }
 
 // Preset avatar URLs
@@ -85,6 +86,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   userId,
   currentUserId,
   isOwnProfile,
+  onSuccess,
 }) => {
   const [displayUser, setDisplayUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -445,6 +447,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
         setIsEditing(false);
         await loadProfile();
+
+        // Notify parent component to refresh profile data
+        if (onSuccess) {
+          onSuccess();
+        }
       }
     } catch (error) {
       console.error('Error saving profile:', error);

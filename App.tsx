@@ -228,7 +228,7 @@ const AppContent: React.FC = () => {
           {/* Profile Section */}
           <div className="flex flex-col items-center space-y-4">
             <Avatar className="h-28 w-28 cursor-pointer hover:opacity-80 transition-opacity" onClick={handleOpenProfile}>
-              <AvatarImage src="" />
+              <AvatarImage src={profileUser?.avatar || ''} />
               <AvatarFallback className="bg-gray-400 text-white text-3xl">
                 {profileUser?.name?.charAt(0) || 'U'}
               </AvatarFallback>
@@ -238,7 +238,7 @@ const AppContent: React.FC = () => {
               <p className="text-[12.25px] text-gray-500">@ {profileUser?.user_id}</p>
             </div>
             <SocialIcons
-              socialLinks={profileUser?.social_links}
+              socialLinks={profileUser?.socialLinks}
               onShare={() => setIsShareModalOpen(true)}
             />
           </div>

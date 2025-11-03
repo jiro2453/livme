@@ -18,6 +18,7 @@ export const getUserById = async (userId: string): Promise<User | null> => {
   return {
     ...data,
     socialLinks: data.social_links,
+    galleryImages: data.images,
   };
 };
 
@@ -37,6 +38,7 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
     return {
       ...dataByUserId,
       socialLinks: dataByUserId.social_links,
+      galleryImages: dataByUserId.images,
     };
   }
 
@@ -58,6 +60,7 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
     return {
       ...dataById,
       socialLinks: dataById.social_links,
+      galleryImages: dataById.images,
     };
   }
 
@@ -66,12 +69,26 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
 };
 
 export const updateUser = async (userId: string, updates: Partial<User>): Promise<User | null> => {
+  console.log('=== updateUser called ===');
+  console.log('userId:', userId);
+  console.log('updates:', updates);
+
   // Convert camelCase to snake_case for database
   const dbUpdates: any = { ...updates };
+
+  // Handle socialLinks conversion
   if (updates.socialLinks) {
     dbUpdates.social_links = updates.socialLinks;
     delete dbUpdates.socialLinks;
   }
+
+  // Handle galleryImages conversion - store in images field as jsonb
+  if (updates.galleryImages !== undefined) {
+    dbUpdates.images = updates.galleryImages;
+    delete dbUpdates.galleryImages;
+  }
+
+  console.log('dbUpdates (for database):', dbUpdates);
 
   const { data, error } = await supabase
     .from('users')
@@ -85,10 +102,13 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     return null;
   }
 
+  console.log('Update successful, data:', data);
+
   // Convert snake_case to camelCase for UI
   return {
     ...data,
     socialLinks: data.social_links,
+    galleryImages: data.images,
   };
 };
 

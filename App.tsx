@@ -313,7 +313,11 @@ const AppContent: React.FC = () => {
           window.history.replaceState({}, '', window.location.pathname);
         }}
         userId={viewingUserId || user?.user_id}
-        currentUserId={user?.id}
+        currentUserId={(() => {
+          console.log('ProfileModal currentUserId:', user?.id);
+          console.log('Full user object:', user);
+          return user?.id;
+        })()}
         isOwnProfile={!viewingUserId || viewingUserId === user?.user_id}
         onSuccess={loadProfileUser}
       />

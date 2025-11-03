@@ -539,6 +539,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     );
   }
 
+  console.log('=== ProfileModal render ===');
+  console.log('isOpen:', isOpen);
+  console.log('isEditing:', isEditing);
+  console.log('isOwnProfile:', isOwnProfile);
+  console.log('currentUserId:', currentUserId);
+  console.log('userId:', userId);
+  console.log('displayUser:', displayUser);
+
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -897,7 +905,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {isEditing ? (
                   <>
                     <Button
-                      onClick={handleSave}
+                      onClick={() => {
+                        console.log('=== Save button clicked ===');
+                        console.log('isSaving:', isSaving);
+                        console.log('isCheckingUserId:', isCheckingUserId);
+                        console.log('userIdStatus:', userIdStatus);
+                        console.log('Button disabled?:', isSaving || isCheckingUserId || userIdStatus === 'taken');
+                        handleSave();
+                      }}
                       className="flex-1 bg-primary text-white rounded-full px-8 py-3 hover:bg-primary/90"
                       disabled={isSaving || isCheckingUserId || userIdStatus === 'taken'}
                     >
@@ -914,7 +929,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </>
                 ) : (
                   <Button
-                    onClick={() => setIsEditing(true)}
+                    onClick={() => {
+                      console.log('=== Edit button clicked ===');
+                      console.log('Setting isEditing to true');
+                      setIsEditing(true);
+                    }}
                     className="w-full bg-primary text-white rounded-full px-8 py-3 hover:bg-primary/90"
                   >
                     プロフィール編集

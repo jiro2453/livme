@@ -11,8 +11,6 @@ import {
   ExternalLink,
   Trash2,
   Edit2,
-  Instagram as InstagramIcon,
-  Twitter as TwitterIcon
 } from 'lucide-react';
 import { Dialog, DialogContent } from './ui/dialog';
 import { Button } from './ui/button';
@@ -22,14 +20,8 @@ import { Textarea } from './ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useToast } from '../hooks/useToast';
 import { getUserByUserId, updateUserProfile, checkUserIdAvailability } from '../lib/api';
+import { Icons } from './assets/Icons';
 import type { User } from '../types';
-
-// TikTok Icon Component
-const TikTokIcon = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-  </svg>
-);
 
 // Validation Rules
 const VALIDATION_RULES = {
@@ -502,7 +494,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-white">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -784,8 +776,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {isEditing ? (
                   <div className="relative">
                     {/* SNS Icon */}
-                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white">
-                      <InstagramIcon className="w-4 h-4" />
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                      <img src={Icons.instagram} alt="Instagram" className="w-8 h-8" />
                     </div>
 
                     {/* Input Field */}
@@ -798,9 +790,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
-                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white mr-4">
-                      <InstagramIcon className="w-4 h-4" />
-                    </div>
+                    <img src={Icons.instagram} alt="Instagram" className="w-8 h-8 mr-4" />
                     <span className={displayUser.socialLinks?.instagram ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.instagram || '未設定'}
                     </span>
@@ -812,8 +802,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <div className="space-y-2">
                 {isEditing ? (
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-black rounded-full flex items-center justify-center text-white">
-                      <TwitterIcon className="w-4 h-4" />
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                      <img src={Icons.x} alt="X" className="w-8 h-8" />
                     </div>
                     <Input
                       value={formData.twitter}
@@ -824,9 +814,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
-                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white mr-4">
-                      <TwitterIcon className="w-4 h-4" />
-                    </div>
+                    <img src={Icons.x} alt="X" className="w-8 h-8 mr-4" />
                     <span className={displayUser.socialLinks?.twitter ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.twitter || '未設定'}
                     </span>
@@ -838,8 +826,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <div className="space-y-2">
                 {isEditing ? (
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-black rounded-full flex items-center justify-center text-white">
-                      <TikTokIcon />
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                      <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8" />
                     </div>
                     <Input
                       value={formData.tiktok}
@@ -850,9 +838,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
-                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white mr-4">
-                      <TikTokIcon />
-                    </div>
+                    <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8 mr-4" />
                     <span className={displayUser.socialLinks?.tiktok ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.tiktok || '未設定'}
                     </span>

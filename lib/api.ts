@@ -14,7 +14,11 @@ export const getUserById = async (userId: string): Promise<User | null> => {
     return null;
   }
 
-  return data;
+  // Convert snake_case to camelCase for UI
+  return {
+    ...data,
+    socialLinks: data.social_links,
+  };
 };
 
 export const getUserByUserId = async (userId: string): Promise<User | null> => {
@@ -29,7 +33,11 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
 
   if (dataByUserId) {
     console.log(`取得したuser (user_idで) ${userId}:`, dataByUserId);
-    return dataByUserId;
+    // Convert snake_case to camelCase for UI
+    return {
+      ...dataByUserId,
+      socialLinks: dataByUserId.social_links,
+    };
   }
 
   // user_idで見つからなければidで検索（UUID形式の場合）
@@ -46,7 +54,11 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
 
   if (dataById) {
     console.log(`取得したuser (idで) ${userId}:`, dataById);
-    return dataById;
+    // Convert snake_case to camelCase for UI
+    return {
+      ...dataById,
+      socialLinks: dataById.social_links,
+    };
   }
 
   console.error(`User not found: ${userId}`);
@@ -54,9 +66,16 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
 };
 
 export const updateUser = async (userId: string, updates: Partial<User>): Promise<User | null> => {
+  // Convert camelCase to snake_case for database
+  const dbUpdates: any = { ...updates };
+  if (updates.socialLinks) {
+    dbUpdates.social_links = updates.socialLinks;
+    delete dbUpdates.socialLinks;
+  }
+
   const { data, error } = await supabase
     .from('users')
-    .update(updates)
+    .update(dbUpdates)
     .eq('id', userId)
     .select()
     .single();
@@ -66,7 +85,11 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     return null;
   }
 
-  return data;
+  // Convert snake_case to camelCase for UI
+  return {
+    ...data,
+    socialLinks: data.social_links,
+  };
 };
 
 // Alias for profile modal

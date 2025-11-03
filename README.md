@@ -100,15 +100,47 @@ LIVME/
 
 ### Netlify
 
-1. GitHubリポジトリにプッシュ
-2. Netlifyで新しいサイトを作成
-3. リポジトリを接続
-4. 環境変数を設定（VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY）
-5. デプロイ
+#### 初回デプロイ手順
 
-ビルド設定:
-- Build command: `npm run build`
-- Publish directory: `dist`
+1. **GitHubリポジトリにプッシュ**
+2. **Netlifyで新しいサイトを作成**
+   - [Netlify](https://app.netlify.com/)にログイン
+   - "Add new site" > "Import an existing project" を選択
+3. **リポジトリを接続**
+   - GitHubを選択し、リポジトリを選択
+4. **ビルド設定を確認**
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Node version: 20 (自動的に設定されます)
+5. **環境変数を設定**
+   - Site settings > Environment variables に移動
+   - 以下の環境変数を追加：
+     - `VITE_SUPABASE_URL`: あなたのSupabaseプロジェクトURL
+     - `VITE_SUPABASE_ANON_KEY`: あなたのSupabase匿名キー
+6. **デプロイ**
+   - "Deploy site"をクリック
+
+#### 環境変数について
+
+**重要**: 環境変数が設定されていなくてもビルドは成功します（プレースホルダー値が使用されます）。ただし、実際にアプリケーションを動作させるには、Netlifyで正しい環境変数を設定する必要があります。
+
+環境変数の取得方法:
+1. [Supabase Dashboard](https://app.supabase.com/)にアクセス
+2. プロジェクトを選択
+3. Settings > API に移動
+4. "Project URL" と "anon/public" キーをコピー
+
+#### トラブルシューティング
+
+**ビルドが失敗する場合:**
+1. `npm install` が実行されているか確認
+2. Node.jsバージョンが20以上か確認（netlify.tomlで指定済み）
+3. ビルドログで具体的なエラーメッセージを確認
+
+**アプリが動作しない場合:**
+1. Netlifyで環境変数が正しく設定されているか確認
+2. ブラウザのコンソールでエラーメッセージを確認
+3. Supabaseプロジェクトのデータベースとストレージが正しく設定されているか確認
 
 ## ライセンス
 

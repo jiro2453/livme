@@ -502,7 +502,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-white">
           {/* Close Button */}
           <button
             onClick={onClose}

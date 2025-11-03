@@ -128,9 +128,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const loadProfile = async () => {
     if (!userId) return;
 
+    console.log('=== loadProfile called ===');
+    console.log('userId:', userId);
+
     setLoading(true);
     try {
       const userData = await getUserByUserId(userId);
+      console.log('userData from API:', userData);
+      console.log('userData.bio:', userData?.bio);
+
       if (userData) {
         setDisplayUser(userData);
         originalUserId.current = userData.user_id;
@@ -146,6 +152,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           galleryImages: userData.galleryImages || [],
         });
         setSelectedAvatar(userData.avatar || '');
+        console.log('formData set with bio:', userData.bio || '');
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -652,7 +659,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <Textarea
                     value={formData.bio}
                     onChange={(e) => handleInputChange('bio', e.target.value)}
-                    placeholder={!formData.bio ? "未設定" : "自己紹介を入力してください"}
+                    placeholder="自己紹介を入力してください"
                     className="min-h-20 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-400"
                   />
                   <div className="flex justify-between items-center text-xs text-muted-foreground">
@@ -669,15 +676,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 </>
               ) : (
-                <>
-                  {displayUser.bio && (
-                    <div className="min-h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
-                      <span className="text-black">
-                        {displayUser.bio}
-                      </span>
-                    </div>
-                  )}
-                </>
+                <div className="min-h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
+                  <span className={displayUser.bio ? "text-black" : "text-gray-500"}>
+                    {displayUser.bio || '未設定'}
+                  </span>
+                </div>
               )}
             </div>
 

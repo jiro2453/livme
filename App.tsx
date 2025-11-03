@@ -315,6 +315,7 @@ const AppContent: React.FC = () => {
         userId={viewingUserId || user?.user_id}
         currentUserId={user?.id}
         isOwnProfile={!viewingUserId || viewingUserId === user?.user_id}
+        onSuccess={loadProfileUser}
       />
 
       <SettingsModal

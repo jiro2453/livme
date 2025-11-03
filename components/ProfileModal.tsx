@@ -904,7 +904,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <div className="flex gap-3 pt-4">
                 {isEditing ? (
                   <>
-                    <Button
+                    <button
+                      type="button"
                       onClick={() => {
                         console.log('=== Save button clicked ===');
                         console.log('isSaving:', isSaving);
@@ -913,22 +914,23 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         console.log('Button disabled?:', isSaving || isCheckingUserId || userIdStatus === 'taken');
                         handleSave();
                       }}
-                      className="flex-1 bg-primary text-white rounded-full px-8 py-3 hover:bg-primary/90"
+                      className="flex-1 bg-primary text-white rounded-full px-8 py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={isSaving || isCheckingUserId || userIdStatus === 'taken'}
                     >
                       {isSaving ? '保存中...' : '保存する'}
-                    </Button>
-                    <Button
+                    </button>
+                    <button
+                      type="button"
                       onClick={handleCancel}
-                      variant="outline"
-                      className="flex-1 rounded-full px-6 py-3"
+                      className="flex-1 rounded-full px-6 py-3 border border-input bg-background hover:bg-gray-100 disabled:opacity-50"
                       disabled={isSaving}
                     >
                       キャンセル
-                    </Button>
+                    </button>
                   </>
                 ) : (
-                  <Button
+                  <button
+                    type="button"
                     onClick={() => {
                       console.log('=== Edit button clicked ===');
                       console.log('Setting isEditing to true');
@@ -937,7 +939,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     className="w-full bg-primary text-white rounded-full px-8 py-3 hover:bg-primary/90"
                   >
                     プロフィール編集
-                  </Button>
+                  </button>
                 )}
               </div>
             )}

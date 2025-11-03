@@ -66,12 +66,18 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
 };
 
 export const updateUser = async (userId: string, updates: Partial<User>): Promise<User | null> => {
+  console.log('=== updateUser called ===');
+  console.log('userId:', userId);
+  console.log('updates:', updates);
+
   // Convert camelCase to snake_case for database
   const dbUpdates: any = { ...updates };
   if (updates.socialLinks) {
     dbUpdates.social_links = updates.socialLinks;
     delete dbUpdates.socialLinks;
   }
+
+  console.log('dbUpdates (for database):', dbUpdates);
 
   const { data, error } = await supabase
     .from('users')
@@ -84,6 +90,8 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     console.error('Error updating user:', error);
     return null;
   }
+
+  console.log('Update successful, data:', data);
 
   // Convert snake_case to camelCase for UI
   return {

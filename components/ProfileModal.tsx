@@ -391,6 +391,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Save Profile
   const handleSave = async () => {
+    console.log('=== handleSave called ===');
+    console.log('currentUserId:', currentUserId);
+    console.log('formData:', formData);
+    console.log('userIdStatus:', userIdStatus);
+
     // Validate all fields
     const newErrors: FormErrors = {};
     let hasErrors = false;
@@ -404,6 +409,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     });
 
     if (hasErrors) {
+      console.log('Validation errors:', newErrors);
       setErrors(newErrors);
       toast({
         title: 'エラー',
@@ -414,6 +420,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     }
 
     if (userIdStatus === 'taken') {
+      console.log('User ID is taken');
       toast({
         title: 'エラー',
         description: 'このユーザーIDは既に使用されています',
@@ -422,10 +429,28 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       return;
     }
 
+    console.log('Validation passed, attempting to save...');
     setIsSaving(true);
     try {
       if (currentUserId) {
-        await updateUserProfile(currentUserId, {
+        console.log('Calling updateUserProfile with:', {
+          currentUserId,
+          updates: {
+            name: formData.name,
+            user_id: formData.user_id,
+            bio: formData.bio,
+            link: formData.link,
+            avatar: formData.avatar,
+            galleryImages: formData.galleryImages,
+            socialLinks: {
+              instagram: formData.instagram,
+              twitter: formData.twitter,
+              tiktok: formData.tiktok,
+            },
+          }
+        });
+
+        const result = await updateUserProfile(currentUserId, {
           name: formData.name,
           user_id: formData.user_id,
           bio: formData.bio,
@@ -438,6 +463,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             tiktok: formData.tiktok,
           },
         });
+
+        console.log('updateUserProfile result:', result);
 
         toast({
           title: '保存しました',
@@ -452,6 +479,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         if (onSuccess) {
           onSuccess();
         }
+      } else {
+        console.error('currentUserId is not defined!');
+        toast({
+          title: 'エラー',
+          description: 'ユーザーIDが見つかりません',
+          variant: 'destructive',
+        });
       }
     } catch (error) {
       console.error('Error saving profile:', error);

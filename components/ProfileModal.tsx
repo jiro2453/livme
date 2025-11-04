@@ -70,14 +70,20 @@ interface ProfileModalProps {
   onSuccess?: () => void;
 }
 
-// Preset avatar URLs
+// Preset avatar URLs - 9 images (3 animals, 3 landscapes, 3 abstract)
 const presetAvatars = [
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Princess',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Midnight',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Missy',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Sammy',
+  // Cute Animals (3)
+  'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop', // Cat
+  'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=400&fit=crop', // Dog
+  'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop', // Rabbit
+  // Landscapes (3)
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop', // Mountain
+  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop', // Beach
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop', // Forest
+  // Abstract (3)
+  'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400&h=400&fit=crop', // Abstract colors
+  'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=400&h=400&fit=crop', // Abstract pattern
+  'https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=400&h=400&fit=crop', // Abstract art
 ];
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({
@@ -287,6 +293,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Trigger File Upload
   const triggerFileUpload = () => {
+    console.log('=== triggerFileUpload called ===');
+    console.log('fileInputRef.current:', fileInputRef.current);
     fileInputRef.current?.click();
   };
 
@@ -296,10 +304,17 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Handle Avatar File Upload
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('=== handleAvatarUpload called ===');
     const file = e.target.files?.[0];
-    if (!file) return;
+    console.log('Selected file:', file);
+
+    if (!file) {
+      console.log('No file selected');
+      return;
+    }
 
     if (file.size > VALIDATION_RULES.MAX_FILE_SIZE) {
+      console.log('File too large:', file.size);
       toast({
         title: 'エラー',
         description: 'ファイルサイズは5MB以下にしてください',
@@ -308,9 +323,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       return;
     }
 
+    console.log('Reading file as DataURL...');
     const reader = new FileReader();
     reader.onloadend = () => {
       const result = reader.result as string;
+      console.log('File read successfully, length:', result.length);
       setSelectedAvatar(result);
       setFormData(prev => ({ ...prev, avatar: result }));
       setShowAvatarSelector(false);

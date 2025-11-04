@@ -166,7 +166,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-md p-0 gap-0 bg-transparent border-0 shadow-none mx-4 my-4 sm:mx-auto sm:my-0">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none sm:w-full">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

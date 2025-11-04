@@ -338,6 +338,20 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             <span className="text-sm text-gray-600">{currentAttendee.user_id}</span>
                           </motion.div>
 
+                          {/* Bio */}
+                          {currentAttendee.bio && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.4 }}
+                              className="text-center px-4"
+                            >
+                              <p className="text-sm text-gray-600 max-w-xs mx-auto">
+                                {currentAttendee.bio}
+                              </p>
+                            </motion.div>
+                          )}
+
                           {/* SNSアイコン */}
                           <motion.div
                             initial={{ opacity: 0, y: 20 }}

@@ -3,8 +3,9 @@ import { Dialog, DialogContent } from './ui/dialog';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { SocialIcons } from './SocialIcons';
 import { LiveCard } from './LiveCard';
+import { LiveAttendeesModal } from './LiveAttendeesModal';
 import { X } from 'lucide-react';
-import { getUserByUserId, getAttendedLivesByUserId } from '../lib/api';
+import { getUserByUserId, getAttendedLivesByUserId, getUsersAttendingSameLive } from '../lib/api';
 import { groupLivesByMonth } from '../utils/liveGrouping';
 import {
   Accordion,
@@ -32,6 +33,9 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
   const [user, setUser] = useState<User | null>(null);
   const [lives, setLives] = useState<Live[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAttendeesModalOpen, setIsAttendeesModalOpen] = useState(false);
+  const [selectedLive, setSelectedLive] = useState<Live | null>(null);
+  const [attendeeUserIds, setAttendeeUserIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (isOpen && userId) {
@@ -63,9 +67,23 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
     }
   };
 
+  const handleLiveClick = async (live: Live) => {
+    setSelectedLive(live);
+    setIsAttendeesModalOpen(true);
+
+    // Fetch attendees for this live event
+    try {
+      const attendees = await getUsersAttendingSameLive(live);
+      setAttendeeUserIds(attendees);
+    } catch (error) {
+      console.error('Error loading attendees:', error);
+    }
+  };
+
   const groupedLives = groupLivesByMonth(lives);
 
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[600px] max-h-[90vh] p-0 gap-0 overflow-hidden">
         {loading ? (
@@ -130,7 +148,7 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
                               <LiveCard
                                 key={live.id}
                                 live={live}
-                                onClick={() => {}}
+                                onClick={handleLiveClick}
                                 isOwner={false}
                               />
                             ))}
@@ -150,5 +168,20 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
         )}
       </DialogContent>
     </Dialog>
+
+    {selectedLive && (
+      <LiveAttendeesModal
+        isOpen={isAttendeesModalOpen}
+        onClose={() => {
+          setIsAttendeesModalOpen(false);
+          setSelectedLive(null);
+        }}
+        live={selectedLive}
+        attendeeUserIds={attendeeUserIds}
+        currentUserId={currentUserId}
+        onViewProfile={undefined}
+      />
+    )}
+  </>
   );
 };

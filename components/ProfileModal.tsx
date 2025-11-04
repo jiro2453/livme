@@ -548,9 +548,20 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     setIsEditing(false);
   };
 
+  // Handle modal close - reset edit mode
+  const handleClose = () => {
+    console.log('=== handleClose called ===');
+    console.log('Resetting isEditing to false');
+    setIsEditing(false);
+    setErrors({});
+    setUserIdStatus('idle');
+    setShowAvatarSelector(false);
+    onClose();
+  };
+
   if (loading || !displayUser) {
     return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent>
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
@@ -573,7 +584,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[90vh] overflow-y-auto bg-white sm:w-full">
           <div className="p-8 space-y-6">
             {/* Avatar Section */}

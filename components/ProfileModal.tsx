@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Check,
@@ -977,15 +978,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         </DialogContent>
       </Dialog>
 
-      {/* Avatar Selector Modal */}
-      <AnimatePresence>
-        {showAvatarSelector && (
+      {/* Avatar Selector Modal - Rendered via Portal to avoid z-index conflicts */}
+      {showAvatarSelector && createPortal(
+        <AnimatePresence>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[110] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setShowAvatarSelector(false)}
           >
             <motion.div
@@ -999,8 +1000,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">プロフィール画像を選択</h3>
                 <button
-                  onClick={() => setShowAvatarSelector(false)}
-                  className="text-gray-500 hover:text-gray-700"
+                  type="button"
+                  onClick={() => {
+                    console.log('=== Close avatar selector clicked ===');
+                    setShowAvatarSelector(false);
+                  }}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -1008,7 +1013,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               {/* Upload Button */}
               <button
-                onClick={triggerFileUpload}
+                type="button"
+                onClick={(e) => {
+                  console.log('=== Upload button clicked ===');
+                  e.preventDefault();
+                  e.stopPropagation();
+                  triggerFileUpload();
+                }}
                 className="w-full p-4 border-2 border-dashed border-primary/30 rounded-lg hover:border-primary/50 transition-colors flex flex-col items-center gap-2"
               >
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -1034,8 +1045,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <div className="grid grid-cols-3 gap-3">
                   {presetAvatars.map((avatar, index) => (
                     <button
+                      type="button"
                       key={index}
-                      onClick={() => handleSelectAvatar(avatar)}
+                      onClick={(e) => {
+                        console.log('=== Preset avatar clicked ===', index);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSelectAvatar(avatar);
+                      }}
                       className="relative aspect-square rounded-lg overflow-hidden border-2 hover:border-primary transition-all hover:scale-105 active:scale-95"
                       style={{
                         borderColor: selectedAvatar === avatar ? '#78B159' : 'transparent'
@@ -1049,7 +1066,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         decoding="async"
                       />
                       {selectedAvatar === avatar && (
-                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center pointer-events-none">
                           <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                             <Check className="w-4 h-4 text-primary-foreground" />
                           </div>
@@ -1061,8 +1078,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
             </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 };

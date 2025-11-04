@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Trash2,
   Edit2,
+  MapPin,
 } from 'lucide-react';
 import { Dialog, DialogContent } from './ui/dialog';
 import { Button } from './ui/button';
@@ -20,9 +21,9 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useToast } from '../hooks/useToast';
-import { getUserByUserId, updateUserProfile, checkUserIdAvailability } from '../lib/api';
+import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId } from '../lib/api';
 import { Icons } from './assets/Icons';
-import type { User } from '../types';
+import type { User, Live } from '../types';
 
 // Validation Rules
 const VALIDATION_RULES = {
@@ -102,6 +103,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<string>('');
+  const [attendedLives, setAttendedLives] = useState<Live[]>([]);
 
   // Form state
   const [formData, setFormData] = useState<FormData>({
@@ -161,6 +163,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         });
         setSelectedAvatar(userData.avatar || '');
         console.log('formData set with bio:', userData.bio || '');
+
+        // Load attended lives
+        const lives = await getAttendedLivesByUserId(userData.id);
+        setAttendedLives(lives);
+        console.log('Loaded attended lives:', lives.length);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -956,6 +963,49 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 )}
               </div>
             </div>
+
+            {/* Attended Lives Section */}
+            {!isEditing && (
+              <div className="space-y-2">
+                <Label className="text-black font-medium text-center block text-sm">参加公演</Label>
+                {attendedLives.length > 0 ? (
+                  <div className="space-y-2">
+                    {attendedLives.slice(0, 3).map((live) => {
+                      const date = new Date(live.date);
+                      const year = date.getFullYear();
+                      const month = date.getMonth() + 1;
+                      const day = date.getDate();
+                      const weekday = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+
+                      return (
+                        <div key={live.id} className="p-3 rounded-lg border-2 border-primary bg-white">
+                          <div className="flex items-center gap-3">
+                            <div className="bg-primary text-primary-foreground px-2 py-1 rounded text-center min-w-[60px]">
+                              <div className="text-[10px] opacity-80 leading-tight">{year}</div>
+                              <div className="text-xs font-medium leading-tight">{month}/{day}({weekday})</div>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-sm text-gray-800 truncate">{live.artist}</h4>
+                              <div className="flex items-center text-xs text-gray-600">
+                                <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="truncate">{live.venue}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    {attendedLives.length > 3 && (
+                      <p className="text-xs text-gray-500 text-center">他 {attendedLives.length - 3} 件</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center">
+                    <span className="text-gray-500 text-sm">参加公演がありません</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Action Buttons - Save/Cancel (shown only in edit mode) */}
             {isOwnProfile && isEditing && (

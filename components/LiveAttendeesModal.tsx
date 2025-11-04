@@ -16,6 +16,7 @@ interface LiveAttendeesModalProps {
   onClose: () => void;
   live: Live;
   attendeeUserIds: string[];
+  onViewProfile?: (userId: string) => void;
 }
 
 // モバイルデバイス検出
@@ -51,6 +52,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   onClose,
   live,
   attendeeUserIds,
+  onViewProfile,
 }) => {
   const [attendees, setAttendees] = useState<User[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -300,18 +302,16 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             className="relative"
                           >
                             <motion.div
-                              className="h-[84px] w-[84px] rounded-full bg-gradient-to-r from-primary to-blue-500 p-1"
+                              className="h-[84px] w-[84px]"
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
-                              <div className="h-full w-full rounded-full bg-white p-1">
-                                <Avatar className="h-full w-full">
-                                  <AvatarImage src={currentAttendee.avatar} />
-                                  <AvatarFallback className="bg-gray-400 text-white text-3xl">
-                                    {currentAttendee.name?.charAt(0) || 'U'}
-                                  </AvatarFallback>
-                                </Avatar>
-                              </div>
+                              <Avatar className="h-full w-full">
+                                <AvatarImage src={currentAttendee.avatar} />
+                                <AvatarFallback className="bg-gray-400 text-white text-3xl">
+                                  {currentAttendee.name?.charAt(0) || 'U'}
+                                </AvatarFallback>
+                              </Avatar>
                             </motion.div>
                           </motion.div>
 
@@ -364,6 +364,26 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               onShare={() => handleShareClick(currentAttendee.user_id)}
                             />
                           </motion.div>
+
+                          {/* View Profile Button */}
+                          {onViewProfile && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.6 }}
+                              className="w-full px-4"
+                            >
+                              <button
+                                onClick={() => {
+                                  onViewProfile(currentAttendee.user_id);
+                                  onClose();
+                                }}
+                                className="w-full bg-white border-2 border-primary text-primary rounded-full px-6 py-2 text-sm font-medium hover:bg-primary/5 transition-colors"
+                              >
+                                もっとみる
+                              </button>
+                            </motion.div>
+                          )}
                         </div>
                       )}
                     </motion.div>

@@ -243,6 +243,45 @@ export const getUsersAttendingSameLive = async (live: Live): Promise<string[]> =
   return userIds;
 };
 
+// Get lives that a user is attending
+export const getAttendedLivesByUserId = async (userId: string): Promise<Live[]> => {
+  console.log('=== Getting attended lives for user ===', userId);
+
+  // Get live IDs from live_attendees table
+  const { data: attendeeData, error: attendeeError } = await supabase
+    .from('live_attendees')
+    .select('live_id')
+    .eq('user_id', userId);
+
+  if (attendeeError) {
+    console.error('Error fetching attended lives:', attendeeError);
+    return [];
+  }
+
+  if (!attendeeData || attendeeData.length === 0) {
+    console.log('No attended lives found');
+    return [];
+  }
+
+  const liveIds = attendeeData.map(a => a.live_id);
+  console.log('Found live IDs:', liveIds);
+
+  // Get live details
+  const { data: livesData, error: livesError } = await supabase
+    .from('lives')
+    .select('*')
+    .in('id', liveIds)
+    .order('date', { ascending: false });
+
+  if (livesError) {
+    console.error('Error fetching live details:', livesError);
+    return [];
+  }
+
+  console.log('Fetched attended lives:', livesData?.length || 0);
+  return livesData || [];
+};
+
 // Follow API
 export const followUser = async (followerId: string, followingId: string): Promise<boolean> => {
   const { error } = await supabase

@@ -356,6 +356,10 @@ const AppContent: React.FC = () => {
           }}
           live={selectedLive}
           attendeeUserIds={attendeeUserIds}
+          onViewProfile={(userId) => {
+            setViewingUserId(userId);
+            setIsProfileModalOpen(true);
+          }}
         />
       )}
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Check,
   X,
@@ -982,7 +982,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       {showAvatarSelector && createPortal(
         <div
           className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={(e) => {
+          onClick={() => {
             console.log('=== Background clicked ===');
             setShowAvatarSelector(false);
           }}

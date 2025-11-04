@@ -612,7 +612,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     setShowAvatarSelector(true);
                   }}
                   variant="outline"
-                  className="rounded-full border-2 border-primary bg-white text-primary hover:bg-primary/5 px-6 py-2"
+                  className="rounded-full border-2 border-primary bg-white text-primary text-sm hover:bg-primary/5 px-6 py-2"
                 >
                   <Camera className="w-4 h-4 mr-2" />
                   プロフィール画像を変更
@@ -632,7 +632,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     console.log('Setting isEditing to true');
                     setIsEditing(true);
                   }}
-                  className="w-full bg-primary text-white rounded-full px-8 py-3 hover:bg-primary/90 max-w-xs"
+                  className="w-full bg-primary text-white text-sm rounded-full px-4 py-2 hover:bg-primary/90 max-w-xs"
                 >
                   プロフィール編集
                 </button>
@@ -641,13 +641,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Name Field */}
             <div className="space-y-2">
-              <Label className="text-black font-medium text-center block">名前</Label>
+              <Label className="text-black font-medium text-center block text-sm">名前</Label>
               {isEditing ? (
                 <>
                   <Input
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="h-12 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-500"
+                    className="h-12 rounded-lg border-2 border-primary bg-white text-black text-sm placeholder:text-gray-500"
                     placeholder="NAME"
                   />
                   {errors.name && (
@@ -661,7 +661,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   )}
                 </>
               ) : (
-                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-black">
+                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-black text-sm">
                   {displayUser.name}
                 </div>
               )}
@@ -669,12 +669,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* User ID Field */}
             <div className="space-y-2">
-              <Label className="text-black font-medium text-center block">ユーザーID *</Label>
+              <Label className="text-black font-medium text-center block text-sm">ユーザーID *</Label>
               {isEditing ? (
                 <>
                   <div className="relative">
                     {/* @ Mark */}
-                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium text-sm">
                       @
                     </div>
 
@@ -682,7 +682,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     <Input
                       value={formData.user_id}
                       onChange={(e) => handleInputChange('user_id', e.target.value)}
-                      className="h-12 pl-12 pr-12 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-500"
+                      className="h-12 pl-12 pr-12 rounded-lg border-2 border-primary bg-white text-black text-sm placeholder:text-gray-500"
                       placeholder="例: music_lover123"
                     />
 
@@ -708,7 +708,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   )}
                 </>
               ) : (
-                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
+                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
                   <span className="text-gray-500 font-medium mr-2">@</span>
                   <span className={displayUser.user_id ? "text-black" : "text-gray-500"}>
                     {displayUser.user_id || '未設定'}
@@ -719,14 +719,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Bio Field */}
             <div className="space-y-2">
-              <Label className="text-black font-medium text-center block">自己紹介</Label>
+              <Label className="text-black font-medium text-center block text-sm">自己紹介</Label>
               {isEditing ? (
                 <>
                   <Textarea
                     value={formData.bio}
                     onChange={(e) => handleInputChange('bio', e.target.value)}
                     placeholder="自己紹介を入力してください"
-                    className="min-h-20 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-400"
+                    className="min-h-20 rounded-lg border-2 border-primary bg-white text-black text-sm placeholder:text-gray-400"
                   />
                   <div className="flex justify-between items-center text-xs text-muted-foreground">
                     <span>{formData.bio.length}/{VALIDATION_RULES.MAX_BIO_LENGTH}文字</span>
@@ -742,7 +742,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 </>
               ) : (
-                <div className="min-h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
+                <div className="min-h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
                   <span className={displayUser.bio ? "text-black" : "text-gray-500"}>
                     {displayUser.bio || '未設定'}
                   </span>
@@ -752,14 +752,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Link Field */}
             <div className="space-y-2">
-              <Label className="text-black font-medium text-center block">リンク</Label>
+              <Label className="text-black font-medium text-center block text-sm">リンク</Label>
               {isEditing ? (
                 <>
                   <Input
                     value={formData.link}
                     onChange={(e) => handleInputChange('link', e.target.value)}
                     placeholder="例: https://example.com"
-                    className="h-12 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-500"
+                    className="h-12 rounded-lg border-2 border-primary bg-white text-black text-sm placeholder:text-gray-500"
                   />
                   {errors.link && (
                     <motion.p
@@ -772,7 +772,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   )}
                 </>
               ) : (
-                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
+                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
                   {displayUser.link ? (
                     <a
                       href={displayUser.link.startsWith('http') ? displayUser.link : `https://${displayUser.link}`}
@@ -792,7 +792,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Gallery Section */}
             <div className="space-y-2">
-              <Label className="text-black font-medium text-center block">
+              <Label className="text-black font-medium text-center block text-sm">
                 {isEditing ? `ギャラリー（最大${VALIDATION_RULES.MAX_GALLERY_IMAGES}枚）` : 'ギャラリー'}
               </Label>
 
@@ -870,7 +870,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     )
                   ) : (
                     <div className="h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center">
-                      <span className="text-gray-500">未設定</span>
+                      <span className="text-gray-500 text-sm">未設定</span>
                     </div>
                   )}
                 </>
@@ -879,7 +879,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* SNS Links Section */}
             <div className="space-y-4">
-              <Label className="text-black font-medium text-center block">SNSリンク</Label>
+              <Label className="text-black font-medium text-center block text-sm">SNSリンク</Label>
 
               {/* Instagram */}
               <div className="space-y-2">
@@ -895,11 +895,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       value={formData.instagram}
                       onChange={(e) => handleInputChange('instagram', e.target.value)}
                       placeholder="@livme"
-                      className="h-12 pl-16 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-500"
+                      className="h-12 pl-16 rounded-lg border-2 border-primary bg-white text-black text-sm placeholder:text-gray-500"
                     />
                   </div>
                 ) : (
-                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
+                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
                     <img src={Icons.instagram} alt="Instagram" className="w-8 h-8 mr-4" />
                     <span className={displayUser.socialLinks?.instagram ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.instagram || '未設定'}
@@ -919,11 +919,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       value={formData.twitter}
                       onChange={(e) => handleInputChange('twitter', e.target.value)}
                       placeholder="@livme"
-                      className="h-12 pl-16 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-500"
+                      className="h-12 pl-16 rounded-lg border-2 border-primary bg-white text-black text-sm placeholder:text-gray-500"
                     />
                   </div>
                 ) : (
-                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
+                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
                     <img src={Icons.x} alt="X" className="w-8 h-8 mr-4" />
                     <span className={displayUser.socialLinks?.twitter ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.twitter || '未設定'}
@@ -943,11 +943,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       value={formData.tiktok}
                       onChange={(e) => handleInputChange('tiktok', e.target.value)}
                       placeholder="@livme"
-                      className="h-12 pl-16 rounded-lg border-2 border-primary bg-white text-black placeholder:text-gray-500"
+                      className="h-12 pl-16 rounded-lg border-2 border-primary bg-white text-black text-sm placeholder:text-gray-500"
                     />
                   </div>
                 ) : (
-                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4">
+                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
                     <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8 mr-4" />
                     <span className={displayUser.socialLinks?.tiktok ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.tiktok || '未設定'}
@@ -970,7 +970,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     console.log('Button disabled?:', isSaving || isCheckingUserId || userIdStatus === 'taken');
                     handleSave();
                   }}
-                  className="flex-1 bg-primary text-white rounded-full px-8 py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-primary text-white text-sm rounded-full px-8 py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isSaving || isCheckingUserId || userIdStatus === 'taken'}
                 >
                   {isSaving ? '保存中...' : '保存する'}
@@ -978,7 +978,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="flex-1 rounded-full px-6 py-3 border border-input bg-background hover:bg-gray-100 disabled:opacity-50"
+                  className="flex-1 text-sm rounded-full px-6 py-3 border border-input bg-background hover:bg-gray-100 disabled:opacity-50"
                   disabled={isSaving}
                 >
                   キャンセル
@@ -1024,7 +1024,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             }}
           >
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">プロフィール画像を選択</h3>
+                <h3 className="text-sm font-semibold">プロフィール画像を選択</h3>
                 <button
                   type="button"
                   onClick={() => {

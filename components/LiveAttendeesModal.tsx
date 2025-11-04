@@ -16,6 +16,7 @@ interface LiveAttendeesModalProps {
   onClose: () => void;
   live: Live;
   attendeeUserIds: string[];
+  currentUserId?: string;
   onViewProfile?: (userId: string) => void;
 }
 
@@ -52,6 +53,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   onClose,
   live,
   attendeeUserIds,
+  currentUserId,
   onViewProfile,
 }) => {
   const [attendees, setAttendees] = useState<User[]>([]);
@@ -365,8 +367,8 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             />
                           </motion.div>
 
-                          {/* View Profile Button */}
-                          {onViewProfile && (
+                          {/* View Profile Button - 自分以外のユーザーにのみ表示 */}
+                          {onViewProfile && currentAttendee.user_id !== currentUserId && (
                             <motion.div
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}

@@ -11,6 +11,7 @@ import { EmptyState } from './components/EmptyState';
 import { SocialIcons } from './components/SocialIcons';
 import { ShareModal } from './components/ShareModal';
 import { LiveAttendeesModal } from './components/LiveAttendeesModal';
+import { UserLivesModal } from './components/UserLivesModal';
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar';
 import {
   Accordion,
@@ -34,7 +35,9 @@ const AppContent: React.FC = () => {
   const [isAddLiveModalOpen, setIsAddLiveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isAttendeesModalOpen, setIsAttendeesModalOpen] = useState(false);
+  const [isUserLivesModalOpen, setIsUserLivesModalOpen] = useState(false);
   const [viewingUserId, setViewingUserId] = useState<string | undefined>();
+  const [userLivesUserId, setUserLivesUserId] = useState<string>('');
   const [editingLive, setEditingLive] = useState<Live | null>(null);
   const [selectedLive, setSelectedLive] = useState<Live | null>(null);
   const [attendeeUserIds, setAttendeeUserIds] = useState<string[]>([]);
@@ -356,12 +359,25 @@ const AppContent: React.FC = () => {
           }}
           live={selectedLive}
           attendeeUserIds={attendeeUserIds}
+          currentUserId={user?.user_id}
           onViewProfile={(userId) => {
-            setViewingUserId(userId);
-            setIsProfileModalOpen(true);
+            setUserLivesUserId(userId);
+            setIsUserLivesModalOpen(true);
           }}
         />
       )}
+
+      <UserLivesModal
+        isOpen={isUserLivesModalOpen}
+        onClose={() => {
+          setIsUserLivesModalOpen(false);
+          setUserLivesUserId('');
+        }}
+        userId={userLivesUserId}
+        onShareUser={() => {
+          // シェア機能は必要に応じて実装
+        }}
+      />
 
       <Toaster />
     </div>

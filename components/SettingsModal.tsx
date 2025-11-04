@@ -43,7 +43,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md mx-4 my-4 sm:mx-auto sm:my-0">
         <DialogHeader>
           <DialogTitle>設定</DialogTitle>
         </DialogHeader>

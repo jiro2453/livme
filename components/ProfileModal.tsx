@@ -71,19 +71,20 @@ interface ProfileModalProps {
 }
 
 // Preset avatar URLs - 9 images (3 animals, 3 landscapes, 3 abstract)
+// Optimized with smaller size (200x200) and quality parameter
 const presetAvatars = [
   // Cute Animals (3)
-  'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop', // Cat
-  'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=400&fit=crop', // Dog
-  'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=400&h=400&fit=crop', // Rabbit
+  'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&h=200&fit=crop&q=80', // Cat
+  'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop&q=80', // Dog
+  'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=200&h=200&fit=crop&q=80', // Rabbit
   // Landscapes (3)
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop', // Mountain
-  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop', // Beach
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop', // Forest
+  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop&q=80', // Mountain
+  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&h=200&fit=crop&q=80', // Beach
+  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop&q=80', // Forest
   // Abstract (3)
-  'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400&h=400&fit=crop', // Abstract colors
-  'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=400&h=400&fit=crop', // Abstract pattern
-  'https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=400&h=400&fit=crop', // Abstract art
+  'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=200&h=200&fit=crop&q=80', // Abstract colors
+  'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=200&h=200&fit=crop&q=80', // Abstract pattern
+  'https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=200&h=200&fit=crop&q=80', // Abstract art
 ];
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({
@@ -547,9 +548,20 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     setIsEditing(false);
   };
 
+  // Handle modal close - reset edit mode
+  const handleClose = () => {
+    console.log('=== handleClose called ===');
+    console.log('Resetting isEditing to false');
+    setIsEditing(false);
+    setErrors({});
+    setUserIdStatus('idle');
+    setShowAvatarSelector(false);
+    onClose();
+  };
+
   if (loading || !displayUser) {
     return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent>
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
@@ -572,7 +584,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[90vh] overflow-y-auto bg-white sm:w-full">
           <div className="p-8 space-y-6">
             {/* Avatar Section */}
@@ -969,16 +981,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       <AnimatePresence>
         {showAvatarSelector && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[110] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
             onClick={() => setShowAvatarSelector(false)}
           >
             <motion.div
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              exit={{ y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
               className="bg-white rounded-xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
@@ -993,11 +1007,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
 
               {/* Upload Button */}
-              <motion.button
+              <button
                 onClick={triggerFileUpload}
                 className="w-full p-4 border-2 border-dashed border-primary/30 rounded-lg hover:border-primary/50 transition-colors flex flex-col items-center gap-2"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
               >
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                   <Upload className="w-6 h-6 text-primary" />
@@ -1006,7 +1018,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <p className="text-sm font-medium">画像をアップロード</p>
                   <p className="text-xs text-muted-foreground">JPG, PNG, GIF (最大5MB)</p>
                 </div>
-              </motion.button>
+              </button>
 
               <input
                 ref={fileInputRef}
@@ -1021,12 +1033,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <p className="text-sm font-medium mb-3">プリセット画像</p>
                 <div className="grid grid-cols-3 gap-3">
                   {presetAvatars.map((avatar, index) => (
-                    <motion.button
+                    <button
                       key={index}
                       onClick={() => handleSelectAvatar(avatar)}
-                      className="relative aspect-square rounded-lg overflow-hidden border-2 hover:border-primary transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      className="relative aspect-square rounded-lg overflow-hidden border-2 hover:border-primary transition-all hover:scale-105 active:scale-95"
                       style={{
                         borderColor: selectedAvatar === avatar ? '#78B159' : 'transparent'
                       }}
@@ -1035,19 +1045,17 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         src={avatar}
                         alt={`Avatar option ${index + 1}`}
                         className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                       {selectedAvatar === avatar && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute inset-0 bg-primary/20 flex items-center justify-center"
-                        >
+                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
                           <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                             <Check className="w-4 h-4 text-primary-foreground" />
                           </div>
-                        </motion.div>
+                        </div>
                       )}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>

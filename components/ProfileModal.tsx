@@ -550,7 +550,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-white mx-4 my-4 sm:mx-auto sm:my-0">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[90vh] overflow-y-auto bg-white sm:w-full">
           <div className="p-8 space-y-6">
             {/* Avatar Section */}
             <div className="flex flex-col items-center space-y-4">

@@ -109,7 +109,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-4 my-4 sm:mx-auto sm:my-0">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-md sm:w-full">
         <DialogHeader>
           <DialogTitle>
             {editingLive ? 'ライブ編集' : 'ライブ追加'}

@@ -286,8 +286,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Handle Avatar Selection
   const handleSelectAvatar = (avatar: string) => {
+    console.log('=== handleSelectAvatar called ===');
+    console.log('Selected avatar:', avatar);
     setSelectedAvatar(avatar);
     setFormData(prev => ({ ...prev, avatar }));
+    console.log('Updated selectedAvatar and formData.avatar');
     setShowAvatarSelector(false);
   };
 
@@ -563,6 +566,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   console.log('currentUserId:', currentUserId);
   console.log('userId:', userId);
   console.log('displayUser:', displayUser);
+  console.log('selectedAvatar:', selectedAvatar);
+  console.log('formData.avatar:', formData.avatar);
+  console.log('Avatar will display:', isEditing ? selectedAvatar : displayUser?.avatar);
 
   return (
     <>
@@ -595,6 +601,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   type="button"
                   onClick={() => {
                     console.log('=== Edit button clicked ===');
+                    console.log('Current avatar:', displayUser?.avatar);
+                    console.log('formData.avatar:', formData.avatar);
+                    // Initialize selectedAvatar with current avatar when entering edit mode
+                    setSelectedAvatar(displayUser?.avatar || formData.avatar || '');
                     console.log('Setting isEditing to true');
                     setIsEditing(true);
                   }}

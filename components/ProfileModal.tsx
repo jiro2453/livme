@@ -551,14 +551,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-white">
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors z-10"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
           <div className="p-8 space-y-6">
             {/* Avatar Section */}
             <div className="flex flex-col items-center space-y-4">

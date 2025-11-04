@@ -98,7 +98,12 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     .single();
 
   if (error) {
-    console.error('Error updating user:', error);
+    console.error('=== Error updating user ===');
+    console.error('Error object:', error);
+    console.error('Error message:', error.message);
+    console.error('Error code:', error.code);
+    console.error('Error details:', error.details);
+    console.error('Error hint:', error.hint);
     return null;
   }
 

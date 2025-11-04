@@ -20,7 +20,7 @@ import {
   AccordionTrigger,
 } from './components/ui/accordion';
 import { Plus, User as UserIcon, LogOut, Calendar, Search } from 'lucide-react';
-import { getLivesByUserId, deleteLive, getUserByUserId, getUsersAttendingSameLive } from './lib/api';
+import { getLivesByUserId, deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId } from './lib/api';
 import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
 import type { Live, User } from './types';
@@ -67,8 +67,34 @@ const AppContent: React.FC = () => {
 
     setLoading(true);
     try {
-      const livesData = await getLivesByUserId(user.id);
-      setLives(livesData);
+      console.log('=== Loading lives for user ===');
+      console.log('User ID (UUID):', user.id);
+      console.log('User ID (string):', user.user_id);
+
+      // Get both created lives and attended lives
+      const [createdLives, attendedLives] = await Promise.all([
+        getLivesByUserId(user.id),
+        getAttendedLivesByUserId(user.user_id),
+      ]);
+
+      console.log('Created lives:', createdLives.length);
+      console.log('Attended lives:', attendedLives.length);
+
+      // Merge and remove duplicates based on ID
+      const allLives = [...createdLives, ...attendedLives];
+      const uniqueLives = allLives.reduce((acc, live) => {
+        if (!acc.some(l => l.id === live.id)) {
+          acc.push(live);
+        }
+        return acc;
+      }, [] as Live[]);
+
+      console.log('Total unique lives:', uniqueLives.length);
+
+      // Sort by date (newest first)
+      uniqueLives.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      setLives(uniqueLives);
     } catch (error) {
       console.error('Error loading lives:', error);
       toast({
@@ -296,7 +322,7 @@ const AppContent: React.FC = () => {
                         <LiveCard
                           key={live.id}
                           live={live}
-                          isOwner={true}
+                          isOwner={live.created_by === user.id}
                           onEdit={handleEditLive}
                           onDelete={handleDeleteLive}
                           onClick={handleLiveClick}

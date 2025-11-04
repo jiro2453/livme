@@ -233,9 +233,14 @@ const AppContent: React.FC = () => {
                 {profileUser?.name?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
-            <div className="text-center">
+            <div className="text-center space-y-2">
               <h2 className="text-[15.75px] font-semibold">{profileUser?.name}</h2>
               <p className="text-[12.25px] text-gray-500">@ {profileUser?.user_id}</p>
+              {profileUser?.bio && (
+                <p className="text-sm text-gray-600 max-w-xs mx-auto">
+                  {profileUser.bio}
+                </p>
+              )}
             </div>
             <SocialIcons
               socialLinks={profileUser?.socialLinks}

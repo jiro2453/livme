@@ -5,12 +5,14 @@ import { User } from 'lucide-react';
 interface ProfileRingProps {
   avatarUrl?: string;
   name: string;
+  bio?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
 export const ProfileRing: React.FC<ProfileRingProps> = ({
   avatarUrl,
   name,
+  bio,
   size = 'lg',
 }) => {
   const sizeClasses = {
@@ -20,17 +22,24 @@ export const ProfileRing: React.FC<ProfileRingProps> = ({
   };
 
   return (
-    <div className="relative">
-      <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-r from-primary to-blue-500 p-1`}>
-        <div className="h-full w-full rounded-full bg-white p-1">
-          <Avatar className="h-full w-full">
-            <AvatarImage src={avatarUrl} alt={name} />
-            <AvatarFallback>
-              <User className="h-8 w-8" />
-            </AvatarFallback>
-          </Avatar>
+    <div className="flex flex-col items-center space-y-3">
+      <div className="relative">
+        <div className={`${sizeClasses[size]} rounded-full bg-gradient-to-r from-primary to-blue-500 p-1`}>
+          <div className="h-full w-full rounded-full bg-white p-1">
+            <Avatar className="h-full w-full">
+              <AvatarImage src={avatarUrl} alt={name} />
+              <AvatarFallback>
+                <User className="h-8 w-8" />
+              </AvatarFallback>
+            </Avatar>
+          </div>
         </div>
       </div>
+      {bio && (
+        <p className="text-sm text-gray-600 text-center max-w-xs">
+          {bio}
+        </p>
+      )}
     </div>
   );
 };

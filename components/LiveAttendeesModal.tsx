@@ -306,7 +306,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             >
                               <div className="h-full w-full rounded-full bg-white p-1">
                                 <Avatar className="h-full w-full">
-                                  <AvatarImage src="" />
+                                  <AvatarImage src={currentAttendee.avatar} />
                                   <AvatarFallback className="bg-gray-400 text-white text-3xl">
                                     {currentAttendee.name?.charAt(0) || 'U'}
                                   </AvatarFallback>

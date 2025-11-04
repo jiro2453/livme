@@ -980,23 +980,20 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
       {/* Avatar Selector Modal - Rendered via Portal to avoid z-index conflicts */}
       {showAvatarSelector && createPortal(
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={() => setShowAvatarSelector(false)}
+        <div
+          className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={(e) => {
+            console.log('=== Background clicked ===');
+            setShowAvatarSelector(false);
+          }}
+        >
+          <div
+            className="bg-white rounded-xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto"
+            onClick={(e) => {
+              console.log('=== Modal content clicked ===');
+              e.stopPropagation();
+            }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="bg-white rounded-xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">プロフィール画像を選択</h3>
                 <button
@@ -1076,9 +1073,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>,
+            </div>
+          </div>,
         document.body
       )}
     </>

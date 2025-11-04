@@ -51,12 +51,14 @@ const AppContent: React.FC = () => {
     }
   }, [user]);
 
-  // Handle URL parameters for profile sharing
+  // Handle URL path for profile sharing (e.g., /user_id)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const profileUserId = params.get('profile');
+    const pathname = window.location.pathname;
+    // Extract user_id from path (e.g., /jiro2453 -> jiro2453)
+    const pathMatch = pathname.match(/^\/([^\/]+)$/);
 
-    if (profileUserId) {
+    if (pathMatch && pathMatch[1]) {
+      const profileUserId = pathMatch[1];
       setViewingUserId(profileUserId);
       setIsProfileModalOpen(true);
     }
@@ -342,9 +344,11 @@ const AppContent: React.FC = () => {
         isOpen={isProfileModalOpen}
         onClose={() => {
           setIsProfileModalOpen(false);
+          // Clear URL path if viewing another user's profile
+          if (viewingUserId) {
+            window.history.replaceState({}, '', '/');
+          }
           setViewingUserId(undefined);
-          // Clear URL parameter
-          window.history.replaceState({}, '', window.location.pathname);
         }}
         userId={viewingUserId || user?.user_id}
         currentUserId={(() => {
@@ -400,6 +404,7 @@ const AppContent: React.FC = () => {
           setUserLivesUserId('');
         }}
         userId={userLivesUserId}
+        currentUserId={user?.user_id}
         onShareUser={() => {
           // シェア機能は必要に応じて実装
         }}

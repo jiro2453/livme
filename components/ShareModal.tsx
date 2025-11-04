@@ -20,7 +20,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, userId 
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
-  const shareUrl = `${window.location.origin}/?profile=${userId}`;
+  const shareUrl = `${window.location.origin}/${userId}`;
 
   const handleCopy = async () => {
     try {

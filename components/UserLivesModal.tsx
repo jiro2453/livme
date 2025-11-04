@@ -18,6 +18,7 @@ interface UserLivesModalProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
+  currentUserId?: string;
   onShareUser?: () => void;
 }
 
@@ -25,6 +26,7 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
   isOpen,
   onClose,
   userId,
+  currentUserId,
   onShareUser,
 }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -103,7 +105,7 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
                 </div>
                 <SocialIcons
                   socialLinks={user.social_links}
-                  onShare={onShareUser}
+                  onShare={userId === currentUserId ? onShareUser : undefined}
                 />
               </div>
 

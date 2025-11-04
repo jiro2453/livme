@@ -221,7 +221,18 @@ const AppContent: React.FC = () => {
     return <AuthScreen />;
   }
 
-  const groupedLives = groupLivesByMonth(lives);
+  // Filter lives based on search query
+  const filteredLives = lives.filter(live => {
+    if (!searchQuery.trim()) return true;
+
+    const query = searchQuery.toLowerCase();
+    const artist = live.artist?.toLowerCase() || '';
+    const venue = live.venue?.toLowerCase() || '';
+
+    return artist.includes(query) || venue.includes(query);
+  });
+
+  const groupedLives = groupLivesByMonth(filteredLives);
 
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
@@ -313,6 +324,11 @@ const AppContent: React.FC = () => {
               message="ライブ情報がありません。追加してみましょう！"
               icon={<Calendar className="h-12 w-12 mb-4 text-gray-400" />}
             />
+          ) : filteredLives.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              <Search className="h-12 w-12 mb-4 text-gray-400 mx-auto" />
+              <p>「{searchQuery}」に一致する公演が見つかりませんでした</p>
+            </div>
           ) : (
             <Accordion type="multiple" className="w-full" defaultValue={Object.keys(groupedLives)}>
               {Object.entries(groupedLives).map(([month, monthLives]) => (

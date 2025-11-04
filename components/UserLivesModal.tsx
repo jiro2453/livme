@@ -40,10 +40,18 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
   const loadUserData = async () => {
     setLoading(true);
     try {
+      console.log('=== UserLivesModal: Loading user data ===');
+      console.log('User ID:', userId);
+
       const [userData, livesData] = await Promise.all([
         getUserByUserId(userId),
         getAttendedLivesByUserId(userId),
       ]);
+
+      console.log('User data:', userData);
+      console.log('Lives data:', livesData);
+      console.log('Lives count:', livesData?.length || 0);
+
       setUser(userData);
       setLives(livesData);
     } catch (error) {

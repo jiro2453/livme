@@ -552,17 +552,24 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   // Handle modal close - reset edit mode
   const handleClose = () => {
     console.log('=== handleClose called ===');
+    console.log('showAvatarSelector:', showAvatarSelector);
+
+    // Don't close main modal if avatar selector is open
+    if (showAvatarSelector) {
+      console.log('Avatar selector is open, preventing main modal close');
+      return;
+    }
+
     console.log('Resetting isEditing to false');
     setIsEditing(false);
     setErrors({});
     setUserIdStatus('idle');
-    setShowAvatarSelector(false);
     onClose();
   };
 
   if (loading || !displayUser) {
     return (
-      <Dialog open={isOpen} onOpenChange={handleClose}>
+      <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
         <DialogContent>
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
@@ -585,7 +592,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={handleClose}>
+      <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[90vh] overflow-y-auto bg-white sm:w-full">
           <div className="p-8 space-y-6">
             {/* Avatar Section */}
@@ -987,20 +994,34 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         console.log('=== Rendering Avatar Selector Modal via Portal ===');
         return createPortal(
           <div
-            className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4"
+            data-testid="avatar-selector-backdrop"
+            className="fixed inset-0 bg-black/90 flex items-center justify-center p-4"
             onClick={() => {
               console.log('=== Background clicked ===');
               setShowAvatarSelector(false);
             }}
-            style={{ pointerEvents: 'auto' }}
+            style={{
+              pointerEvents: 'auto',
+              zIndex: 99999,
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
+            }}
           >
           <div
+            data-testid="avatar-selector-modal"
             className="bg-white rounded-xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto"
             onClick={(e) => {
               console.log('=== Modal content clicked ===');
               e.stopPropagation();
             }}
-            style={{ pointerEvents: 'auto' }}
+            style={{
+              pointerEvents: 'auto',
+              position: 'relative',
+              zIndex: 100000
+            }}
           >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">プロフィール画像を選択</h3>

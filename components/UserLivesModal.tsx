@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from './ui/dialog';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { SocialIcons } from './SocialIcons';
 import { LiveCard } from './LiveCard';
-import { MapPin, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { getUserByUserId, getAttendedLivesByUserId } from '../lib/api';
 import { groupLivesByMonth } from '../utils/liveGrouping';
 import {
@@ -71,10 +71,9 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
           </div>
         ) : user ? (
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full max-h-[90vh]">
             {/* Header with close button */}
-            <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">プロフィール</h2>
+            <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-end">
               <button
                 onClick={onClose}
                 className="p-1 rounded-full hover:bg-gray-100 transition-colors"
@@ -110,9 +109,8 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
 
               {/* Attended Lives Section */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  参加したライブ
+                <h3 className="text-lg font-semibold text-gray-800 text-center">
+                  参加公演
                 </h3>
 
                 {lives.length === 0 ? (
@@ -120,25 +118,12 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
                     まだライブに参加していません
                   </div>
                 ) : (
-                  <Accordion type="multiple" className="space-y-2" defaultValue={Object.keys(groupedLives)}>
+                  <Accordion type="multiple" className="w-full" defaultValue={Object.keys(groupedLives)}>
                     {Object.entries(groupedLives).map(([month, monthLives]) => (
-                      <AccordionItem
-                        key={month}
-                        value={month}
-                        className="border-2 border-primary rounded-xl overflow-hidden bg-white"
-                      >
-                        <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-gray-50">
-                          <div className="flex items-center justify-between w-full pr-2">
-                            <span className="text-base font-medium text-gray-800">
-                              {month}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              {monthLives.length}件
-                            </span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-4 pb-4">
-                          <div className="space-y-3 pt-2">
+                      <AccordionItem key={month} value={month}>
+                        <AccordionTrigger>{month}</AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-2">
                             {monthLives.map((live) => (
                               <LiveCard
                                 key={live.id}

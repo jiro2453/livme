@@ -969,8 +969,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <div className="space-y-2">
                 <Label className="text-black font-medium text-center block text-sm">参加公演</Label>
                 {attendedLives.length > 0 ? (
-                  <div className="space-y-2">
-                    {attendedLives.slice(0, 3).map((live) => {
+                  <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1">
+                    {attendedLives.map((live) => {
                       const date = new Date(live.date);
                       const year = date.getFullYear();
                       const month = date.getMonth() + 1;
@@ -995,9 +995,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         </div>
                       );
                     })}
-                    {attendedLives.length > 3 && (
-                      <p className="text-xs text-gray-500 text-center">他 {attendedLives.length - 3} 件</p>
-                    )}
                   </div>
                 ) : (
                   <div className="h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center">

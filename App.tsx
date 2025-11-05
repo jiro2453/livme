@@ -302,6 +302,43 @@ const AppContent: React.FC = () => {
 
   const groupedLives = groupLivesByMonth(filteredLives);
 
+  // 他ユーザーのプロフィール画面表示時
+  if (showUserProfile && selectedUser) {
+    return (
+      <div className="min-h-screen bg-[#f8f9fa]">
+        {/* ProfileModal as full page (not modal) */}
+        <ProfileModal
+          isOpen={true}
+          onClose={handleCloseUserProfile}
+          userId={selectedUser.user_id}
+          currentUserId={user?.id}
+          isOwnProfile={false}
+          onSuccess={() => {}}
+          onLiveClick={handleProfileLiveClick}
+        />
+
+        {/* ProfileRing from profile (z-110) */}
+        {profileModalSelectedLive && (
+          <LiveAttendeesModal
+            isOpen={!!profileModalSelectedLive}
+            onClose={() => {
+              setProfileModalSelectedLive(null);
+              setProfileModalAttendeeUserIds([]);
+            }}
+            live={profileModalSelectedLive}
+            attendeeUserIds={profileModalAttendeeUserIds}
+            currentUserId={user?.user_id}
+            onViewProfile={undefined}
+            zIndex={110}
+          />
+        )}
+
+        <Toaster />
+      </div>
+    );
+  }
+
+  // ホーム画面
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
       {/* Header */}
@@ -435,19 +472,6 @@ const AppContent: React.FC = () => {
         onLiveClick={handleProfileLiveClick}
       />
 
-      {/* Other user's full-screen profile */}
-      {showUserProfile && selectedUser && (
-        <ProfileModal
-          isOpen={showUserProfile}
-          onClose={handleCloseUserProfile}
-          userId={selectedUser.user_id}
-          currentUserId={user?.id}
-          isOwnProfile={false}
-          onSuccess={() => {}}
-          onLiveClick={handleProfileLiveClick}
-        />
-      )}
-
       <SettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
@@ -481,22 +505,6 @@ const AppContent: React.FC = () => {
           currentUserId={user?.user_id}
           onViewProfile={handleViewUserProfile}
           zIndex={90}
-        />
-      )}
-
-      {/* ProfileRing from profile (z-110) */}
-      {profileModalSelectedLive && (
-        <LiveAttendeesModal
-          isOpen={!!profileModalSelectedLive}
-          onClose={() => {
-            setProfileModalSelectedLive(null);
-            setProfileModalAttendeeUserIds([]);
-          }}
-          live={profileModalSelectedLive}
-          attendeeUserIds={profileModalAttendeeUserIds}
-          currentUserId={user?.user_id}
-          onViewProfile={undefined}
-          zIndex={110}
         />
       )}
 

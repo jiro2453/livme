@@ -13,6 +13,7 @@ import {
   Trash2,
   Edit2,
   MapPin,
+  ArrowLeft,
 } from 'lucide-react';
 import { Dialog, DialogContent } from './ui/dialog';
 import { Button } from './ui/button';
@@ -1049,17 +1050,22 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           </DialogContent>
         </Dialog>
       ) : (
-        /* 他ユーザーのプロフィール: フルスクリーン表示 */
+        /* 他ユーザーのプロフィール: 通常のページとして表示 */
         isOpen && (
-          <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
-            {/* 閉じるボタン */}
-            <button
-              onClick={handleClose}
-              className="fixed top-4 left-4 z-10 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
-              aria-label="戻る"
-            >
-              <X className="h-6 w-6 text-gray-600" />
-            </button>
+          <div className="min-h-screen bg-[#f8f9fa] pb-8">
+            {/* 戻るボタン */}
+            <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
+              <div className="max-w-[546px] mx-auto px-4 py-3">
+                <button
+                  onClick={handleClose}
+                  className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
+                  aria-label="戻る"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  <span className="text-sm font-medium">戻る</span>
+                </button>
+              </div>
+            </div>
             <div className="w-full max-w-md mx-auto">
               {profileContent}
             </div>

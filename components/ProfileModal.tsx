@@ -70,6 +70,7 @@ interface ProfileModalProps {
   currentUserId?: string;
   isOwnProfile: boolean;
   onSuccess?: () => void;
+  onLiveClick?: (live: Live) => void;
 }
 
 // Preset avatar URLs - 9 images (3 animals, 3 landscapes, 3 abstract)
@@ -96,6 +97,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   currentUserId,
   isOwnProfile,
   onSuccess,
+  onLiveClick,
 }) => {
   const [displayUser, setDisplayUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -978,7 +980,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       const weekday = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
 
                       return (
-                        <div key={live.id} className="p-3 rounded-lg border-2 border-primary bg-white">
+                        <div
+                          key={live.id}
+                          className="p-3 rounded-lg border-2 border-primary bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+                          onClick={() => onLiveClick?.(live)}
+                        >
                           <div className="flex items-center gap-3">
                             <div className="bg-primary text-primary-foreground px-2 py-1 rounded text-center min-w-[60px]">
                               <div className="text-[10px] opacity-80 leading-tight">{year}</div>

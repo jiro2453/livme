@@ -11,7 +11,6 @@ import { EmptyState } from './components/EmptyState';
 import { SocialIcons } from './components/SocialIcons';
 import { ShareModal } from './components/ShareModal';
 import { LiveAttendeesModal } from './components/LiveAttendeesModal';
-import { UserLivesModal } from './components/UserLivesModal';
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar';
 import {
   Accordion,
@@ -23,25 +22,38 @@ import { Plus, User as UserIcon, LogOut, Calendar, Search } from 'lucide-react';
 import { getLivesByUserId, deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId } from './lib/api';
 import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
+import { useProfileRouting } from './hooks/useProfileRouting';
 import type { Live, User } from './types';
 
 const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut } = useAuth();
+  const { urlUserId, navigateToProfile, navigateToHome } = useProfileRouting();
+
+  // Data
   const [lives, setLives] = useState<Live[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileUser, setProfileUser] = useState<User | null>(null);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  // Profile screens
+  const [showProfile, setShowProfile] = useState(false); // Own profile modal
+  const [showUserProfile, setShowUserProfile] = useState(false); // Other user's full-screen profile
+  const [selectedUser, setSelectedUser] = useState<User | null>(null); // Other user being viewed
+
+  // ProfileRing modals (LiveAttendeesModal)
+  const [selectedLive, setSelectedLive] = useState<Live | null>(null); // From home (z-index: 90)
+  const [profileModalSelectedLive, setProfileModalSelectedLive] = useState<Live | null>(null); // From profile (z-index: 110)
+  const [attendeeUserIds, setAttendeeUserIds] = useState<string[]>([]);
+  const [profileModalAttendeeUserIds, setProfileModalAttendeeUserIds] = useState<string[]>([]);
+
+  // Other modals
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isAddLiveModalOpen, setIsAddLiveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isAttendeesModalOpen, setIsAttendeesModalOpen] = useState(false);
-  const [isUserLivesModalOpen, setIsUserLivesModalOpen] = useState(false);
-  const [viewingUserId, setViewingUserId] = useState<string | undefined>();
-  const [userLivesUserId, setUserLivesUserId] = useState<string>('');
   const [editingLive, setEditingLive] = useState<Live | null>(null);
-  const [selectedLive, setSelectedLive] = useState<Live | null>(null);
-  const [attendeeUserIds, setAttendeeUserIds] = useState<string[]>([]);
+
+  // Search
   const [searchQuery, setSearchQuery] = useState('');
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -51,18 +63,29 @@ const AppContent: React.FC = () => {
     }
   }, [user]);
 
-  // Handle URL path for profile sharing (e.g., /user_id)
+  // Handle URL-based profile routing
   useEffect(() => {
-    const pathname = window.location.pathname;
-    // Extract user_id from path (e.g., /jiro2453 -> jiro2453)
-    const pathMatch = pathname.match(/^\/([^\/]+)$/);
+    if (!user || authLoading || loading) return;
 
-    if (pathMatch && pathMatch[1]) {
-      const profileUserId = pathMatch[1];
-      setViewingUserId(profileUserId);
-      setIsProfileModalOpen(true);
+    if (urlUserId) {
+      // URL contains a user_id -> show that user's profile
+      if (urlUserId === user.user_id) {
+        // URL is own user_id -> show own profile modal
+        setShowProfile(true);
+        setShowUserProfile(false);
+        setSelectedUser(null);
+      } else {
+        // URL is another user_id -> show full-screen profile
+        handleViewUserProfile(urlUserId);
+      }
+    } else {
+      // URL is home (/) -> close any open profiles
+      if (showUserProfile) {
+        setShowUserProfile(false);
+        setSelectedUser(null);
+      }
     }
-  }, []);
+  }, [urlUserId, user, authLoading, loading]);
 
   const loadLives = async () => {
     if (!user) return;
@@ -155,10 +178,35 @@ const AppContent: React.FC = () => {
   };
 
   const handleOpenProfile = () => {
-    if (user) {
-      setViewingUserId(user.user_id);
-      setIsProfileModalOpen(true);
+    // Open own profile modal (no URL change)
+    setShowProfile(true);
+  };
+
+  const handleViewUserProfile = async (userId: string) => {
+    // View another user's profile (full-screen with URL change)
+    try {
+      const userData = await getUserByUserId(userId);
+      setSelectedUser(userData);
+      setShowUserProfile(true);
+      navigateToProfile(userId);
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+      toast({
+        title: 'エラー',
+        description: 'ユーザー情報の読み込みに失敗しました',
+        variant: 'destructive',
+      });
+      navigateToHome();
     }
+  };
+
+  const handleCloseUserProfile = () => {
+    // Close other user's profile and return to home
+    setShowUserProfile(false);
+    setSelectedUser(null);
+    setProfileModalSelectedLive(null);
+    setProfileModalAttendeeUserIds([]);
+    navigateToHome();
   };
 
   const handleLogout = async () => {
@@ -178,18 +226,12 @@ const AppContent: React.FC = () => {
   };
 
   const handleLiveClick = async (live: Live) => {
+    // Handle live click from home screen -> ProfileRing z-90
     setSelectedLive(live);
-    setIsAttendeesModalOpen(true);
-
-    console.log('=== デバッグ情報 ===');
-    console.log('現在のユーザーID:', user?.user_id);
-    console.log('クリックしたライブ:', live);
 
     // Fetch attendees for this live event
     try {
       const attendees = await getUsersAttendingSameLive(live);
-      console.log('取得した参加者:', attendees);
-      console.log('参加者数:', attendees.length);
 
       // 自分自身を先頭に配置
       if (user) {
@@ -197,11 +239,37 @@ const AppContent: React.FC = () => {
           user.user_id,
           ...attendees.filter(id => id !== user.user_id)
         ];
-
-        console.log('並び替え後の参加者:', sortedAttendees);
         setAttendeeUserIds(sortedAttendees);
       } else {
         setAttendeeUserIds(attendees);
+      }
+    } catch (error) {
+      console.error('Error loading attendees:', error);
+      toast({
+        title: 'エラー',
+        description: '参加者情報の読み込みに失敗しました',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleProfileLiveClick = async (live: Live) => {
+    // Handle live click from profile screen -> ProfileRing z-110
+    setProfileModalSelectedLive(live);
+
+    // Fetch attendees for this live event
+    try {
+      const attendees = await getUsersAttendingSameLive(live);
+
+      // 自分自身を先頭に配置
+      if (user) {
+        const sortedAttendees = [
+          user.user_id,
+          ...attendees.filter(id => id !== user.user_id)
+        ];
+        setProfileModalAttendeeUserIds(sortedAttendees);
+      } else {
+        setProfileModalAttendeeUserIds(attendees);
       }
     } catch (error) {
       console.error('Error loading attendees:', error);
@@ -356,25 +424,29 @@ const AppContent: React.FC = () => {
       </main>
 
       {/* Modals */}
+      {/* Own profile modal */}
       <ProfileModal
-        isOpen={isProfileModalOpen}
-        onClose={() => {
-          setIsProfileModalOpen(false);
-          // Clear URL path if viewing another user's profile
-          if (viewingUserId) {
-            window.history.replaceState({}, '', '/');
-          }
-          setViewingUserId(undefined);
-        }}
-        userId={viewingUserId || user?.user_id}
-        currentUserId={(() => {
-          console.log('ProfileModal currentUserId:', user?.id);
-          console.log('Full user object:', user);
-          return user?.id;
-        })()}
-        isOwnProfile={!viewingUserId || viewingUserId === user?.user_id}
+        isOpen={showProfile}
+        onClose={() => setShowProfile(false)}
+        userId={user?.user_id}
+        currentUserId={user?.id}
+        isOwnProfile={true}
         onSuccess={loadProfileUser}
+        onLiveClick={handleProfileLiveClick}
       />
+
+      {/* Other user's full-screen profile */}
+      {showUserProfile && selectedUser && (
+        <ProfileModal
+          isOpen={showUserProfile}
+          onClose={handleCloseUserProfile}
+          userId={selectedUser.user_id}
+          currentUserId={user?.id}
+          isOwnProfile={false}
+          onSuccess={() => {}}
+          onLiveClick={handleProfileLiveClick}
+        />
+      )}
 
       <SettingsModal
         isOpen={isSettingsModalOpen}
@@ -396,35 +468,37 @@ const AppContent: React.FC = () => {
         userId={user.user_id}
       />
 
+      {/* ProfileRing from home (z-90) */}
       {selectedLive && (
         <LiveAttendeesModal
-          isOpen={isAttendeesModalOpen}
+          isOpen={!!selectedLive}
           onClose={() => {
-            setIsAttendeesModalOpen(false);
             setSelectedLive(null);
+            setAttendeeUserIds([]);
           }}
           live={selectedLive}
           attendeeUserIds={attendeeUserIds}
           currentUserId={user?.user_id}
-          onViewProfile={(userId) => {
-            setUserLivesUserId(userId);
-            setIsUserLivesModalOpen(true);
-          }}
+          onViewProfile={handleViewUserProfile}
+          zIndex={90}
         />
       )}
 
-      <UserLivesModal
-        isOpen={isUserLivesModalOpen}
-        onClose={() => {
-          setIsUserLivesModalOpen(false);
-          setUserLivesUserId('');
-        }}
-        userId={userLivesUserId}
-        currentUserId={user?.user_id}
-        onShareUser={() => {
-          // シェア機能は必要に応じて実装
-        }}
-      />
+      {/* ProfileRing from profile (z-110) */}
+      {profileModalSelectedLive && (
+        <LiveAttendeesModal
+          isOpen={!!profileModalSelectedLive}
+          onClose={() => {
+            setProfileModalSelectedLive(null);
+            setProfileModalAttendeeUserIds([]);
+          }}
+          live={profileModalSelectedLive}
+          attendeeUserIds={profileModalAttendeeUserIds}
+          currentUserId={user?.user_id}
+          onViewProfile={undefined}
+          zIndex={110}
+        />
+      )}
 
       <Toaster />
     </div>

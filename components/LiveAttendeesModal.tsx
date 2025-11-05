@@ -18,6 +18,7 @@ interface LiveAttendeesModalProps {
   attendeeUserIds: string[];
   currentUserId?: string;
   onViewProfile?: (userId: string) => void;
+  zIndex?: number;
 }
 
 // モバイルデバイス検出
@@ -55,6 +56,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   attendeeUserIds,
   currentUserId,
   onViewProfile,
+  zIndex = 90,
 }) => {
   const [attendees, setAttendees] = useState<User[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -170,7 +172,10 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none sm:w-full">
+        <DialogContent
+          className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none sm:w-full"
+          style={{ zIndex }}
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

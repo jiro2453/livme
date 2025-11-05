@@ -599,11 +599,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   console.log('formData.avatar:', formData.avatar);
   console.log('Avatar will display:', isEditing ? selectedAvatar : displayUser?.avatar);
 
-  return (
-    <>
-      <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
-        <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[90vh] overflow-y-auto bg-white sm:w-full">
-          <div className="p-8 space-y-6">
+  // コンテンツ部分（自分と他ユーザーで共通）
+  const profileContent = (
+    <div className="p-8 space-y-6">
             {/* Avatar Section */}
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="w-28 h-28 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => isEditing && setShowAvatarSelector(true)}>
@@ -1039,8 +1037,35 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
             )}
           </div>
-        </DialogContent>
-      </Dialog>
+  );
+
+  return (
+    <>
+      {/* 自分のプロフィール: モーダル表示 */}
+      {isOwnProfile ? (
+        <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
+          <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[90vh] overflow-y-auto bg-white sm:w-full">
+            {profileContent}
+          </DialogContent>
+        </Dialog>
+      ) : (
+        /* 他ユーザーのプロフィール: フルスクリーン表示 */
+        isOpen && (
+          <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+            {/* 閉じるボタン */}
+            <button
+              onClick={handleClose}
+              className="fixed top-4 left-4 z-10 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+              aria-label="戻る"
+            >
+              <X className="h-6 w-6 text-gray-600" />
+            </button>
+            <div className="w-full max-w-md mx-auto">
+              {profileContent}
+            </div>
+          </div>
+        )
+      )}
 
       {/* Avatar Selector Modal - Rendered via Portal to avoid z-index conflicts */}
       {showAvatarSelector && (() => {

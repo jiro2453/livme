@@ -24,6 +24,15 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useToast } from '../hooks/useToast';
 import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId } from '../lib/api';
 import { Icons } from './assets/Icons';
+import { LiveCard } from './LiveCard';
+import { SocialIcons } from './SocialIcons';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from './ui/accordion';
+import { groupLivesByMonth } from '../utils/liveGrouping';
 import type { User, Live } from '../types';
 
 // Validation Rules
@@ -600,8 +609,77 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   console.log('formData.avatar:', formData.avatar);
   console.log('Avatar will display:', isEditing ? selectedAvatar : displayUser?.avatar);
 
-  // コンテンツ部分（自分と他ユーザーで共通）
-  const profileContent = (
+  // 他ユーザー用のコンテンツ（ホーム画面のようなUI）
+  const otherUserContent = (
+    <div className="space-y-6">
+      {/* Profile Section */}
+      <div className="flex flex-col items-center space-y-4 px-4 pt-8">
+        <Avatar className="h-28 w-28">
+          <AvatarImage src={displayUser?.avatar || ''} />
+          <AvatarFallback className="bg-gray-400 text-white text-3xl">
+            {displayUser?.name?.charAt(0) || 'U'}
+          </AvatarFallback>
+        </Avatar>
+
+        <div className="text-center space-y-2 w-full">
+          <h2 className="text-2xl font-bold text-gray-800">{displayUser?.name || 'Unknown'}</h2>
+
+          {displayUser?.bio && (
+            <p className="text-sm text-gray-600 whitespace-pre-wrap break-words px-4">
+              {displayUser.bio}
+            </p>
+          )}
+
+          {/* Social Links */}
+          <div className="flex justify-center pt-2">
+            <SocialIcons
+              socialLinks={{
+                instagram: displayUser?.socialLinks?.instagram,
+                twitter: displayUser?.socialLinks?.twitter,
+                tiktok: displayUser?.socialLinks?.tiktok,
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Attended Lives Section */}
+      <div className="px-4 space-y-4">
+        <h3 className="text-lg font-semibold text-gray-800 text-center">参加公演</h3>
+
+        {attendedLives.length === 0 ? (
+          <div className="text-center py-12 text-gray-500">
+            <p>参加公演がありません</p>
+          </div>
+        ) : (
+          <Accordion type="multiple" className="w-full" defaultValue={Object.keys(groupLivesByMonth(attendedLives))}>
+            {Object.entries(groupLivesByMonth(attendedLives)).map(([month, monthLives]) => (
+              <AccordionItem key={month} value={month}>
+                <AccordionTrigger>{month}</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    {monthLives.map((live) => (
+                      <LiveCard
+                        key={live.id}
+                        live={live}
+                        isOwner={false}
+                        onEdit={() => {}}
+                        onDelete={() => {}}
+                        onClick={() => onLiveClick?.(live)}
+                      />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
+      </div>
+    </div>
+  );
+
+  // 自分用のコンテンツ（従来のプロフィール編集UI）
+  const ownProfileContent = (
     <div className="p-8 space-y-6">
             {/* Avatar Section */}
             <div className="flex flex-col items-center space-y-4">
@@ -1046,7 +1124,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       {isOwnProfile ? (
         <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
           <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[90vh] overflow-y-auto bg-white sm:w-full">
-            {profileContent}
+            {ownProfileContent}
           </DialogContent>
         </Dialog>
       ) : (
@@ -1067,7 +1145,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
             </div>
             <div className="w-full max-w-md mx-auto">
-              {profileContent}
+              {otherUserContent}
             </div>
           </div>
         )

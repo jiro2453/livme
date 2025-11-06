@@ -233,12 +233,17 @@ const AppContent: React.FC = () => {
     try {
       const attendees = await getUsersAttendingSameLive(live);
 
-      // 自分自身を先頭に配置
+      console.log('handleLiveClick: Retrieved attendees:', attendees);
+      console.log('handleLiveClick: Current user.id (UUID):', user?.id);
+      console.log('handleLiveClick: Current user.user_id (string):', user?.user_id);
+
+      // 自分自身を先頭に配置（UUIDを使用）
       if (user) {
         const sortedAttendees = [
-          user.user_id,
-          ...attendees.filter(id => id !== user.user_id)
+          user.id,  // UUIDを使用
+          ...attendees.filter(id => id !== user.id)
         ];
+        console.log('handleLiveClick: Sorted attendees:', sortedAttendees);
         setAttendeeUserIds(sortedAttendees);
       } else {
         setAttendeeUserIds(attendees);
@@ -261,12 +266,16 @@ const AppContent: React.FC = () => {
     try {
       const attendees = await getUsersAttendingSameLive(live);
 
-      // 自分自身を先頭に配置
+      console.log('handleProfileLiveClick: Retrieved attendees:', attendees);
+      console.log('handleProfileLiveClick: Current user.id (UUID):', user?.id);
+
+      // 自分自身を先頭に配置（UUIDを使用）
       if (user) {
         const sortedAttendees = [
-          user.user_id,
-          ...attendees.filter(id => id !== user.user_id)
+          user.id,  // UUIDを使用
+          ...attendees.filter(id => id !== user.id)
         ];
+        console.log('handleProfileLiveClick: Sorted attendees:', sortedAttendees);
         setProfileModalAttendeeUserIds(sortedAttendees);
       } else {
         setProfileModalAttendeeUserIds(attendees);

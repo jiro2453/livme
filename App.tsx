@@ -99,7 +99,7 @@ const AppContent: React.FC = () => {
       // Get both created lives and attended lives
       const [createdLives, attendedLives] = await Promise.all([
         getLivesByUserId(user.id),
-        getAttendedLivesByUserId(user.user_id),
+        getAttendedLivesByUserId(user.id),
       ]);
 
       console.log('Created lives:', createdLives.length);

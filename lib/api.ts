@@ -245,22 +245,13 @@ export const getUsersAttendingSameLive = async (live: Live): Promise<string[]> =
 
 // Get lives that a user is attending
 export const getAttendedLivesByUserId = async (userId: string): Promise<Live[]> => {
-  console.log('=== Getting attended lives for user ===', userId);
+  console.log('=== Getting attended lives for user UUID ===', userId);
 
-  // First, get the user's Supabase UUID from their user_id string
-  const user = await getUserByUserId(userId);
-  if (!user || !user.id) {
-    console.error('User not found or no UUID:', userId);
-    return [];
-  }
-
-  console.log('User UUID:', user.id);
-
-  // Get live IDs from live_attendees table using the UUID
+  // Get live IDs from live_attendees table using the UUID directly
   const { data: attendeeData, error: attendeeError } = await supabase
     .from('live_attendees')
     .select('live_id')
-    .eq('user_id', user.id);
+    .eq('user_id', userId);
 
   if (attendeeError) {
     console.error('Error fetching attended lives:', attendeeError);

@@ -64,6 +64,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareUserId, setShareUserId] = useState<string>('');
   const [direction, setDirection] = useState(0); // 1: 上スワイプ, -1: 下スワイプ
+  const galleryScrollRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen && attendeeUserIds.length > 0) {
@@ -71,6 +72,17 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
       setCurrentIndex(0);
     }
   }, [isOpen, attendeeUserIds]);
+
+  // ギャラリー画像を中央からスクロール開始
+  useEffect(() => {
+    if (galleryScrollRef.current) {
+      const container = galleryScrollRef.current;
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+      const centerPosition = (scrollWidth - clientWidth) / 2;
+      container.scrollLeft = centerPosition;
+    }
+  }, [currentIndex, attendees]);
 
   const loadAttendees = async () => {
     setLoading(true);
@@ -380,7 +392,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               transition={{ delay: 0.55 }}
                               className="w-full px-4"
                             >
-                              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                              <div ref={galleryScrollRef} className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide scroll-smooth">
                                 {currentAttendee.galleryImages.map((image: string, index: number) => (
                                   <motion.div
                                     key={index}
@@ -393,6 +405,8 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                                       src={image}
                                       alt={`Gallery ${index + 1}`}
                                       className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                                      loading="lazy"
+                                      decoding="async"
                                     />
                                   </motion.div>
                                 ))}

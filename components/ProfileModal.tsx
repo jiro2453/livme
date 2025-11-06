@@ -414,30 +414,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   };
 
   // Handle crop complete
-  const handleCropComplete = async (croppedImageUrl: string) => {
-    // Convert blob URL to base64
-    const response = await fetch(croppedImageUrl);
-    const blob = await response.blob();
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = reader.result as string;
-
-      if (cropMode === 'avatar') {
-        setSelectedAvatar(base64);
-      } else if (cropMode === 'gallery') {
-        setFormData(prev => ({
-          ...prev,
-          galleryImages: [...prev.galleryImages, base64],
-        }));
-      } else if (cropMode === 'gallery-edit' && editingGalleryIndex >= 0) {
-        setFormData(prev => {
-          const newImages = [...prev.galleryImages];
-          newImages[editingGalleryIndex] = base64;
-          return { ...prev, galleryImages: newImages };
-        });
-      }
-    };
-    reader.readAsDataURL(blob);
+  const handleCropComplete = (croppedImageBase64: string) => {
+    if (cropMode === 'avatar') {
+      setSelectedAvatar(croppedImageBase64);
+    } else if (cropMode === 'gallery') {
+      setFormData(prev => ({
+        ...prev,
+        galleryImages: [...prev.galleryImages, croppedImageBase64],
+      }));
+    } else if (cropMode === 'gallery-edit' && editingGalleryIndex >= 0) {
+      setFormData(prev => {
+        const newImages = [...prev.galleryImages];
+        newImages[editingGalleryIndex] = croppedImageBase64;
+        return { ...prev, galleryImages: newImages };
+      });
+    }
   };
 
   // Edit Gallery Image

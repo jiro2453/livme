@@ -26,6 +26,7 @@ import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttende
 import { Icons } from './assets/Icons';
 import { LiveCard } from './LiveCard';
 import { SocialIcons } from './SocialIcons';
+import { ImageCropModal } from './ImageCropModal';
 import {
   Accordion,
   AccordionContent,
@@ -116,6 +117,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<string>('');
   const [attendedLives, setAttendedLives] = useState<Live[]>([]);
+
+  // Image crop state
+  const [showCropModal, setShowCropModal] = useState(false);
+  const [cropImageUrl, setCropImageUrl] = useState<string>('');
+  const [cropMode, setCropMode] = useState<'avatar' | 'gallery' | 'gallery-edit'>('avatar');
+  const [editingGalleryIndex, setEditingGalleryIndex] = useState<number>(-1);
 
   // Form state
   const [formData, setFormData] = useState<FormData>({
@@ -328,17 +335,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Handle Avatar File Upload
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('=== handleAvatarUpload called ===');
     const file = e.target.files?.[0];
-    console.log('Selected file:', file);
 
     if (!file) {
-      console.log('No file selected');
       return;
     }
 
     if (file.size > VALIDATION_RULES.MAX_FILE_SIZE) {
-      console.log('File too large:', file.size);
       toast({
         title: 'エラー',
         description: 'ファイルサイズは5MB以下にしてください',
@@ -347,16 +350,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       return;
     }
 
-    console.log('Reading file as DataURL...');
     const reader = new FileReader();
     reader.onloadend = () => {
       const result = reader.result as string;
-      console.log('File read successfully, length:', result.length);
-      setSelectedAvatar(result);
-      setFormData(prev => ({ ...prev, avatar: result }));
+      setCropImageUrl(result);
+      setCropMode('avatar');
       setShowAvatarSelector(false);
+      setShowCropModal(true);
     };
     reader.readAsDataURL(file);
+
+    // Reset input
+    e.target.value = '';
   };
 
   // Handle Gallery Upload
@@ -374,26 +379,30 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       return;
     }
 
-    files.forEach(file => {
-      if (file.size > VALIDATION_RULES.MAX_FILE_SIZE) {
-        toast({
-          title: 'エラー',
-          description: 'ファイルサイズは5MB以下にしてください',
-          variant: 'destructive',
-        });
-        return;
-      }
+    // Process first file with crop modal
+    const file = files[0];
+    if (!file) return;
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setFormData(prev => ({
-          ...prev,
-          galleryImages: [...prev.galleryImages, result],
-        }));
-      };
-      reader.readAsDataURL(file);
-    });
+    if (file.size > VALIDATION_RULES.MAX_FILE_SIZE) {
+      toast({
+        title: 'エラー',
+        description: 'ファイルサイズは5MB以下にしてください',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const result = reader.result as string;
+      setCropImageUrl(result);
+      setCropMode('gallery');
+      setShowCropModal(true);
+    };
+    reader.readAsDataURL(file);
+
+    // Reset input
+    e.target.value = '';
   };
 
   // Remove Gallery Image
@@ -404,9 +413,35 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     }));
   };
 
+  // Handle crop complete
+  const handleCropComplete = async (croppedImageUrl: string) => {
+    // Convert blob URL to base64
+    const response = await fetch(croppedImageUrl);
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+
+      if (cropMode === 'avatar') {
+        setSelectedAvatar(base64);
+      } else if (cropMode === 'gallery') {
+        setFormData(prev => ({
+          ...prev,
+          galleryImages: [...prev.galleryImages, base64],
+        }));
+      } else if (cropMode === 'gallery-edit' && editingGalleryIndex >= 0) {
+        setFormData(prev => {
+          const newImages = [...prev.galleryImages];
+          newImages[editingGalleryIndex] = base64;
+          return { ...prev, galleryImages: newImages };
+        });
+      }
+    };
+    reader.readAsDataURL(blob);
+  };
+
   // Edit Gallery Image
   const handleEditGalleryImage = (index: number) => {
-    // For now, just allow re-upload
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -426,11 +461,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result as string;
-        setFormData(prev => {
-          const newImages = [...prev.galleryImages];
-          newImages[index] = result;
-          return { ...prev, galleryImages: newImages };
-        });
+        setCropImageUrl(result);
+        setCropMode('gallery-edit');
+        setEditingGalleryIndex(index);
+        setShowCropModal(true);
       };
       reader.readAsDataURL(file);
     };
@@ -1269,6 +1303,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           document.body
         );
       })()}
+
+      {/* Image Crop Modal */}
+      <ImageCropModal
+        isOpen={showCropModal}
+        onClose={() => setShowCropModal(false)}
+        onCropComplete={handleCropComplete}
+        imageUrl={cropImageUrl}
+        aspectRatio={cropMode === 'avatar' ? 1 : undefined}
+        title={cropMode === 'avatar' ? 'アバター画像をクロップ' : 'ギャラリー画像をクロップ'}
+      />
     </>
   );
 };

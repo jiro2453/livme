@@ -972,7 +972,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <div className="grid grid-cols-3 gap-2">
                         {displayUser.galleryImages.map((image, index) => (
                           <div key={index} className="aspect-square rounded-lg overflow-hidden border-2 border-primary">
-                            <img src={image} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                            <img src={image} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                           </div>
                         ))}
                       </div>
@@ -980,7 +980,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <div className="flex justify-center gap-2">
                         {displayUser.galleryImages.map((image, index) => (
                           <div key={index} className="w-20 h-20 rounded-lg overflow-hidden border-2 border-primary">
-                            <img src={image} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                            <img src={image} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" loading="lazy" decoding="async" />
                           </div>
                         ))}
                       </div>
@@ -1004,7 +1004,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div className="relative">
                     {/* SNS Icon */}
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <img src={Icons.instagram} alt="Instagram" className="w-8 h-8" />
+                      <img src={Icons.instagram} alt="Instagram" className="w-8 h-8" loading="lazy" decoding="async" />
                     </div>
 
                     {/* Input Field */}
@@ -1017,7 +1017,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
-                    <img src={Icons.instagram} alt="Instagram" className="w-8 h-8 mr-4" />
+                    <img src={Icons.instagram} alt="Instagram" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
                     <span className={displayUser.socialLinks?.instagram ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.instagram || '未設定'}
                     </span>
@@ -1030,7 +1030,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {isEditing ? (
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <img src={Icons.x} alt="X" className="w-8 h-8" />
+                      <img src={Icons.x} alt="X" className="w-8 h-8" loading="lazy" decoding="async" />
                     </div>
                     <Input
                       value={formData.twitter}
@@ -1041,7 +1041,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
-                    <img src={Icons.x} alt="X" className="w-8 h-8 mr-4" />
+                    <img src={Icons.x} alt="X" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
                     <span className={displayUser.socialLinks?.twitter ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.twitter || '未設定'}
                     </span>
@@ -1054,7 +1054,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {isEditing ? (
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8" />
+                      <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8" loading="lazy" decoding="async" />
                     </div>
                     <Input
                       value={formData.tiktok}
@@ -1065,7 +1065,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
-                    <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8 mr-4" />
+                    <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
                     <span className={displayUser.socialLinks?.tiktok ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.tiktok || '未設定'}
                     </span>
@@ -1332,7 +1332,7 @@ const GalleryImageItem: React.FC<GalleryImageItemProps> = ({
 }) => {
   return (
     <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-primary group">
-      <img src={image} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+      <img src={image} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" loading="lazy" decoding="async" />
 
       {/* Overlay with actions */}
       <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">

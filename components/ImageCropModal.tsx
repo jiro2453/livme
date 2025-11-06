@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { X, Check } from 'lucide-react';
@@ -141,13 +142,18 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-[100000]"
+      className="fixed inset-0 bg-black/90 flex items-center justify-center p-4"
+      style={{
+        zIndex: 200000,
+        pointerEvents: 'auto'
+      }}
       onClick={handleCancel}
     >
       <div
         className="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
+        style={{ pointerEvents: 'auto' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -211,6 +217,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
           style={{ display: 'none' }}
         />
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

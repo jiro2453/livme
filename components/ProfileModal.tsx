@@ -1177,7 +1177,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       )}
 
       {/* Avatar Selector Modal - Rendered via Portal to avoid z-index conflicts */}
-      {showAvatarSelector && (() => {
+      {showAvatarSelector && !showCropModal && (() => {
         console.log('=== Rendering Avatar Selector Modal via Portal ===');
         return createPortal(
           <div
@@ -1296,14 +1296,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       })()}
 
       {/* Image Crop Modal */}
-      <ImageCropModal
-        isOpen={showCropModal}
-        onClose={() => setShowCropModal(false)}
-        onCropComplete={handleCropComplete}
-        imageUrl={cropImageUrl}
-        aspectRatio={cropMode === 'avatar' ? 1 : undefined}
-        title={cropMode === 'avatar' ? 'アバター画像をクロップ' : 'ギャラリー画像をクロップ'}
-      />
+      {!showAvatarSelector && (
+        <ImageCropModal
+          isOpen={showCropModal}
+          onClose={() => setShowCropModal(false)}
+          onCropComplete={handleCropComplete}
+          imageUrl={cropImageUrl}
+          aspectRatio={cropMode === 'avatar' ? 1 : undefined}
+          title={cropMode === 'avatar' ? 'アバター画像をクロップ' : 'ギャラリー画像をクロップ'}
+        />
+      )}
     </>
   );
 };

@@ -372,6 +372,34 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             />
                           </motion.div>
 
+                          {/* ギャラリー画像 */}
+                          {currentAttendee.galleryImages && currentAttendee.galleryImages.length > 0 && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.55 }}
+                              className="w-full px-4"
+                            >
+                              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                {currentAttendee.galleryImages.map((image: string, index: number) => (
+                                  <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.55 + index * 0.05 }}
+                                    className="flex-shrink-0"
+                                  >
+                                    <img
+                                      src={image}
+                                      alt={`Gallery ${index + 1}`}
+                                      className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                                    />
+                                  </motion.div>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+
                           {/* View Profile Button - 自分以外のユーザーにのみ表示 */}
                           {onViewProfile && currentAttendee.user_id !== currentUserId && (
                             <motion.div

@@ -417,6 +417,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const handleCropComplete = (croppedImageBase64: string) => {
     if (cropMode === 'avatar') {
       setSelectedAvatar(croppedImageBase64);
+      // formData.avatarも更新して、保存時に反映されるようにする
+      setFormData(prev => ({ ...prev, avatar: croppedImageBase64 }));
     } else if (cropMode === 'gallery') {
       setFormData(prev => ({
         ...prev,

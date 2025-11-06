@@ -73,9 +73,9 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
     }
   }, [isOpen, attendeeUserIds]);
 
-  // ギャラリー画像を中央からスクロール開始
+  // ギャラリー画像を中央からスクロール開始（画像が複数ある場合のみ）
   useEffect(() => {
-    if (galleryScrollRef.current) {
+    if (galleryScrollRef.current && attendees[currentIndex]?.galleryImages && attendees[currentIndex].galleryImages.length > 1) {
       const container = galleryScrollRef.current;
       const scrollWidth = container.scrollWidth;
       const clientWidth = container.clientWidth;
@@ -389,7 +389,12 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               transition={{ delay: 0.55 }}
                               className="w-full px-4"
                             >
-                              <div ref={galleryScrollRef} className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide scroll-smooth">
+                              <div
+                                ref={galleryScrollRef}
+                                className={`flex gap-2 overflow-x-auto pb-2 scrollbar-hide scroll-smooth ${
+                                  currentAttendee.galleryImages.length === 1 ? 'justify-center' : ''
+                                }`}
+                              >
                                 {currentAttendee.galleryImages.map((image: string, index: number) => (
                                   <motion.div
                                     key={index}

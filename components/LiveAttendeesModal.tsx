@@ -87,8 +87,13 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   const loadAttendees = async () => {
     setLoading(true);
     try {
+      console.log('LiveAttendeesModal: Loading attendees for IDs:', attendeeUserIds);
+
       // Get all users in a single query
       const users = await getUsersByIds(attendeeUserIds);
+
+      console.log('LiveAttendeesModal: Received users:', users);
+      console.log('LiveAttendeesModal: Number of users:', users.length);
 
       // users.idで重複を除外
       const uniqueUsers = users.reduce((acc, user) => {
@@ -98,6 +103,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
         return acc;
       }, [] as User[]);
 
+      console.log('LiveAttendeesModal: Unique users:', uniqueUsers.length);
       setAttendees(uniqueUsers);
     } catch (error) {
       console.error('Error loading attendees:', error);

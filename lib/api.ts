@@ -69,30 +69,53 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
 };
 
 // Get multiple users by their IDs in a single query
+// Supports both UUID (id column) and string (user_id column)
 export const getUsersByIds = async (userIds: string[]): Promise<User[]> => {
   if (!userIds || userIds.length === 0) {
+    console.log('getUsersByIds: No user IDs provided');
     return [];
   }
 
   console.log('getUsersByIds呼び出し:', userIds);
+  console.log('getUsersByIds: Number of IDs:', userIds.length);
 
-  // Use 'in' clause to fetch multiple users at once
-  const { data, error } = await supabase
+  // Try to fetch by UUID (id column) first
+  const { data: dataById, error: errorById } = await supabase
     .from('users')
     .select('*')
     .in('id', userIds);
 
-  if (error) {
-    console.error('Error fetching users:', error);
-    return [];
+  if (errorById) {
+    console.error('Error fetching users by id:', errorById);
   }
 
-  if (!data) {
-    return [];
+  let users = dataById || [];
+  console.log('getUsersByIds: Found by id:', users.length);
+
+  // If we didn't find all users, try by user_id column
+  if (users.length < userIds.length) {
+    const { data: dataByUserId, error: errorByUserId } = await supabase
+      .from('users')
+      .select('*')
+      .in('user_id', userIds);
+
+    if (errorByUserId) {
+      console.error('Error fetching users by user_id:', errorByUserId);
+    } else if (dataByUserId) {
+      console.log('getUsersByIds: Found by user_id:', dataByUserId.length);
+      // Merge results, avoiding duplicates
+      dataByUserId.forEach(user => {
+        if (!users.some(u => u.id === user.id)) {
+          users.push(user);
+        }
+      });
+    }
   }
+
+  console.log('getUsersByIds: Total found:', users.length);
 
   // Convert snake_case to camelCase for UI
-  return data.map(user => ({
+  return users.map(user => ({
     ...user,
     socialLinks: user.social_links,
     galleryImages: user.images,

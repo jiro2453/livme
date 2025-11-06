@@ -343,12 +343,12 @@ const AppContent: React.FC = () => {
     <div className="min-h-screen bg-[#f8f9fa]">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white border-b border-primary">
-        <div className="max-w-[546px] mx-auto px-4 py-1">
+        <div className="max-w-[546px] mx-auto px-4 py-0.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 w-[88px]">
               {/* 左側のスペーサー（右側のボタン2つ分の幅） */}
             </div>
-            <img src="/LiVME_2.png" alt="LiVME" className="h-16 w-auto" />
+            <img src="/LiVME_2.png" alt="LiVME" className="h-12 w-auto" />
             <div className="flex items-center gap-2 w-[88px] justify-end">
               <button
                 onClick={handleOpenProfile}

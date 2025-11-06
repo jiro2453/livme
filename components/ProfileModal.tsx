@@ -429,6 +429,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         return { ...prev, galleryImages: newImages };
       });
     }
+
+    // クロップモーダルを閉じて、プロフィール編集画面に戻る
+    setShowCropModal(false);
+    setShowAvatarSelector(false);
   };
 
   // Edit Gallery Image

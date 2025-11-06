@@ -8,7 +8,7 @@ import { SocialIcons } from './SocialIcons';
 import { ShareModal } from './ShareModal';
 import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
-import { getUserByUserId } from '../lib/api';
+import { getUsersByIds } from '../lib/api';
 import type { Live, User } from '../types';
 
 interface LiveAttendeesModalProps {
@@ -87,14 +87,11 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   const loadAttendees = async () => {
     setLoading(true);
     try {
-      const users = await Promise.all(
-        attendeeUserIds.map(userId => getUserByUserId(userId))
-      );
-
-      const filteredUsers = users.filter(u => u !== null) as User[];
+      // Get all users in a single query
+      const users = await getUsersByIds(attendeeUserIds);
 
       // users.idで重複を除外
-      const uniqueUsers = filteredUsers.reduce((acc, user) => {
+      const uniqueUsers = users.reduce((acc, user) => {
         if (!acc.some(u => u.id === user.id)) {
           acc.push(user);
         }

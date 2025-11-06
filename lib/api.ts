@@ -68,6 +68,37 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
   return null;
 };
 
+// Get multiple users by their IDs in a single query
+export const getUsersByIds = async (userIds: string[]): Promise<User[]> => {
+  if (!userIds || userIds.length === 0) {
+    return [];
+  }
+
+  console.log('getUsersByIds呼び出し:', userIds);
+
+  // Use 'in' clause to fetch multiple users at once
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .in('id', userIds);
+
+  if (error) {
+    console.error('Error fetching users:', error);
+    return [];
+  }
+
+  if (!data) {
+    return [];
+  }
+
+  // Convert snake_case to camelCase for UI
+  return data.map(user => ({
+    ...user,
+    socialLinks: user.social_links,
+    galleryImages: user.images,
+  }));
+};
+
 export const updateUser = async (userId: string, updates: Partial<User>): Promise<User | null> => {
   console.log('=== updateUser called ===');
   console.log('userId:', userId);

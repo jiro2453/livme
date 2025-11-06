@@ -328,7 +328,7 @@ const AppContent: React.FC = () => {
             live={profileModalSelectedLive}
             attendeeUserIds={profileModalAttendeeUserIds}
             currentUserId={user?.user_id}
-            onViewProfile={undefined}
+            onViewProfile={handleViewUserProfile}
             zIndex={110}
           />
         )}

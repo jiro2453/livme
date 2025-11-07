@@ -111,61 +111,65 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[calc(100vw-2rem)] max-w-md sm:w-full">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-lg font-semibold">
             {editingLive ? 'ライブ編集' : 'ライブ追加'}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="artist">アーティスト名 *</Label>
+            <Label htmlFor="artist" className="text-sm">アーティスト名 *</Label>
             <Input
               id="artist"
               value={artist}
               onChange={(e) => setArtist(e.target.value)}
               placeholder="山田太郎"
+              className="text-sm"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date">日付 *</Label>
+            <Label htmlFor="date" className="text-sm">日付 *</Label>
             <Input
               id="date"
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
+              className="text-sm"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="venue">会場 *</Label>
+            <Label htmlFor="venue" className="text-sm">会場 *</Label>
             <Input
               id="venue"
               value={venue}
               onChange={(e) => setVenue(e.target.value)}
               placeholder="渋谷クラブクアトロ"
+              className="text-sm"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">説明</Label>
+            <Label htmlFor="description" className="text-sm">説明</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="ライブの詳細説明"
+              className="text-sm"
               rows={3}
             />
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} className="text-sm">
               キャンセル
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="text-sm">
               {loading ? '保存中...' : editingLive ? '更新' : '追加'}
             </Button>
           </DialogFooter>

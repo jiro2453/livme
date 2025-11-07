@@ -108,79 +108,84 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle>新規登録</CardTitle>
-          <CardDescription>新しいアカウントを作成してください</CardDescription>
+          <CardDescription className="text-sm">新しいアカウントを作成してください</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">名前</Label>
+              <Label htmlFor="name" className="text-sm">名前</Label>
               <Input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="山田 太郎"
+                className="text-sm"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="userId">ユーザーID</Label>
+              <Label htmlFor="userId" className="text-sm">ユーザーID</Label>
               <Input
                 id="userId"
                 type="text"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
                 placeholder="yamada_taro"
+                className="text-sm"
                 required
               />
-              <p className="text-gray-500">
+              <p className="text-sm text-gray-500">
                 英数字・ハイフン・アンダースコアのみ、3-30文字
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">メールアドレス</Label>
+              <Label htmlFor="email" className="text-sm">メールアドレス</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@example.com"
+                className="text-sm"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">パスワード</Label>
+              <Label htmlFor="password" className="text-sm">パスワード</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                className="text-sm"
                 required
               />
-              <p className="text-gray-500">8文字以上</p>
+              <p className="text-sm text-gray-500">8文字以上</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">パスワード確認</Label>
+              <Label htmlFor="confirmPassword" className="text-sm">パスワード確認</Label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
+                className="text-sm"
                 required
               />
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full text-sm" disabled={loading}>
               {loading ? '登録中...' : '登録'}
             </Button>
 
-            <div className="text-center text-gray-600">
+            <div className="text-center text-sm text-gray-600">
               既にアカウントをお持ちの方は
               <button
                 type="button"

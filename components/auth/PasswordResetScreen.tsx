@@ -51,39 +51,40 @@ export const PasswordResetScreen: React.FC<PasswordResetScreenProps> = ({
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>パスワードリセット</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             パスワードをリセットするためのメールを送信します
           </CardDescription>
         </CardHeader>
         <CardContent>
           {sent ? (
             <div className="space-y-4">
-              <p className="text-gray-600">
+              <p className="text-sm text-gray-600">
                 パスワードリセット用のメールを送信しました。メール内のリンクをクリックして、新しいパスワードを設定してください。
               </p>
-              <Button onClick={onSwitchToLogin} className="w-full">
+              <Button onClick={onSwitchToLogin} className="w-full text-sm">
                 ログイン画面に戻る
               </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">メールアドレス</Label>
+                <Label htmlFor="email" className="text-sm">メールアドレス</Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@example.com"
+                  className="text-sm"
                   required
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full text-sm" disabled={loading}>
                 {loading ? '送信中...' : 'リセットメールを送信'}
               </Button>
 
-              <div className="text-center text-gray-600">
+              <div className="text-center text-sm text-gray-600">
                 <button
                   type="button"
                   onClick={onSwitchToLogin}

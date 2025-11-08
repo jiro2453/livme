@@ -109,9 +109,9 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100vw-2rem)] max-w-md sm:w-full">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-md sm:w-full shadow-sm border border-primary/30 bg-white">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">
+          <DialogTitle className="text-[21px] font-bold text-center">
             {editingLive ? 'ライブ編集' : 'ライブ追加'}
           </DialogTitle>
         </DialogHeader>
@@ -124,7 +124,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
               value={artist}
               onChange={(e) => setArtist(e.target.value)}
               placeholder="山田太郎"
-              className="text-sm"
+              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
               required
             />
           </div>
@@ -136,7 +136,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="text-sm"
+              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
               required
             />
           </div>
@@ -148,7 +148,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
               value={venue}
               onChange={(e) => setVenue(e.target.value)}
               placeholder="渋谷クラブクアトロ"
-              className="text-sm"
+              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
               required
             />
           </div>
@@ -160,16 +160,16 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="ライブの詳細説明"
-              className="text-sm"
+              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
               rows={3}
             />
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose} className="text-sm">
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button type="button" variant="outline" onClick={onClose} className="text-sm h-12 font-medium">
               キャンセル
             </Button>
-            <Button type="submit" disabled={loading} className="text-sm">
+            <Button type="submit" disabled={loading} className="text-sm h-12 font-medium">
               {loading ? '保存中...' : editingLive ? '更新' : '追加'}
             </Button>
           </DialogFooter>

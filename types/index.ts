@@ -22,7 +22,6 @@ export interface Live {
   artist: string;
   date: string;
   venue: string;
-  description?: string;
   image_url?: string;
   created_by: string;
   created_at?: string;

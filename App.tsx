@@ -237,16 +237,22 @@ const AppContent: React.FC = () => {
       console.log('handleLiveClick: Current user.id (UUID):', user?.id);
       console.log('handleLiveClick: Current user.user_id (string):', user?.user_id);
 
-      // 自分自身が参加者リストに含まれている場合のみ、先頭に配置（UUIDを使用）
-      if (user && attendees.includes(user.id)) {
-        const sortedAttendees = [
-          user.id,  // UUIDを使用
-          ...attendees.filter(id => id !== user.id)
-        ];
-        console.log('handleLiveClick: Sorted attendees (user attending):', sortedAttendees);
-        setAttendeeUserIds(sortedAttendees);
+      // 自分自身が参加者リストに含まれている場合、必ず先頭に配置（UUIDを使用）
+      if (user) {
+        const isUserAttending = attendees.some(id => id === user.id);
+        console.log('handleLiveClick: Is user attending?', isUserAttending);
+
+        if (isUserAttending) {
+          // 自分を先頭に、それ以外を元の順序で配置
+          const otherAttendees = attendees.filter(id => id !== user.id);
+          const sortedAttendees = [user.id, ...otherAttendees];
+          console.log('handleLiveClick: Sorted attendees (user at front):', sortedAttendees);
+          setAttendeeUserIds(sortedAttendees);
+        } else {
+          console.log('handleLiveClick: User not attending, using original list:', attendees);
+          setAttendeeUserIds(attendees);
+        }
       } else {
-        console.log('handleLiveClick: User not attending, using original list:', attendees);
         setAttendeeUserIds(attendees);
       }
     } catch (error) {
@@ -270,16 +276,22 @@ const AppContent: React.FC = () => {
       console.log('handleProfileLiveClick: Retrieved attendees:', attendees);
       console.log('handleProfileLiveClick: Current user.id (UUID):', user?.id);
 
-      // 自分自身が参加者リストに含まれている場合のみ、先頭に配置（UUIDを使用）
-      if (user && attendees.includes(user.id)) {
-        const sortedAttendees = [
-          user.id,  // UUIDを使用
-          ...attendees.filter(id => id !== user.id)
-        ];
-        console.log('handleProfileLiveClick: Sorted attendees (user attending):', sortedAttendees);
-        setProfileModalAttendeeUserIds(sortedAttendees);
+      // 自分自身が参加者リストに含まれている場合、必ず先頭に配置（UUIDを使用）
+      if (user) {
+        const isUserAttending = attendees.some(id => id === user.id);
+        console.log('handleProfileLiveClick: Is user attending?', isUserAttending);
+
+        if (isUserAttending) {
+          // 自分を先頭に、それ以外を元の順序で配置
+          const otherAttendees = attendees.filter(id => id !== user.id);
+          const sortedAttendees = [user.id, ...otherAttendees];
+          console.log('handleProfileLiveClick: Sorted attendees (user at front):', sortedAttendees);
+          setProfileModalAttendeeUserIds(sortedAttendees);
+        } else {
+          console.log('handleProfileLiveClick: User not attending, using original list:', attendees);
+          setProfileModalAttendeeUserIds(attendees);
+        }
       } else {
-        console.log('handleProfileLiveClick: User not attending, using original list:', attendees);
         setProfileModalAttendeeUserIds(attendees);
       }
     } catch (error) {

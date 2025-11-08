@@ -144,9 +144,10 @@ const AppContent: React.FC = () => {
 
   const handleDeleteLive = async (liveId: string) => {
     if (!confirm('本当に削除しますか?')) return;
+    if (!user) return;
 
     try {
-      const success = await deleteLive(liveId);
+      const success = await deleteLive(liveId, user.id);
       if (success) {
         toast({
           title: '削除しました',

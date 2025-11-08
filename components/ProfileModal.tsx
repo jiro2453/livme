@@ -694,7 +694,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         key={live.id}
                         live={live}
                         isOwner={false}
-                        onEdit={() => {}}
                         onDelete={() => {}}
                         onClick={() => onLiveClick?.(live)}
                       />

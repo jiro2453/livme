@@ -13,7 +13,6 @@ import { cn } from '../lib/utils';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Textarea } from './ui/textarea';
 import { useToast } from '../hooks/useToast';
 import { createLive, updateLive } from '../lib/api';
 import type { Live } from '../types';
@@ -36,7 +35,6 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
   const [artist, setArtist] = useState('');
   const [date, setDate] = useState('');
   const [venue, setVenue] = useState('');
-  const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -45,7 +43,6 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
       setArtist(editingLive.artist);
       setDate(editingLive.date);
       setVenue(editingLive.venue);
-      setDescription(editingLive.description || '');
     } else {
       resetForm();
     }
@@ -55,7 +52,6 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
     setArtist('');
     setDate('');
     setVenue('');
-    setDescription('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,7 +74,6 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
         artist,
         date,
         venue,
-        description: description || undefined,
       };
 
       if (editingLive) {
@@ -167,18 +162,6 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
                 placeholder="渋谷クラブクアトロ"
                 className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm">説明</Label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="ライブの詳細説明"
-                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
-                rows={3}
               />
             </div>
 

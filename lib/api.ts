@@ -252,14 +252,15 @@ export const updateLive = async (liveId: string, updates: Partial<Live>): Promis
   return data;
 };
 
-export const deleteLive = async (liveId: string): Promise<boolean> => {
+export const deleteLive = async (liveId: string, userId: string): Promise<boolean> => {
   const { error } = await supabase
-    .from('lives')
+    .from('live_attendees')
     .delete()
-    .eq('id', liveId);
+    .eq('live_id', liveId)
+    .eq('user_id', userId);
 
   if (error) {
-    console.error('Error deleting live:', error);
+    console.error('Error deleting live attendee:', error);
     return false;
   }
 

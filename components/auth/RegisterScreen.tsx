@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 import { useToast } from '../../hooks/useToast';
 
 interface RegisterScreenProps {
@@ -85,112 +84,102 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">
-      {/* ロゴ */}
-      <div className="mb-8">
-        <img
-          src="/LiVME_2.png"
-          alt="LiVME Logo"
-          className="h-16 w-auto"
-          onError={(e) => {
-            // 画像が見つからない場合のフォールバック
-            e.currentTarget.style.display = 'none';
-            const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-            if (fallback) fallback.style.display = 'block';
-          }}
-        />
-        {/* フォールバックテキスト */}
-        <h1 className="text-4xl font-bold text-primary" style={{ display: 'none' }}>
-          LiVME
-        </h1>
-      </div>
+    <div className="flex items-center justify-center min-h-screen p-4 bg-[#f8f9fa]">
+      <Card className="w-full max-w-md shadow-sm border border-primary/30 bg-white">
+        <CardContent className="pt-8 pb-6 px-10">
+          {/* ロゴ */}
+          <div className="flex justify-center mb-6">
+            <img
+              src="/LiVME_2.png"
+              alt="LiVME Logo"
+              className="h-20 w-auto"
+            />
+          </div>
 
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle>新規登録</CardTitle>
-          <CardDescription className="text-sm">新しいアカウントを作成してください</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm">名前</Label>
+          {/* タイトル */}
+          <h1 className="text-[21px] font-bold text-center mb-8">新規登録</h1>
+          <form onSubmit={handleSubmit}>
+            {/* 名前 */}
+            <div className="mb-6">
               <Input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="山田 太郎"
-                className="text-sm"
+                placeholder="名前"
+                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="userId" className="text-sm">ユーザーID</Label>
+            {/* ユーザーID */}
+            <div className="mb-6">
               <Input
                 id="userId"
                 type="text"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                placeholder="yamada_taro"
-                className="text-sm"
+                placeholder="ユーザーID（英数字・ハイフン・アンダースコア 3-30文字）"
+                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
               />
-              <p className="text-sm text-gray-500">
-                英数字・ハイフン・アンダースコアのみ、3-30文字
-              </p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm">メールアドレス</Label>
+            {/* メールアドレス */}
+            <div className="mb-6">
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@example.com"
-                className="text-sm"
+                placeholder="メールアドレス"
+                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm">パスワード</Label>
+            {/* パスワード */}
+            <div className="mb-6">
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="text-sm"
+                placeholder="パスワード（8文字以上）"
+                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
               />
-              <p className="text-sm text-gray-500">8文字以上</p>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-sm">パスワード確認</Label>
+            {/* パスワード確認 */}
+            <div className="mb-6">
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                className="text-sm"
+                placeholder="パスワード確認"
+                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
 
-            <Button type="submit" className="w-full text-sm" disabled={loading}>
+            {/* 登録ボタン */}
+            <Button
+              type="submit"
+              className="w-full h-12 text-base font-medium mb-8"
+              disabled={loading}
+            >
               {loading ? '登録中...' : '登録'}
             </Button>
 
+            {/* ログインリンク */}
             <div className="text-center text-sm text-gray-600">
-              既にアカウントをお持ちの方は
+              アカウントをお持ちの方は{' '}
               <button
                 type="button"
                 onClick={onSwitchToLogin}
-                className="text-primary hover:underline ml-1"
+                className="text-primary hover:underline font-medium"
               >
                 ログイン
               </button>

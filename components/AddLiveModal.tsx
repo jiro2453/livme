@@ -15,7 +15,6 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/useToast';
 import { createLive } from '../lib/api';
-import type { Live } from '../types';
 
 interface AddLiveModalProps {
   isOpen: boolean;

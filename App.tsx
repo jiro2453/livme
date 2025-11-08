@@ -49,7 +49,6 @@ const AppContent: React.FC = () => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isAddLiveModalOpen, setIsAddLiveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [editingLive, setEditingLive] = useState<Live | null>(null);
 
   // Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -167,14 +166,8 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const handleEditLive = (live: Live) => {
-    setEditingLive(live);
-    setIsAddLiveModalOpen(true);
-  };
-
   const handleCloseAddLiveModal = () => {
     setIsAddLiveModalOpen(false);
-    setEditingLive(null);
   };
 
   const handleOpenProfile = () => {
@@ -469,7 +462,6 @@ const AppContent: React.FC = () => {
                           key={live.id}
                           live={live}
                           isOwner={live.created_by === user.id}
-                          onEdit={handleEditLive}
                           onDelete={handleDeleteLive}
                           onClick={handleLiveClick}
                         />
@@ -506,7 +498,6 @@ const AppContent: React.FC = () => {
         onClose={handleCloseAddLiveModal}
         userId={user.id}
         onSuccess={loadLives}
-        editingLive={editingLive}
       />
 
       <ShareModal

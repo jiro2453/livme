@@ -14,7 +14,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/useToast';
-import { createLive, updateLive } from '../lib/api';
+import { createLive } from '../lib/api';
 import type { Live } from '../types';
 
 interface AddLiveModalProps {
@@ -22,7 +22,6 @@ interface AddLiveModalProps {
   onClose: () => void;
   userId: string;
   onSuccess: () => void;
-  editingLive?: Live | null;
 }
 
 export const AddLiveModal: React.FC<AddLiveModalProps> = ({
@@ -30,7 +29,6 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
   onClose,
   userId,
   onSuccess,
-  editingLive,
 }) => {
   const [artist, setArtist] = useState('');
   const [date, setDate] = useState('');
@@ -39,14 +37,10 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
   const { toast } = useToast();
 
   useEffect(() => {
-    if (editingLive) {
-      setArtist(editingLive.artist);
-      setDate(editingLive.date);
-      setVenue(editingLive.venue);
-    } else {
+    if (!isOpen) {
       resetForm();
     }
-  }, [editingLive, isOpen]);
+  }, [isOpen]);
 
   const resetForm = () => {
     setArtist('');
@@ -76,21 +70,12 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
         venue,
       };
 
-      if (editingLive) {
-        await updateLive(editingLive.id, liveData);
-        toast({
-          title: '更新しました',
-          description: 'ライブ情報を更新しました',
-          variant: 'success',
-        });
-      } else {
-        await createLive(liveData);
-        toast({
-          title: '追加しました',
-          description: '新しいライブを追加しました',
-          variant: 'success',
-        });
-      }
+      await createLive(liveData);
+      toast({
+        title: '追加しました',
+        description: '新しいライブを追加しました',
+        variant: 'success',
+      });
 
       resetForm();
       onSuccess();
@@ -124,7 +109,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
 
           <DialogHeader>
             <DialogTitle className="text-[21px] font-bold text-center">
-              {editingLive ? 'ライブ編集' : 'ライブ追加'}
+              ライブ追加
             </DialogTitle>
           </DialogHeader>
 
@@ -170,7 +155,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
                 キャンセル
               </Button>
               <Button type="submit" disabled={loading} className="text-sm h-12 font-medium">
-                {loading ? '保存中...' : editingLive ? '更新' : '追加'}
+                {loading ? '追加中...' : '追加'}
               </Button>
             </DialogFooter>
           </form>

@@ -104,7 +104,14 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
       }, [] as User[]);
 
       console.log('LiveAttendeesModal: Unique users:', uniqueUsers.length);
-      setAttendees(uniqueUsers);
+
+      // attendeeUserIdsの順序に従ってソート（自分が1番目になるように）
+      const sortedUsers = attendeeUserIds
+        .map(id => uniqueUsers.find(user => user.id === id))
+        .filter((user): user is User => user !== undefined);
+
+      console.log('LiveAttendeesModal: Sorted users (preserving order):', sortedUsers.map(u => u.id));
+      setAttendees(sortedUsers);
     } catch (error) {
       console.error('Error loading attendees:', error);
     } finally {

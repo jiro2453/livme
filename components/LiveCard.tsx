@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from './ui/card';
-import { MapPin, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { MapPin, MoreVertical, Trash2 } from 'lucide-react';
 import type { Live } from '../types';
 
 interface LiveCardProps {
   live: Live;
   isOwner: boolean;
-  onEdit?: (live: Live) => void;
   onDelete?: (liveId: string) => void;
   onClick?: (live: Live) => void;
 }
@@ -14,7 +13,6 @@ interface LiveCardProps {
 export const LiveCard: React.FC<LiveCardProps> = ({
   live,
   isOwner,
-  onEdit,
   onDelete,
   onClick,
 }) => {
@@ -77,16 +75,6 @@ export const LiveCard: React.FC<LiveCardProps> = ({
                     onClick={() => setShowMenu(false)}
                   />
                   <div className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32">
-                    <button
-                      onClick={() => {
-                        onEdit?.(live);
-                        setShowMenu(false);
-                      }}
-                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
-                    >
-                      <Pencil className="h-4 w-4" />
-                      編集
-                    </button>
                     <button
                       onClick={() => {
                         onDelete?.(live.id);

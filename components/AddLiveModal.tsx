@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
 import {
   Dialog,
-  DialogContent,
+  DialogPortal,
+  DialogOverlay,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from './ui/dialog';
+import { cn } from '../lib/utils';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -109,72 +113,86 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100vw-2rem)] max-w-md sm:w-full shadow-sm border border-primary/30 bg-white">
-        <DialogHeader>
-          <DialogTitle className="text-[21px] font-bold text-center">
-            {editingLive ? 'ライブ編集' : 'ライブ追加'}
-          </DialogTitle>
-        </DialogHeader>
+      <DialogPortal>
+        <DialogOverlay style={{ zIndex: 120 }} />
+        <DialogPrimitive.Content
+          className={cn(
+            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+            "w-[calc(100vw-2rem)] max-w-md sm:w-full shadow-sm border border-primary/30 bg-white"
+          )}
+          style={{ zIndex: 120 }}
+        >
+          <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-gray-100">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="artist" className="text-sm">アーティスト名 *</Label>
-            <Input
-              id="artist"
-              value={artist}
-              onChange={(e) => setArtist(e.target.value)}
-              placeholder="山田太郎"
-              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
-              required
-            />
-          </div>
+          <DialogHeader>
+            <DialogTitle className="text-[21px] font-bold text-center">
+              {editingLive ? 'ライブ編集' : 'ライブ追加'}
+            </DialogTitle>
+          </DialogHeader>
 
-          <div className="space-y-2">
-            <Label htmlFor="date" className="text-sm">日付 *</Label>
-            <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="artist" className="text-sm">アーティスト名 *</Label>
+              <Input
+                id="artist"
+                value={artist}
+                onChange={(e) => setArtist(e.target.value)}
+                placeholder="山田太郎"
+                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                required
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="venue" className="text-sm">会場 *</Label>
-            <Input
-              id="venue"
-              value={venue}
-              onChange={(e) => setVenue(e.target.value)}
-              placeholder="渋谷クラブクアトロ"
-              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
-              required
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="date" className="text-sm">日付 *</Label>
+              <Input
+                id="date"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                required
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm">説明</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="ライブの詳細説明"
-              className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
-              rows={3}
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="venue" className="text-sm">会場 *</Label>
+              <Input
+                id="venue"
+                value={venue}
+                onChange={(e) => setVenue(e.target.value)}
+                placeholder="渋谷クラブクアトロ"
+                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                required
+              />
+            </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button type="button" variant="outline" onClick={onClose} className="text-sm h-12 font-medium">
-              キャンセル
-            </Button>
-            <Button type="submit" disabled={loading} className="text-sm h-12 font-medium">
-              {loading ? '保存中...' : editingLive ? '更新' : '追加'}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
+            <div className="space-y-2">
+              <Label htmlFor="description" className="text-sm">説明</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="ライブの詳細説明"
+                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                rows={3}
+              />
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button type="button" variant="outline" onClick={onClose} className="text-sm h-12 font-medium">
+                キャンセル
+              </Button>
+              <Button type="submit" disabled={loading} className="text-sm h-12 font-medium">
+                {loading ? '保存中...' : editingLive ? '更新' : '追加'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogPrimitive.Content>
+      </DialogPortal>
     </Dialog>
   );
 };

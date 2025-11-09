@@ -391,7 +391,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               transition={{ delay: 0.55 }}
                               className="w-full"
                             >
-                              <div className="grid grid-cols-3 gap-0.5 justify-items-center">
+                              <div className="flex flex-wrap gap-x-0 gap-y-0.5 justify-center max-w-[144px] mx-auto">
                                 {currentAttendee.galleryImages.map((image: string, index: number) => (
                                   <motion.div
                                     key={index}

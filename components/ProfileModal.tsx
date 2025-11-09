@@ -744,6 +744,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     console.log('formData.avatar:', formData.avatar);
                     // Initialize selectedAvatar with current avatar when entering edit mode
                     setSelectedAvatar(displayUser?.avatar || formData.avatar || '');
+                    // Reset userIdStatus to idle when entering edit mode
+                    setUserIdStatus('idle');
+                    // Clear any previous errors
+                    setErrors({});
                     console.log('Setting isEditing to true');
                     setIsEditing(true);
                   }}

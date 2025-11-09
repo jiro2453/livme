@@ -5,14 +5,12 @@ import type { Live } from '../types';
 
 interface LiveCardProps {
   live: Live;
-  isOwner: boolean;
   onDelete?: (liveId: string) => void;
   onClick?: (live: Live) => void;
 }
 
 export const LiveCard: React.FC<LiveCardProps> = ({
   live,
-  isOwner,
   onDelete,
   onClick,
 }) => {

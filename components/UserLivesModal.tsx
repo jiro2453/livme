@@ -149,7 +149,6 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
                                 key={live.id}
                                 live={live}
                                 onClick={handleLiveClick}
-                                isOwner={false}
                               />
                             ))}
                           </div>

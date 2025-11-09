@@ -20,7 +20,7 @@ import {
   AccordionTrigger,
 } from './components/ui/accordion';
 import { Plus, User as UserIcon, LogOut, Calendar, Search } from 'lucide-react';
-import { getLivesByUserId, deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId } from './lib/api';
+import { deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId } from './lib/api';
 import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
 import { useProfileRouting } from './hooks/useProfileRouting';
@@ -98,30 +98,15 @@ const AppContent: React.FC = () => {
       console.log('User ID (UUID):', user.id);
       console.log('User ID (string):', user.user_id);
 
-      // Get both created lives and attended lives
-      const [createdLives, attendedLives] = await Promise.all([
-        getLivesByUserId(user.id),
-        getAttendedLivesByUserId(user.id),
-      ]);
+      // Get only attended lives from LiveAttendees table
+      const attendedLives = await getAttendedLivesByUserId(user.id);
 
-      console.log('Created lives:', createdLives.length);
       console.log('Attended lives:', attendedLives.length);
 
-      // Merge and remove duplicates based on ID
-      const allLives = [...createdLives, ...attendedLives];
-      const uniqueLives = allLives.reduce((acc, live) => {
-        if (!acc.some(l => l.id === live.id)) {
-          acc.push(live);
-        }
-        return acc;
-      }, [] as Live[]);
-
-      console.log('Total unique lives:', uniqueLives.length);
-
       // Sort by date (newest first)
-      uniqueLives.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      attendedLives.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-      setLives(uniqueLives);
+      setLives(attendedLives);
     } catch (error) {
       console.error('Error loading lives:', error);
       toast({

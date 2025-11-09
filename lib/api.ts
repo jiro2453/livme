@@ -126,6 +126,7 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
   console.log('=== updateUser called ===');
   console.log('userId:', userId);
   console.log('updates:', updates);
+  console.log('updates.bio:', updates.bio);
 
   // Convert camelCase to snake_case for database
   const dbUpdates: any = { ...updates };
@@ -143,6 +144,7 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
   }
 
   console.log('dbUpdates (for database):', dbUpdates);
+  console.log('dbUpdates.bio:', dbUpdates.bio);
 
   const { data, error } = await supabase
     .from('users')
@@ -162,13 +164,19 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
   }
 
   console.log('Update successful, data:', data);
+  console.log('data.bio:', data.bio);
 
   // Convert snake_case to camelCase for UI
-  return {
+  const result = {
     ...data,
     socialLinks: data.social_links,
     galleryImages: data.images,
   };
+
+  console.log('Returning result:', result);
+  console.log('result.bio:', result.bio);
+
+  return result;
 };
 
 // Alias for profile modal

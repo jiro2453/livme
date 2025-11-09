@@ -276,7 +276,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                 className="bg-white rounded-2xl shadow-xl overflow-hidden relative"
                 style={{
                   height: '400px',
-                  paddingTop: '2rem',
+                  paddingTop: '1.5rem',
                   transformStyle: 'preserve-3d',
                   zIndex: 10,
                 }}
@@ -318,7 +318,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       }}
                     >
                       {currentAttendee && (
-                        <div className="flex flex-col items-center space-y-4 w-full max-h-full overflow-y-auto px-8 py-4 scrollbar-hide">
+                        <div className="flex flex-col items-center space-y-2 w-full px-6">
                           {/* アバター */}
                           <motion.div
                             initial={{ scale: 0 }}
@@ -331,13 +331,13 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             className="relative"
                           >
                             <motion.div
-                              className="h-[84px] w-[84px]"
+                              className="h-[64px] w-[64px]"
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
                               <Avatar className="h-full w-full">
                                 <AvatarImage src={currentAttendee.avatar} />
-                                <AvatarFallback className="bg-gray-400 text-white text-3xl">
+                                <AvatarFallback className="bg-gray-400 text-white text-2xl">
                                   {currentAttendee.name?.charAt(0) || 'U'}
                                 </AvatarFallback>
                               </Avatar>
@@ -351,7 +351,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             transition={{ delay: 0.3 }}
                             className="text-center"
                           >
-                            <h3 className="text-lg font-semibold mb-2 text-black">
+                            <h3 className="text-base font-semibold text-black">
                               {currentAttendee.name}
                             </h3>
                           </motion.div>
@@ -363,8 +363,8 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             transition={{ delay: 0.35 }}
                             className="flex items-center justify-center gap-1"
                           >
-                            <span className="text-gray-500 font-medium">@</span>
-                            <span className="text-sm text-gray-600">{currentAttendee.user_id}</span>
+                            <span className="text-gray-500 font-medium text-xs">@</span>
+                            <span className="text-xs text-gray-600">{currentAttendee.user_id}</span>
                           </motion.div>
 
                           {/* Bio */}
@@ -375,7 +375,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               transition={{ delay: 0.4 }}
                               className="text-center"
                             >
-                              <p className="text-sm text-gray-600 max-w-xs mx-auto line-clamp-3">
+                              <p className="text-xs text-gray-600 max-w-xs mx-auto line-clamp-2">
                                 {currentAttendee.bio}
                               </p>
                             </motion.div>
@@ -419,7 +419,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                                     <img
                                       src={image}
                                       alt={`Gallery ${index + 1}`}
-                                      className="w-16 h-16 object-cover rounded-lg border border-gray-200"
+                                      className="w-12 h-12 object-cover rounded-lg border border-gray-200"
                                       loading="lazy"
                                       decoding="async"
                                     />
@@ -442,7 +442,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                                   onViewProfile(currentAttendee.user_id);
                                   onClose();
                                 }}
-                                className="w-full bg-white border-2 border-primary text-primary rounded-full px-6 py-2 text-sm font-medium hover:bg-primary/5 transition-colors"
+                                className="w-full bg-white border-2 border-primary text-primary rounded-full px-6 py-1.5 text-sm font-medium hover:bg-primary/5 transition-colors"
                               >
                                 もっとみる
                               </button>

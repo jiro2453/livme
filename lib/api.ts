@@ -233,6 +233,20 @@ export const createLive = async (live: Omit<Live, 'id' | 'created_at' | 'updated
     return null;
   }
 
+  // Add the creator to live_attendees table
+  const { error: attendeeError } = await supabase
+    .from('live_attendees')
+    .insert({
+      live_id: data.id,
+      user_id: live.created_by
+    });
+
+  if (attendeeError) {
+    console.error('Error adding creator to live_attendees:', attendeeError);
+    // Note: We don't return null here because the live was created successfully
+    // The attendee entry is a secondary operation
+  }
+
   return data;
 };
 

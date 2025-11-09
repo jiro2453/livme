@@ -693,8 +693,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <LiveCard
                         key={live.id}
                         live={live}
-                        onDelete={() => {}}
                         onClick={() => onLiveClick?.(live)}
+                        showMenuButton={false}
                       />
                     ))}
                   </div>

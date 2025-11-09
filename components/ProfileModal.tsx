@@ -1123,7 +1123,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // 編集モードのボタン部分
   const editModeButtons = isOwnProfile && isEditing ? (
-    <div className="flex-shrink-0 bg-white border-t border-gray-200 p-4 flex gap-3 safe-area-inset-bottom">
+    <div className="flex-shrink-0 w-full bg-white border-t border-gray-200 px-4 py-3 sm:py-4 flex gap-3">
       <button
         type="button"
         onClick={() => {
@@ -1134,7 +1134,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           console.log('Button disabled?:', isSaving || isCheckingUserId || userIdStatus === 'taken');
           handleSave();
         }}
-        className="flex-1 bg-primary text-white text-sm rounded-full px-8 py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex-1 bg-primary text-white text-sm rounded-full px-6 py-2.5 sm:px-8 sm:py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         disabled={isSaving || isCheckingUserId || userIdStatus === 'taken'}
       >
         {isSaving ? '保存中...' : '保存する'}
@@ -1142,7 +1142,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       <button
         type="button"
         onClick={handleCancel}
-        className="flex-1 text-sm rounded-full px-6 py-3 border border-input bg-background hover:bg-gray-100 disabled:opacity-50"
+        className="flex-1 text-sm rounded-full px-5 py-2.5 sm:px-6 sm:py-3 border border-input bg-white hover:bg-gray-100 disabled:opacity-50 transition-colors"
         disabled={isSaving}
       >
         キャンセル
@@ -1155,8 +1155,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       {/* 自分のプロフィール: モーダル表示 */}
       {isOwnProfile ? (
         <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
-          <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[85vh] sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full">
-            <div className="flex-1 overflow-y-auto px-4 py-6 sm:p-8 pb-safe">
+          <DialogContent className="w-[calc(100vw-2rem)] max-w-md h-[95vh] sm:h-auto sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full !top-[2.5vh] !translate-y-0 sm:!top-[50%] sm:!translate-y-[-50%]">
+            <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-8 sm:py-6">
               {ownProfileContentMain}
             </div>
             {editModeButtons}

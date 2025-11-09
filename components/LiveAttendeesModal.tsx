@@ -197,6 +197,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
         <DialogContent
           className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none sm:w-full"
           style={{ zIndex }}
+          onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}

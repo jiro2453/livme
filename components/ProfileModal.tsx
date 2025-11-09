@@ -707,9 +707,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     </div>
   );
 
-  // 自分用のコンテンツ（従来のプロフィール編集UI）
-  const ownProfileContent = (
-    <div className="p-8 space-y-6">
+  // 自分用のコンテンツ（従来のプロフィール編集UI）- ボタン部分は除く
+  const ownProfileContentMain = (
+    <div className="space-y-6">
             {/* Avatar Section */}
             <div className="flex flex-col items-center space-y-4">
               <Avatar className="w-28 h-28 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => isEditing && setShowAvatarSelector(true)}>
@@ -1115,45 +1115,48 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 )}
               </div>
             )}
-
-            {/* Action Buttons - Save/Cancel (shown only in edit mode) */}
-            {isOwnProfile && isEditing && (
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log('=== Save button clicked ===');
-                    console.log('isSaving:', isSaving);
-                    console.log('isCheckingUserId:', isCheckingUserId);
-                    console.log('userIdStatus:', userIdStatus);
-                    console.log('Button disabled?:', isSaving || isCheckingUserId || userIdStatus === 'taken');
-                    handleSave();
-                  }}
-                  className="flex-1 bg-primary text-white text-sm rounded-full px-8 py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isSaving || isCheckingUserId || userIdStatus === 'taken'}
-                >
-                  {isSaving ? '保存中...' : '保存する'}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="flex-1 text-sm rounded-full px-6 py-3 border border-input bg-background hover:bg-gray-100 disabled:opacity-50"
-                  disabled={isSaving}
-                >
-                  キャンセル
-                </button>
-              </div>
-            )}
           </div>
   );
+
+  // 編集モードのボタン部分
+  const editModeButtons = isOwnProfile && isEditing ? (
+    <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex gap-3">
+      <button
+        type="button"
+        onClick={() => {
+          console.log('=== Save button clicked ===');
+          console.log('isSaving:', isSaving);
+          console.log('isCheckingUserId:', isCheckingUserId);
+          console.log('userIdStatus:', userIdStatus);
+          console.log('Button disabled?:', isSaving || isCheckingUserId || userIdStatus === 'taken');
+          handleSave();
+        }}
+        className="flex-1 bg-primary text-white text-sm rounded-full px-8 py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isSaving || isCheckingUserId || userIdStatus === 'taken'}
+      >
+        {isSaving ? '保存中...' : '保存する'}
+      </button>
+      <button
+        type="button"
+        onClick={handleCancel}
+        className="flex-1 text-sm rounded-full px-6 py-3 border border-input bg-background hover:bg-gray-100 disabled:opacity-50"
+        disabled={isSaving}
+      >
+        キャンセル
+      </button>
+    </div>
+  ) : null;
 
   return (
     <>
       {/* 自分のプロフィール: モーダル表示 */}
       {isOwnProfile ? (
         <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
-          <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[96vh] sm:max-h-[90vh] overflow-y-auto bg-white sm:w-full !top-[2vh] !translate-y-0 sm:!top-[50%] sm:!translate-y-[-50%]">
-            {ownProfileContent}
+          <DialogContent className="w-[calc(100vw-2rem)] max-w-md h-[90vh] sm:h-auto sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full">
+            <div className="flex-1 overflow-y-auto p-8">
+              {ownProfileContentMain}
+            </div>
+            {editModeButtons}
           </DialogContent>
         </Dialog>
       ) : (

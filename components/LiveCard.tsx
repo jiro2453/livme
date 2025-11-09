@@ -74,18 +74,16 @@ export const LiveCard: React.FC<LiveCardProps> = ({
                   onClick={() => setShowMenu(false)}
                 />
                 <div className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32">
-                  {isOwner && (
-                    <button
-                      onClick={() => {
-                        onDelete?.(live.id);
-                        setShowMenu(false);
-                      }}
-                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-danger"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      削除
-                    </button>
-                  )}
+                  <button
+                    onClick={() => {
+                      onDelete?.(live.id);
+                      setShowMenu(false);
+                    }}
+                    className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-danger"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    削除
+                  </button>
                 </div>
               </>
             )}

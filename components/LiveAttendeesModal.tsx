@@ -418,14 +418,14 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.6 }}
-                              className="w-full"
+                              className="w-full text-center"
                             >
                               <button
                                 onClick={() => {
                                   onViewProfile(currentAttendee.user_id);
                                   onClose();
                                 }}
-                                className="w-full bg-white border-2 border-primary text-primary rounded-full px-4 py-1 text-xs font-medium hover:bg-primary/5 transition-colors"
+                                className="text-primary text-xs font-medium underline hover:text-primary/80 transition-colors"
                               >
                                 もっとみる
                               </button>

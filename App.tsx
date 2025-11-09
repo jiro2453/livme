@@ -11,6 +11,7 @@ import { EmptyState } from './components/EmptyState';
 import { SocialIcons } from './components/SocialIcons';
 import { ShareModal } from './components/ShareModal';
 import { LiveAttendeesModal } from './components/LiveAttendeesModal';
+import { ConfirmDialog } from './components/ConfirmDialog';
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar';
 import {
   Accordion,
@@ -49,6 +50,8 @@ const AppContent: React.FC = () => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isAddLiveModalOpen, setIsAddLiveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [liveToDelete, setLiveToDelete] = useState<string | null>(null);
 
   // Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,18 +145,31 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const handleDeleteLive = async (liveId: string) => {
-    if (!confirm('本当に削除しますか?')) return;
-    if (!user) return;
+  const handleDeleteLive = (liveId: string) => {
+    setLiveToDelete(liveId);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const confirmDeleteLive = async () => {
+    if (!user || !liveToDelete) return;
 
     try {
-      const success = await deleteLive(liveId, user.id);
+      const success = await deleteLive(liveToDelete, user.id);
       if (success) {
         toast({
           title: '削除しました',
           description: 'ライブ情報を削除しました',
           variant: 'success',
         });
+        // Close LiveAttendees modal if the deleted live is currently selected
+        if (selectedLive?.id === liveToDelete) {
+          setSelectedLive(null);
+          setAttendeeUserIds([]);
+        }
+        if (profileModalSelectedLive?.id === liveToDelete) {
+          setProfileModalSelectedLive(null);
+          setProfileModalAttendeeUserIds([]);
+        }
         loadLives();
       } else {
         throw new Error('削除に失敗しました');
@@ -164,6 +180,8 @@ const AppContent: React.FC = () => {
         description: 'ライブ情報の削除に失敗しました',
         variant: 'destructive',
       });
+    } finally {
+      setLiveToDelete(null);
     }
   };
 
@@ -521,6 +539,21 @@ const AppContent: React.FC = () => {
           zIndex={90}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => {
+          setIsDeleteConfirmOpen(false);
+          setLiveToDelete(null);
+        }}
+        onConfirm={confirmDeleteLive}
+        title="ライブを削除しますか？"
+        description="このライブへの参加を削除します。この操作は取り消せません。"
+        confirmText="削除"
+        cancelText="キャンセル"
+        variant="danger"
+      />
 
       <Toaster />
     </div>

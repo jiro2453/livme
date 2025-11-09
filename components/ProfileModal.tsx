@@ -1085,14 +1085,25 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       const day = date.getDate();
                       const weekday = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
 
+                      // 今日の日付と比較（時刻を無視）
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      const liveDate = new Date(live.date);
+                      liveDate.setHours(0, 0, 0, 0);
+                      const isPastLive = liveDate < today;
+
+                      // 過去のライブはグレー、未来のライブは緑
+                      const badgeColor = isPastLive ? 'bg-gray-400' : 'bg-primary';
+                      const borderColor = isPastLive ? 'border-gray-300' : 'border-primary';
+
                       return (
                         <div
                           key={live.id}
-                          className="p-3 rounded-lg border-2 border-primary bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+                          className={`p-3 rounded-lg border-2 ${borderColor} bg-white cursor-pointer hover:bg-gray-50 transition-colors`}
                           onClick={() => onLiveClick?.(live)}
                         >
                           <div className="flex items-center gap-3">
-                            <div className="bg-primary text-primary-foreground px-2 py-1 rounded text-center min-w-[60px]">
+                            <div className={`${badgeColor} text-white px-2 py-1 rounded text-center min-w-[60px]`}>
                               <div className="text-[10px] opacity-80 leading-tight">{year}</div>
                               <div className="text-xs font-medium leading-tight">{month}/{day}({weekday})</div>
                             </div>

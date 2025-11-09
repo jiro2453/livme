@@ -73,7 +73,8 @@ export const LiveCard: React.FC<LiveCardProps> = ({
                 />
                 <div className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32">
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onDelete?.(live.id);
                       setShowMenu(false);
                     }}

@@ -55,26 +55,26 @@ export const LiveCard: React.FC<LiveCardProps> = ({
           </div>
 
           {/* Menu Button */}
-          {isOwner && (
-            <div className="relative flex-shrink-0">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowMenu(!showMenu);
-                }}
-                className="p-1 hover:bg-gray-100 rounded"
-                aria-label="メニュー"
-              >
-                <MoreVertical className="h-5 w-5 text-gray-600" />
-              </button>
+          <div className="relative flex-shrink-0">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMenu(!showMenu);
+              }}
+              className="p-1 hover:bg-gray-100 rounded"
+              aria-label="メニュー"
+            >
+              <MoreVertical className="h-5 w-5 text-gray-600" />
+            </button>
 
-              {showMenu && (
-                <>
-                  <div
-                    className="fixed inset-0 z-10"
-                    onClick={() => setShowMenu(false)}
-                  />
-                  <div className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32">
+            {showMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setShowMenu(false)}
+                />
+                <div className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32">
+                  {isOwner && (
                     <button
                       onClick={() => {
                         onDelete?.(live.id);
@@ -85,11 +85,11 @@ export const LiveCard: React.FC<LiveCardProps> = ({
                       <Trash2 className="h-4 w-4" />
                       削除
                     </button>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -462,7 +462,6 @@ const AppContent: React.FC = () => {
                         <LiveCard
                           key={live.id}
                           live={live}
-                          isOwner={live.created_by === user.id}
                           onDelete={handleDeleteLive}
                           onClick={handleLiveClick}
                         />

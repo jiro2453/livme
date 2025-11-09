@@ -7,12 +7,14 @@ interface LiveCardProps {
   live: Live;
   onDelete?: (liveId: string) => void;
   onClick?: (live: Live) => void;
+  showMenuButton?: boolean;
 }
 
 export const LiveCard: React.FC<LiveCardProps> = ({
   live,
   onDelete,
   onClick,
+  showMenuButton = true,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -53,46 +55,48 @@ export const LiveCard: React.FC<LiveCardProps> = ({
           </div>
 
           {/* Menu Button */}
-          <div className="relative flex-shrink-0">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowMenu(!showMenu);
-              }}
-              className="p-1 hover:bg-gray-100 rounded"
-              aria-label="メニュー"
-            >
-              <MoreVertical className="h-5 w-5 text-gray-600" />
-            </button>
+          {showMenuButton && (
+            <div className="relative flex-shrink-0">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowMenu(!showMenu);
+                }}
+                className="p-1 hover:bg-gray-100 rounded"
+                aria-label="メニュー"
+              >
+                <MoreVertical className="h-5 w-5 text-gray-600" />
+              </button>
 
-            {showMenu && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowMenu(false);
-                  }}
-                />
-                <div
-                  className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button
+              {showMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onDelete?.(live.id);
                       setShowMenu(false);
                     }}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-danger"
+                  />
+                  <div
+                    className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <Trash2 className="h-4 w-4" />
-                    削除
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete?.(live.id);
+                        setShowMenu(false);
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-danger"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      削除
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

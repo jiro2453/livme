@@ -149,6 +149,7 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
                                 key={live.id}
                                 live={live}
                                 onClick={handleLiveClick}
+                                showMenuButton={false}
                               />
                             ))}
                           </div>

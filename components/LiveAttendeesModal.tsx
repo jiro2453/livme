@@ -64,7 +64,6 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareUserId, setShareUserId] = useState<string>('');
   const [direction, setDirection] = useState(0); // 1: 上スワイプ, -1: 下スワイプ
-  const galleryScrollRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen && attendeeUserIds.length > 0) {
@@ -72,17 +71,6 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
       setCurrentIndex(0);
     }
   }, [isOpen, attendeeUserIds]);
-
-  // ギャラリー画像を中央からスクロール開始（画像が複数ある場合のみ）
-  useEffect(() => {
-    if (galleryScrollRef.current && attendees[currentIndex]?.galleryImages && attendees[currentIndex].galleryImages.length > 1) {
-      const container = galleryScrollRef.current;
-      const scrollWidth = container.scrollWidth;
-      const clientWidth = container.clientWidth;
-      const centerPosition = (scrollWidth - clientWidth) / 2;
-      container.scrollLeft = centerPosition;
-    }
-  }, [currentIndex, attendees]);
 
   const loadAttendees = async () => {
     setLoading(true);
@@ -403,19 +391,13 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               transition={{ delay: 0.55 }}
                               className="w-full"
                             >
-                              <div
-                                ref={galleryScrollRef}
-                                className={`flex gap-2 overflow-x-auto pb-2 scrollbar-hide scroll-smooth ${
-                                  currentAttendee.galleryImages.length === 1 ? 'justify-center' : ''
-                                }`}
-                              >
+                              <div className="grid grid-cols-3 gap-2 justify-items-center">
                                 {currentAttendee.galleryImages.map((image: string, index: number) => (
                                   <motion.div
                                     key={index}
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 0.55 + index * 0.05 }}
-                                    className="flex-shrink-0"
                                   >
                                     <img
                                       src={image}

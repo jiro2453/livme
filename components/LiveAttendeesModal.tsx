@@ -320,13 +320,13 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             className="relative"
                           >
                             <motion.div
-                              className="h-[64px] w-[64px]"
+                              className="h-[80px] w-[80px]"
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
                               <Avatar className="h-full w-full">
                                 <AvatarImage src={currentAttendee.avatar} />
-                                <AvatarFallback className="bg-gray-400 text-white text-2xl">
+                                <AvatarFallback className="bg-gray-400 text-white text-3xl">
                                   {currentAttendee.name?.charAt(0) || 'U'}
                                 </AvatarFallback>
                               </Avatar>
@@ -391,7 +391,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               transition={{ delay: 0.55 }}
                               className="w-full"
                             >
-                              <div className="flex flex-wrap gap-x-0 gap-y-0.5 justify-center max-w-[144px] mx-auto">
+                              <div className="flex flex-wrap gap-x-0 gap-y-0.5 justify-center max-w-[180px] mx-auto">
                                 {currentAttendee.galleryImages.map((image: string, index: number) => (
                                   <motion.div
                                     key={index}
@@ -402,7 +402,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                                     <img
                                       src={image}
                                       alt={`Gallery ${index + 1}`}
-                                      className="w-12 h-12 object-cover rounded-lg border border-gray-200"
+                                      className="w-[60px] h-[60px] object-cover rounded-lg border border-gray-200"
                                       loading="lazy"
                                       decoding="async"
                                     />
@@ -425,7 +425,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                                   onViewProfile(currentAttendee.user_id);
                                   onClose();
                                 }}
-                                className="w-full bg-white border-2 border-primary text-primary rounded-full px-6 py-1.5 text-sm font-medium hover:bg-primary/5 transition-colors"
+                                className="w-full bg-white border-2 border-primary text-primary rounded-full px-4 py-1 text-xs font-medium hover:bg-primary/5 transition-colors"
                               >
                                 もっとみる
                               </button>

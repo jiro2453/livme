@@ -19,6 +19,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { signIn } = useAuth();
   const { toast } = useToast();
 
@@ -28,6 +29,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     console.log('🔵 Login form submitted', { email });
 
     setLoading(true);
+    setErrorMessage(''); // Clear previous errors
 
     try {
       console.log('🔵 Calling signIn...');
@@ -39,15 +41,27 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       });
     } catch (error: any) {
       console.error('❌ Login failed:', error);
+      const errorMsg = error.message || 'メールアドレスまたはパスワードが正しくありません';
+      setErrorMessage(errorMsg);
       toast({
         title: 'ログインに失敗しました',
-        description: error.message || 'メールアドレスまたはパスワードが正しくありません',
+        description: errorMsg,
         variant: 'destructive',
       });
     } finally {
       console.log('🔵 Login attempt finished');
       setLoading(false);
     }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setErrorMessage(''); // Clear error when user types
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setErrorMessage(''); // Clear error when user types
   };
 
   return (
@@ -73,7 +87,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 placeholder="メールアドレス"
                 required
                 className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
@@ -81,12 +95,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </div>
 
             {/* パスワード */}
-            <div className="relative mb-6">
+            <div className="relative mb-2">
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
                 placeholder="パスワード"
                 required
                 className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary pr-10"
@@ -103,6 +117,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 )}
               </button>
             </div>
+
+            {/* エラーメッセージ */}
+            {errorMessage && (
+              <div className="mb-4 text-red-600 text-sm">
+                {errorMessage}
+              </div>
+            )}
 
             {/* ログインボタン */}
             <Button

@@ -310,7 +310,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       dragConstraints={{ top: 0, bottom: 0 }}
                       dragElastic={0.2}
                       onDragEnd={handleDragEnd}
-                      className="absolute inset-0 p-8 flex items-center justify-center cursor-grab active:cursor-grabbing"
+                      className="absolute inset-0 flex items-center justify-center cursor-grab active:cursor-grabbing"
                       style={{
                         transformStyle: 'preserve-3d',
                         backfaceVisibility: 'hidden',
@@ -318,7 +318,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       }}
                     >
                       {currentAttendee && (
-                        <div className="flex flex-col items-center space-y-4 w-full">
+                        <div className="flex flex-col items-center space-y-4 w-full max-h-full overflow-y-auto px-8 py-4 scrollbar-hide">
                           {/* アバター */}
                           <motion.div
                             initial={{ scale: 0 }}
@@ -373,9 +373,9 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.4 }}
-                              className="text-center px-4"
+                              className="text-center"
                             >
-                              <p className="text-sm text-gray-600 max-w-xs mx-auto">
+                              <p className="text-sm text-gray-600 max-w-xs mx-auto line-clamp-3">
                                 {currentAttendee.bio}
                               </p>
                             </motion.div>
@@ -400,7 +400,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.55 }}
-                              className="w-full px-4"
+                              className="w-full"
                             >
                               <div
                                 ref={galleryScrollRef}
@@ -435,7 +435,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.6 }}
-                              className="w-full px-4"
+                              className="w-full"
                             >
                               <button
                                 onClick={() => {

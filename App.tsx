@@ -170,7 +170,8 @@ const AppContent: React.FC = () => {
           setProfileModalSelectedLive(null);
           setProfileModalAttendeeUserIds([]);
         }
-        loadLives();
+        // Remove the deleted live from the local state immediately
+        setLives(prevLives => prevLives.filter(live => live.id !== liveToDelete));
       } else {
         throw new Error('削除に失敗しました');
       }

@@ -1074,7 +1074,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Attended Lives Section */}
             {!isEditing && (
-              <div className="space-y-2">
+              <div className="space-y-2 pb-4">
                 <Label className="text-black font-medium text-center block text-sm">参加公演</Label>
                 {attendedLives.length > 0 ? (
                   <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1">
@@ -1115,12 +1115,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 )}
               </div>
             )}
+
+            {/* 編集モード時の下部スペース確保 */}
+            {isEditing && <div className="pb-4" />}
           </div>
   );
 
   // 編集モードのボタン部分
   const editModeButtons = isOwnProfile && isEditing ? (
-    <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex gap-3">
+    <div className="flex-shrink-0 bg-white border-t border-gray-200 p-4 flex gap-3 safe-area-inset-bottom">
       <button
         type="button"
         onClick={() => {
@@ -1152,8 +1155,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       {/* 自分のプロフィール: モーダル表示 */}
       {isOwnProfile ? (
         <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
-          <DialogContent className="w-[calc(100vw-2rem)] max-w-md h-[90vh] sm:h-auto sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full">
-            <div className="flex-1 overflow-y-auto p-8">
+          <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[85vh] sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full">
+            <div className="flex-1 overflow-y-auto px-4 py-6 sm:p-8 pb-safe">
               {ownProfileContentMain}
             </div>
             {editModeButtons}

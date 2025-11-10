@@ -5,7 +5,7 @@ import type { User, Live } from '../types';
 export const getUserById = async (userId: string): Promise<User | null> => {
   const { data, error } = await supabase
     .from('users')
-    .select('*')
+    .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
     .eq('id', userId)
     .single();
 
@@ -25,42 +25,25 @@ export const getUserById = async (userId: string): Promise<User | null> => {
 export const getUserByUserId = async (userId: string): Promise<User | null> => {
   console.log('getUserByUserId呼び出し:', userId);
 
-  // まずuser_idで検索
-  const { data: dataByUserId } = await supabase
+  // Single optimized query using OR condition
+  const { data, error } = await supabase
     .from('users')
-    .select('*')
-    .eq('user_id', userId)
+    .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
+    .or(`user_id.eq.${userId},id.eq.${userId}`)
     .maybeSingle();
 
-  if (dataByUserId) {
-    console.log(`取得したuser (user_idで) ${userId}:`, dataByUserId);
-    // Convert snake_case to camelCase for UI
-    return {
-      ...dataByUserId,
-      socialLinks: dataByUserId.social_links,
-      galleryImages: dataByUserId.images,
-    };
-  }
-
-  // user_idで見つからなければidで検索（UUID形式の場合）
-  const { data: dataById, error: errorById } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', userId)
-    .maybeSingle();
-
-  if (errorById) {
-    console.error(`Error fetching user ${userId}:`, errorById);
+  if (error) {
+    console.error(`Error fetching user ${userId}:`, error);
     return null;
   }
 
-  if (dataById) {
-    console.log(`取得したuser (idで) ${userId}:`, dataById);
+  if (data) {
+    console.log(`取得したuser ${userId}:`, data);
     // Convert snake_case to camelCase for UI
     return {
-      ...dataById,
-      socialLinks: dataById.social_links,
-      galleryImages: dataById.images,
+      ...data,
+      socialLinks: data.social_links,
+      galleryImages: data.images,
     };
   }
 
@@ -79,39 +62,18 @@ export const getUsersByIds = async (userIds: string[]): Promise<User[]> => {
   console.log('getUsersByIds呼び出し:', userIds);
   console.log('getUsersByIds: Number of IDs:', userIds.length);
 
-  // Try to fetch by UUID (id column) first
-  const { data: dataById, error: errorById } = await supabase
+  // Single optimized query using OR condition
+  const { data, error } = await supabase
     .from('users')
-    .select('*')
-    .in('id', userIds);
+    .select('id, user_id, name, bio, avatar, social_links, images, created_at, updated_at')
+    .or(`id.in.(${userIds.join(',')}),user_id.in.(${userIds.join(',')})`);
 
-  if (errorById) {
-    console.error('Error fetching users by id:', errorById);
+  if (error) {
+    console.error('Error fetching users:', error);
+    return [];
   }
 
-  let users = dataById || [];
-  console.log('getUsersByIds: Found by id:', users.length);
-
-  // If we didn't find all users, try by user_id column
-  if (users.length < userIds.length) {
-    const { data: dataByUserId, error: errorByUserId } = await supabase
-      .from('users')
-      .select('*')
-      .in('user_id', userIds);
-
-    if (errorByUserId) {
-      console.error('Error fetching users by user_id:', errorByUserId);
-    } else if (dataByUserId) {
-      console.log('getUsersByIds: Found by user_id:', dataByUserId.length);
-      // Merge results, avoiding duplicates
-      dataByUserId.forEach(user => {
-        if (!users.some(u => u.id === user.id)) {
-          users.push(user);
-        }
-      });
-    }
-  }
-
+  const users = data || [];
   console.log('getUsersByIds: Total found:', users.length);
 
   // Convert snake_case to camelCase for UI
@@ -150,7 +112,7 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     .from('users')
     .update(dbUpdates)
     .eq('id', userId)
-    .select()
+    .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
     .single();
 
   if (error) {
@@ -203,7 +165,7 @@ export const checkUserIdAvailability = async (userId: string): Promise<boolean> 
 export const getLivesByUserId = async (userId: string): Promise<Live[]> => {
   const { data, error } = await supabase
     .from('lives')
-    .select('*')
+    .select('id, artist, date, venue, image_url, created_by, created_at, updated_at')
     .eq('created_by', userId)
     .order('date', { ascending: false });
 
@@ -218,7 +180,7 @@ export const getLivesByUserId = async (userId: string): Promise<Live[]> => {
 export const getAllLives = async (): Promise<Live[]> => {
   const { data, error } = await supabase
     .from('lives')
-    .select('*')
+    .select('id, artist, date, venue, image_url, created_by, created_at, updated_at')
     .order('date', { ascending: false });
 
   if (error) {
@@ -233,7 +195,7 @@ export const createLive = async (live: Omit<Live, 'id' | 'created_at' | 'updated
   const { data, error } = await supabase
     .from('lives')
     .insert(live)
-    .select()
+    .select('id, artist, date, venue, image_url, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -263,7 +225,7 @@ export const updateLive = async (liveId: string, updates: Partial<Live>): Promis
     .from('lives')
     .update(updates)
     .eq('id', liveId)
-    .select()
+    .select('id, artist, date, venue, image_url, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -343,10 +305,10 @@ export const getAttendedLivesByUserId = async (userId: string): Promise<Live[]> 
   const liveIds = attendeeData.map(a => a.live_id);
   console.log('Found live IDs:', liveIds);
 
-  // Get live details
+  // Get live details - only select necessary fields
   const { data: livesData, error: livesError } = await supabase
     .from('lives')
-    .select('*')
+    .select('id, artist, date, venue, image_url, created_by, created_at, updated_at')
     .in('id', liveIds)
     .order('date', { ascending: false });
 

@@ -50,8 +50,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (data) {
         console.log('✅ User profile fetched:', { name: data.name, user_id: data.user_id });
-        setUser(data);
-        setUserProfile(data);
+        // Convert snake_case to camelCase for UI consistency
+        const userData = {
+          ...data,
+          socialLinks: data.social_links,
+          galleryImages: data.images,
+        };
+        setUser(userData);
+        setUserProfile(userData);
       } else {
         console.warn('⚠️ No user profile found for user:', userId);
       }
@@ -189,8 +195,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (error) throw error;
 
     if (data) {
-      setUser(data);
-      setUserProfile(data);
+      // Convert snake_case to camelCase for UI consistency
+      const userData = {
+        ...data,
+        socialLinks: data.social_links,
+        galleryImages: data.images,
+      };
+      setUser(userData);
+      setUserProfile(userData);
     }
   };
 

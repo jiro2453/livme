@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Toaster } from './components/ui/sonner';
 import { AuthScreen } from './components/auth/AuthScreen';
@@ -55,6 +55,9 @@ const AppContent: React.FC = () => {
   // Search
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Attendees cache to avoid redundant API calls
+  const attendeesCache = useRef<Map<string, string[]>>(new Map());
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -91,6 +94,9 @@ const AppContent: React.FC = () => {
     if (!user) return;
 
     setLoading(true);
+    // Clear attendees cache when reloading lives
+    attendeesCache.current.clear();
+
     try {
       console.log('=== Loading lives for user ===');
       console.log('User ID (UUID):', user.id);
@@ -214,9 +220,21 @@ const AppContent: React.FC = () => {
     // Handle live click from home screen -> ProfileRing z-90
     setSelectedLive(live);
 
-    // Fetch attendees for this live event
+    // Fetch attendees for this live event (with caching)
     try {
-      const attendees = await getUsersAttendingSameLive(live);
+      let attendees: string[];
+
+      // Check cache first
+      const cached = attendeesCache.current.get(live.id);
+      if (cached) {
+        console.log('handleLiveClick: Using cached attendees for live:', live.id);
+        attendees = cached;
+      } else {
+        console.log('handleLiveClick: Fetching attendees for live:', live.id);
+        attendees = await getUsersAttendingSameLive(live);
+        // Store in cache
+        attendeesCache.current.set(live.id, attendees);
+      }
 
       console.log('handleLiveClick: Retrieved attendees:', attendees);
       console.log('handleLiveClick: Current user.id (UUID):', user?.id);
@@ -254,9 +272,21 @@ const AppContent: React.FC = () => {
     // Handle live click from profile screen -> ProfileRing z-110
     setProfileModalSelectedLive(live);
 
-    // Fetch attendees for this live event
+    // Fetch attendees for this live event (with caching)
     try {
-      const attendees = await getUsersAttendingSameLive(live);
+      let attendees: string[];
+
+      // Check cache first
+      const cached = attendeesCache.current.get(live.id);
+      if (cached) {
+        console.log('handleProfileLiveClick: Using cached attendees for live:', live.id);
+        attendees = cached;
+      } else {
+        console.log('handleProfileLiveClick: Fetching attendees for live:', live.id);
+        attendees = await getUsersAttendingSameLive(live);
+        // Store in cache
+        attendeesCache.current.set(live.id, attendees);
+      }
 
       console.log('handleProfileLiveClick: Retrieved attendees:', attendees);
       console.log('handleProfileLiveClick: Current user.id (UUID):', user?.id);
@@ -476,6 +506,8 @@ const AppContent: React.FC = () => {
         isOwnProfile={true}
         onSuccess={() => {}}
         onLiveClick={handleProfileLiveClick}
+        attendedLives={lives}
+        currentUser={user || undefined}
       />
 
       <SettingsModal

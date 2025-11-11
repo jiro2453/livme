@@ -82,6 +82,8 @@ interface ProfileModalProps {
   isOwnProfile: boolean;
   onSuccess?: () => void;
   onLiveClick?: (live: Live) => void;
+  attendedLives?: Live[]; // Pass pre-fetched lives to avoid redundant API calls
+  currentUser?: User; // Pass current user data to avoid redundant API calls for own profile
 }
 
 // Preset avatar URLs - 9 images (3 animals, 3 landscapes, 3 abstract)
@@ -109,6 +111,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   isOwnProfile,
   onSuccess,
   onLiveClick,
+  attendedLives: preFetchedLives,
+  currentUser,
 }) => {
   const [displayUser, setDisplayUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -159,11 +163,24 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
     console.log('=== loadProfile called ===');
     console.log('userId:', userId);
+    console.log('isOwnProfile:', isOwnProfile);
+    console.log('Has preFetchedLives:', !!preFetchedLives);
+    console.log('Has currentUser:', !!currentUser);
 
     setLoading(true);
     try {
-      const userData = await getUserByUserId(userId);
-      console.log('userData from API:', userData);
+      let userData: User | null = null;
+
+      // Use pre-fetched currentUser data if available (for own profile)
+      if (isOwnProfile && currentUser) {
+        console.log('Using pre-fetched currentUser data (no API call)');
+        userData = currentUser;
+      } else {
+        console.log('Fetching user data from API');
+        userData = await getUserByUserId(userId);
+        console.log('userData from API:', userData);
+      }
+
       console.log('userData.bio:', userData?.bio);
 
       if (userData) {
@@ -183,10 +200,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         setSelectedAvatar(userData.avatar || '');
         console.log('formData set with bio:', userData.bio || '');
 
-        // Load attended lives
-        const lives = await getAttendedLivesByUserId(userData.id);
-        setAttendedLives(lives);
-        console.log('Loaded attended lives:', lives.length);
+        // Use pre-fetched lives if available, otherwise fetch from API
+        if (preFetchedLives) {
+          console.log('Using pre-fetched lives data (no API call):', preFetchedLives.length);
+          setAttendedLives(preFetchedLives);
+        } else {
+          console.log('Fetching lives data from API');
+          const lives = await getAttendedLivesByUserId(userData.id);
+          setAttendedLives(lives);
+          console.log('Loaded attended lives:', lives.length);
+        }
       }
     } catch (error) {
       console.error('Error loading profile:', error);

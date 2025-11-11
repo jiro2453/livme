@@ -506,6 +506,8 @@ const AppContent: React.FC = () => {
         isOwnProfile={true}
         onSuccess={() => {}}
         onLiveClick={handleProfileLiveClick}
+        attendedLives={lives}
+        currentUser={user || undefined}
       />
 
       <SettingsModal

@@ -284,41 +284,46 @@ export const getUsersAttendingSameLive = async (live: Live): Promise<string[]> =
 
 // Get lives that a user is attending
 export const getAttendedLivesByUserId = async (userId: string): Promise<Live[]> => {
-  console.log('=== Getting attended lives for user UUID ===', userId);
+  console.log('=== Getting attended lives for user UUID (optimized JOIN) ===', userId);
 
-  // Get live IDs from live_attendees table using the UUID directly
-  const { data: attendeeData, error: attendeeError } = await supabase
+  // Single query with JOIN to get both attendee and live data
+  const { data, error } = await supabase
     .from('live_attendees')
-    .select('live_id')
+    .select(`
+      live_id,
+      lives (
+        id,
+        artist,
+        date,
+        venue,
+        image_url,
+        created_by,
+        created_at,
+        updated_at
+      )
+    `)
     .eq('user_id', userId);
 
-  if (attendeeError) {
-    console.error('Error fetching attended lives:', attendeeError);
+  if (error) {
+    console.error('Error fetching attended lives:', error);
     return [];
   }
 
-  if (!attendeeData || attendeeData.length === 0) {
+  if (!data || data.length === 0) {
     console.log('No attended lives found');
     return [];
   }
 
-  const liveIds = attendeeData.map(a => a.live_id);
-  console.log('Found live IDs:', liveIds);
+  // Extract lives from the joined data and filter out any null entries
+  const livesData = data
+    .map(item => item.lives)
+    .filter((live): live is Live => live !== null);
 
-  // Get live details - only select necessary fields
-  const { data: livesData, error: livesError } = await supabase
-    .from('lives')
-    .select('id, artist, date, venue, image_url, created_by, created_at, updated_at')
-    .in('id', liveIds)
-    .order('date', { ascending: false });
+  // Sort by date (most recent first) - doing this in-memory since JOIN doesn't support direct ordering
+  livesData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  if (livesError) {
-    console.error('Error fetching live details:', livesError);
-    return [];
-  }
-
-  console.log('Fetched attended lives:', livesData?.length || 0);
-  return livesData || [];
+  console.log('Fetched attended lives (optimized):', livesData.length);
+  return livesData;
 };
 
 // Follow API

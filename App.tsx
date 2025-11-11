@@ -33,7 +33,6 @@ const AppContent: React.FC = () => {
   // Data
   const [lives, setLives] = useState<Live[]>([]);
   const [loading, setLoading] = useState(true);
-  const [profileUser, setProfileUser] = useState<User | null>(null);
 
   // Profile screens
   const [showProfile, setShowProfile] = useState(false); // Own profile modal
@@ -61,7 +60,6 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     if (user) {
       loadLives();
-      loadProfileUser();
     }
   }, [user]);
 
@@ -116,17 +114,6 @@ const AppContent: React.FC = () => {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadProfileUser = async () => {
-    if (!user) return;
-
-    try {
-      const userData = await getUserByUserId(user.user_id);
-      setProfileUser(userData);
-    } catch (error) {
-      console.error('Error loading profile user:', error);
     }
   };
 
@@ -396,22 +383,22 @@ const AppContent: React.FC = () => {
           {/* Profile Section */}
           <div className="flex flex-col items-center space-y-4">
             <Avatar className="h-28 w-28 cursor-pointer hover:opacity-80 transition-opacity" onClick={handleOpenProfile}>
-              <AvatarImage src={profileUser?.avatar || ''} />
+              <AvatarImage src={user?.avatar || ''} />
               <AvatarFallback className="bg-gray-400 text-white text-3xl">
-                {profileUser?.name?.charAt(0) || 'U'}
+                {user?.name?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
             <div className="text-center space-y-2">
-              <h2 className="text-[15.75px] font-semibold">{profileUser?.name}</h2>
-              <p className="text-[12.25px] text-gray-500">@ {profileUser?.user_id}</p>
-              {profileUser?.bio && (
+              <h2 className="text-[15.75px] font-semibold">{user?.name}</h2>
+              <p className="text-[12.25px] text-gray-500">@ {user?.user_id}</p>
+              {user?.bio && (
                 <p className="text-sm text-gray-600 max-w-xs mx-auto">
-                  {profileUser.bio}
+                  {user.bio}
                 </p>
               )}
             </div>
             <SocialIcons
-              socialLinks={profileUser?.socialLinks}
+              socialLinks={user?.socialLinks}
               onShare={() => setIsShareModalOpen(true)}
             />
           </div>
@@ -487,7 +474,7 @@ const AppContent: React.FC = () => {
         userId={user?.user_id}
         currentUserId={user?.id}
         isOwnProfile={true}
-        onSuccess={loadProfileUser}
+        onSuccess={() => {}}
         onLiveClick={handleProfileLiveClick}
       />
 

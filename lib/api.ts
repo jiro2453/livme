@@ -315,8 +315,10 @@ export const getAttendedLivesByUserId = async (userId: string): Promise<Live[]> 
   }
 
   // Extract lives from the joined data and filter out any null entries
+  // Note: Supabase JOIN returns lives as a single object (not array) for many-to-one relationships
+  // Using 'unknown' intermediate cast due to Supabase type inference limitations
   const livesData = data
-    .map(item => item.lives)
+    .map(item => item.lives as unknown as Live | null)
     .filter((live): live is Live => live !== null);
 
   // Sort by date (most recent first) - doing this in-memory since JOIN doesn't support direct ordering

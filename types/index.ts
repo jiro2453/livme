@@ -50,6 +50,7 @@ export interface AuthContextType {
   signUp: (email: string, password: string, name: string, userId: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<User>) => Promise<void>;
+  refreshUserProfile: () => Promise<void>;
 }
 
 export interface LiveGroup {

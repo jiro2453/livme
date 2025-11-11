@@ -27,7 +27,7 @@ import { useProfileRouting } from './hooks/useProfileRouting';
 import type { Live, User } from './types';
 
 const AppContent: React.FC = () => {
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
   const { urlUserId, navigateToProfile, navigateToHome } = useProfileRouting();
 
   // Data
@@ -504,7 +504,10 @@ const AppContent: React.FC = () => {
         userId={user?.user_id}
         currentUserId={user?.id}
         isOwnProfile={true}
-        onSuccess={() => {}}
+        onSuccess={async () => {
+          // Refresh user profile to reflect changes immediately
+          await refreshUserProfile();
+        }}
         onLiveClick={handleProfileLiveClick}
         attendedLives={lives}
         currentUser={user || undefined}

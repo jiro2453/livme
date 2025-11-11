@@ -206,6 +206,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const refreshUserProfile = async () => {
+    if (!user) {
+      console.warn('No user to refresh');
+      return;
+    }
+    console.log('🔄 Refreshing user profile for:', user.id);
+    await fetchUserProfile(user.id);
+  };
+
   const value: AuthContextType = {
     user,
     userProfile,
@@ -214,6 +223,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signOut,
     updateProfile,
+    refreshUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

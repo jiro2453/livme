@@ -175,8 +175,21 @@ const AppContent: React.FC = () => {
 
   const handleViewUserProfile = async (userId: string) => {
     // View another user's profile (full-screen with URL change)
+    console.log('🔍 handleViewUserProfile called with userId:', userId);
     try {
       const userData = await getUserByUserId(userId);
+      console.log('👤 getUserByUserId result:', userData);
+
+      if (!userData) {
+        console.error('❌ User not found:', userId);
+        toast({
+          title: 'エラー',
+          description: 'ユーザーが見つかりませんでした',
+          variant: 'destructive',
+        });
+        return;
+      }
+
       setSelectedUser(userData);
       setShowUserProfile(true);
       navigateToProfile(userId);

@@ -568,6 +568,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
         console.log('updateUserProfile result:', result);
 
+        if (!result) {
+          throw new Error('更新結果が空です');
+        }
+
         toast({
           title: '保存しました',
           description: 'プロフィールを更新しました',

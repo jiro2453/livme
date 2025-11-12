@@ -93,6 +93,11 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
   // Convert camelCase to snake_case for database
   const dbUpdates: any = { ...updates };
 
+  // Remove fields that should not be updated
+  delete dbUpdates.id;
+  delete dbUpdates.created_at;
+  delete dbUpdates.updated_at;
+
   // Handle socialLinks conversion
   if (updates.socialLinks) {
     dbUpdates.social_links = updates.socialLinks;

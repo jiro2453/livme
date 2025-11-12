@@ -594,10 +594,19 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         });
       }
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error('=== Error saving profile ===');
+      console.error('Error object:', error);
+
+      let errorMessage = 'プロフィールの保存に失敗しました';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+
       toast({
         title: 'エラー',
-        description: 'プロフィールの保存に失敗しました',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {

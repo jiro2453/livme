@@ -122,7 +122,7 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     console.error('Error code:', error.code);
     console.error('Error details:', error.details);
     console.error('Error hint:', error.hint);
-    return null;
+    throw new Error(`プロフィールの更新に失敗しました: ${error.message}`);
   }
 
   console.log('Update successful, data:', data);

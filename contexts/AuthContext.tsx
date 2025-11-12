@@ -37,9 +37,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       console.log('👤 Fetching user profile for:', userId);
 
+      // Select only necessary fields for faster query
       const { data, error } = await supabase
         .from('users')
-        .select('*')
+        .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
         .eq('id', userId)
         .single();
 
@@ -92,6 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('✅ Login successful:', data.user?.id);
 
     if (data.user) {
+      // Fetch user profile immediately after successful authentication
+      // This will set user state and trigger App.tsx to load lives
       await fetchUserProfile(data.user.id);
     }
   };

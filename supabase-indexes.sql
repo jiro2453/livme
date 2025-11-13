@@ -26,13 +26,13 @@ ON lives(date DESC);
 CREATE INDEX IF NOT EXISTS idx_lives_created_by
 ON lives(created_by);
 
--- アーティスト名での検索を高速化
+-- アーティスト名での検索を高速化（LIKE検索用）
 CREATE INDEX IF NOT EXISTS idx_lives_artist
-ON lives USING gin(to_tsvector('japanese', artist));
+ON lives(artist);
 
--- 会場名での検索を高速化
+-- 会場名での検索を高速化（LIKE検索用）
 CREATE INDEX IF NOT EXISTS idx_lives_venue
-ON lives USING gin(to_tsvector('japanese', venue));
+ON lives(venue);
 
 
 -- 3. live_attendeesテーブルのインデックス

@@ -90,28 +90,34 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
   console.log('updates:', updates);
   console.log('updates.bio:', updates.bio);
 
-  // Convert camelCase to snake_case for database
-  const dbUpdates: any = { ...updates };
+  // Build database updates object with only valid fields
+  const dbUpdates: any = {};
 
-  // Remove fields that should not be updated
-  delete dbUpdates.id;
-  delete dbUpdates.created_at;
-  delete dbUpdates.updated_at;
+  // Map allowed fields explicitly
+  if (updates.name !== undefined) dbUpdates.name = updates.name;
+  if (updates.user_id !== undefined) dbUpdates.user_id = updates.user_id;
+  if (updates.bio !== undefined) dbUpdates.bio = updates.bio;
+  if (updates.link !== undefined) dbUpdates.link = updates.link;
+  if (updates.avatar !== undefined) dbUpdates.avatar = updates.avatar;
 
-  // Handle socialLinks conversion
-  if (updates.socialLinks) {
+  // Handle socialLinks conversion to social_links
+  if (updates.socialLinks !== undefined) {
     dbUpdates.social_links = updates.socialLinks;
-    delete dbUpdates.socialLinks;
   }
 
-  // Handle galleryImages conversion - store in images field as jsonb
+  // Handle galleryImages conversion to images
   if (updates.galleryImages !== undefined) {
     dbUpdates.images = updates.galleryImages;
-    delete dbUpdates.galleryImages;
   }
 
   console.log('dbUpdates (for database):', dbUpdates);
   console.log('dbUpdates.bio:', dbUpdates.bio);
+  console.log('Number of fields to update:', Object.keys(dbUpdates).length);
+
+  if (Object.keys(dbUpdates).length === 0) {
+    console.warn('No fields to update');
+    throw new Error('更新するフィールドがありません');
+  }
 
   const { data, error } = await supabase
     .from('users')
@@ -128,6 +134,11 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     console.error('Error details:', error.details);
     console.error('Error hint:', error.hint);
     throw new Error(`プロフィールの更新に失敗しました: ${error.message}`);
+  }
+
+  if (!data) {
+    console.error('No data returned from update');
+    throw new Error('更新は成功しましたが、データが返されませんでした');
   }
 
   console.log('Update successful, data:', data);

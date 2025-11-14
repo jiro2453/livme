@@ -54,18 +54,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('✅ Basic user profile fetched:', { name: data.name, user_id: data.user_id });
         // Set minimal user data for fast initial load
         // Additional fields will be loaded when ProfileModal opens
-        const userData = {
+        const userData: User = {
           id: data.id,
           user_id: data.user_id,
           name: data.name,
           avatar: data.avatar,
-          // Use placeholder values for fields not loaded yet
           bio: '',
           link: '',
           socialLinks: {},
           galleryImages: [],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          created_at: '',
+          updated_at: '',
         };
         setUser(userData);
         setUserProfile(userData);
@@ -216,10 +215,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (fetchError) throw fetchError;
 
     if (data) {
-      // Set minimal user data
-      const userData = {
+      // Merge with existing user data, but preserve existing fields not returned
+      const userData: User = {
         ...user,
-        ...data,
+        id: data.id,
+        user_id: data.user_id,
+        name: data.name,
+        avatar: data.avatar,
       };
       setUser(userData);
       setUserProfile(userData);

@@ -15,7 +15,8 @@ import {
   MapPin,
   ArrowLeft,
 } from 'lucide-react';
-import { Dialog, DialogContent } from './ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
+import { VisuallyHidden } from './ui/visually-hidden';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -647,6 +648,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     return (
       <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
         <DialogContent>
+          <VisuallyHidden>
+            <DialogTitle>プロフィール読み込み中</DialogTitle>
+          </VisuallyHidden>
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
           </div>
@@ -1197,6 +1201,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       {isOwnProfile ? (
         <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
           <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[70vh] sm:h-auto sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full !top-[10vh] !translate-y-0 sm:!top-[50%] sm:!translate-y-[-50%] overflow-hidden">
+            <VisuallyHidden>
+              <DialogTitle>{isEditing ? 'プロフィール編集' : 'プロフィール'}</DialogTitle>
+            </VisuallyHidden>
             <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-8 sm:py-6">
               {ownProfileContentMain}
             </div>

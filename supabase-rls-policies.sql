@@ -3,24 +3,34 @@
 -- ===================================
 -- このSQLをSupabase SQL Editorで実行してください
 
+-- 0. タイムアウト設定を延長（重要！）
+-- ===================================
+ALTER DATABASE postgres SET statement_timeout = '30s';
+SET statement_timeout = '30s';
+
 -- 1. usersテーブルのRLSポリシー
 -- ===================================
+
+-- RLSを一時的に無効化してポリシーを再作成
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 
 -- 既存のポリシーを削除
 DROP POLICY IF EXISTS "Users are viewable by everyone" ON users;
 DROP POLICY IF EXISTS "Users can update own profile" ON users;
 DROP POLICY IF EXISTS "Users can insert own profile" ON users;
 
--- 読み取り: 全員が閲覧可能
+-- RLSを再有効化
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+
+-- 読み取り: 全員が閲覧可能（シンプル）
 CREATE POLICY "Users are viewable by everyone"
 ON users FOR SELECT
 USING (true);
 
--- 更新: ログイン中のユーザーが自分のプロフィールのみ更新可能
+-- 更新: ログイン中のユーザーが自分のプロフィールのみ更新可能（シンプル）
 CREATE POLICY "Users can update own profile"
 ON users FOR UPDATE
-USING (auth.uid() = id)
-WITH CHECK (auth.uid() = id);
+USING (auth.uid() = id);
 
 -- 挿入: ログイン中のユーザーが自分のプロフィールのみ作成可能
 CREATE POLICY "Users can insert own profile"

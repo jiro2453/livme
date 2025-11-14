@@ -83,7 +83,6 @@ interface ProfileModalProps {
   onSuccess?: () => void;
   onLiveClick?: (live: Live) => void;
   attendedLives?: Live[]; // Pass pre-fetched lives to avoid redundant API calls
-  currentUser?: User; // Pass current user data to avoid redundant API calls for own profile
 }
 
 // Preset avatar URLs - 9 images (3 animals, 3 landscapes, 3 abstract)
@@ -112,7 +111,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   onSuccess,
   onLiveClick,
   attendedLives: preFetchedLives,
-  currentUser,
 }) => {
   const [displayUser, setDisplayUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -165,22 +163,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     console.log('userId:', userId);
     console.log('isOwnProfile:', isOwnProfile);
     console.log('Has preFetchedLives:', !!preFetchedLives);
-    console.log('Has currentUser:', !!currentUser);
 
     setLoading(true);
     try {
-      let userData: User | null = null;
-
-      // Use pre-fetched currentUser data if available (for own profile)
-      if (isOwnProfile && currentUser) {
-        console.log('Using pre-fetched currentUser data (no API call)');
-        userData = currentUser;
-      } else {
-        console.log('Fetching user data from API');
-        userData = await getUserByUserId(userId);
-        console.log('userData from API:', userData);
-      }
-
+      // Always fetch full profile data when opening ProfileModal
+      // (bio, link, social_links, images are not loaded during initial app startup for performance)
+      console.log('Fetching full profile data from API');
+      const userData = await getUserByUserId(userId);
+      console.log('userData from API:', userData);
       console.log('userData.bio:', userData?.bio);
 
       if (userData) {

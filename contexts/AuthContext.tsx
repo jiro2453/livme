@@ -37,10 +37,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       console.log('👤 Fetching user profile for:', userId);
 
-      // Select only necessary fields for faster query
+      // Initial load: Only fetch essential fields for fast startup
+      // Additional fields (bio, link, social_links, images) are loaded when ProfileModal opens
       const { data, error } = await supabase
         .from('users')
-        .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
+        .select('id, user_id, name, avatar')
         .eq('id', userId)
         .single();
 
@@ -50,12 +51,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (data) {
-        console.log('✅ User profile fetched:', { name: data.name, user_id: data.user_id });
-        // Convert snake_case to camelCase for UI consistency
+        console.log('✅ Basic user profile fetched:', { name: data.name, user_id: data.user_id });
+        // Set minimal user data for fast initial load
+        // Additional fields will be loaded when ProfileModal opens
         const userData = {
-          ...data,
-          socialLinks: data.social_links,
-          galleryImages: data.images,
+          id: data.id,
+          user_id: data.user_id,
+          name: data.name,
+          avatar: data.avatar,
+          // Use placeholder values for fields not loaded yet
+          bio: '',
+          link: '',
+          socialLinks: {},
+          galleryImages: [],
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         };
         setUser(userData);
         setUserProfile(userData);
@@ -188,21 +198,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateProfile = async (updates: Partial<User>) => {
     if (!user) throw new Error('No user logged in');
 
-    const { data, error } = await supabase
+    // Update without select to avoid timeout
+    const { error: updateError } = await supabase
       .from('users')
       .update(updates)
+      .eq('id', user.id);
+
+    if (updateError) throw updateError;
+
+    // Fetch only essential fields after update
+    const { data, error: fetchError } = await supabase
+      .from('users')
+      .select('id, user_id, name, avatar')
       .eq('id', user.id)
-      .select()
       .single();
 
-    if (error) throw error;
+    if (fetchError) throw fetchError;
 
     if (data) {
-      // Convert snake_case to camelCase for UI consistency
+      // Set minimal user data
       const userData = {
+        ...user,
         ...data,
-        socialLinks: data.social_links,
-        galleryImages: data.images,
       };
       setUser(userData);
       setUserProfile(userData);

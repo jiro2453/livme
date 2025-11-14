@@ -523,7 +523,6 @@ const AppContent: React.FC = () => {
         }}
         onLiveClick={handleProfileLiveClick}
         attendedLives={lives}
-        currentUser={user || undefined}
       />
 
       <SettingsModal

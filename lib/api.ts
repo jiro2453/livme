@@ -25,12 +25,23 @@ export const getUserById = async (userId: string): Promise<User | null> => {
 export const getUserByUserId = async (userId: string): Promise<User | null> => {
   console.log('getUserByUserId呼び出し:', userId);
 
-  // Single optimized query using OR condition
-  const { data, error } = await supabase
+  // Check if userId is a UUID format
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId);
+
+  let query = supabase
     .from('users')
-    .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
-    .or(`user_id.eq.${userId},id.eq.${userId}`)
-    .maybeSingle();
+    .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at');
+
+  // Use appropriate column based on format
+  if (isUUID) {
+    // If UUID format, search by id column
+    query = query.eq('id', userId);
+  } else {
+    // Otherwise, search by user_id column
+    query = query.eq('user_id', userId);
+  }
+
+  const { data, error } = await query.maybeSingle();
 
   if (error) {
     console.error(`Error fetching user ${userId}:`, error);
@@ -62,11 +73,31 @@ export const getUsersByIds = async (userIds: string[]): Promise<User[]> => {
   console.log('getUsersByIds呼び出し:', userIds);
   console.log('getUsersByIds: Number of IDs:', userIds.length);
 
-  // Single optimized query using OR condition
-  const { data, error } = await supabase
+  // Check if all IDs are UUIDs or user_ids
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const uuidIds = userIds.filter(id => uuidRegex.test(id));
+  const stringIds = userIds.filter(id => !uuidRegex.test(id));
+
+  let query = supabase
     .from('users')
-    .select('id, user_id, name, bio, avatar, social_links, images, created_at, updated_at')
-    .or(`id.in.(${userIds.join(',')}),user_id.in.(${userIds.join(',')})`);
+    .select('id, user_id, name, bio, avatar, social_links, images, created_at, updated_at');
+
+  // Build OR condition only for the types of IDs we have
+  const conditions: string[] = [];
+  if (uuidIds.length > 0) {
+    conditions.push(`id.in.(${uuidIds.join(',')})`);
+  }
+  if (stringIds.length > 0) {
+    conditions.push(`user_id.in.(${stringIds.join(',')})`);
+  }
+
+  if (conditions.length > 0) {
+    query = query.or(conditions.join(','));
+  } else {
+    return [];
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error('Error fetching users:', error);

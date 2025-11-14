@@ -119,29 +119,38 @@ export const updateUser = async (userId: string, updates: Partial<User>): Promis
     throw new Error('更新するフィールドがありません');
   }
 
-  const { data, error } = await supabase
+  // Step 1: Perform update without select to avoid RLS double-check
+  console.log('Executing update...');
+  const { error: updateError } = await supabase
     .from('users')
     .update(dbUpdates)
-    .eq('id', userId)
+    .eq('id', userId);
+
+  if (updateError) {
+    console.error('=== Error updating user ===');
+    console.error('Error object:', updateError);
+    console.error('Error message:', updateError.message);
+    console.error('Error code:', updateError.code);
+    console.error('Error details:', updateError.details);
+    console.error('Error hint:', updateError.hint);
+    throw new Error(`プロフィールの更新に失敗しました: ${updateError.message}`);
+  }
+
+  console.log('Update successful, fetching updated data...');
+
+  // Step 2: Fetch the updated data separately
+  const { data, error: fetchError } = await supabase
+    .from('users')
     .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
+    .eq('id', userId)
     .single();
 
-  if (error) {
-    console.error('=== Error updating user ===');
-    console.error('Error object:', error);
-    console.error('Error message:', error.message);
-    console.error('Error code:', error.code);
-    console.error('Error details:', error.details);
-    console.error('Error hint:', error.hint);
-    throw new Error(`プロフィールの更新に失敗しました: ${error.message}`);
+  if (fetchError || !data) {
+    console.error('Error fetching updated user:', fetchError);
+    throw new Error('更新は成功しましたが、データの取得に失敗しました');
   }
 
-  if (!data) {
-    console.error('No data returned from update');
-    throw new Error('更新は成功しましたが、データが返されませんでした');
-  }
-
-  console.log('Update successful, data:', data);
+  console.log('Fetched updated data:', data);
   console.log('data.bio:', data.bio);
 
   // Convert snake_case to camelCase for UI

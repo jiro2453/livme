@@ -685,6 +685,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         <div className="text-center space-y-2 w-full">
           <h2 className="text-sm font-medium text-black">{displayUser?.name || 'Unknown'}</h2>
 
+          {displayUser?.user_id && (
+            <p className="text-xs text-gray-500">
+              @{displayUser.user_id}
+            </p>
+          )}
+
           {displayUser?.bio && (
             <p className="text-sm text-gray-600 whitespace-pre-wrap break-words px-4">
               {displayUser.bio}

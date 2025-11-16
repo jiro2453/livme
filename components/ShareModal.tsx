@@ -80,50 +80,50 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, userId 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100vw-2rem)] max-w-md sm:w-full">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-md sm:w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>プロフィール共有</DialogTitle>
+          <DialogTitle className="text-center">プロフィール共有</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-4 pb-2">
           {/* QR Code */}
-          <div className="flex flex-col items-center space-y-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm border-2 border-primary">
+          <div className="flex flex-col items-center space-y-3">
+            <div className="bg-white p-3 rounded-lg shadow-sm border-2 border-primary">
               <QRCodeSVG
                 id="qr-code-svg"
                 value={shareUrl}
-                size={256}
+                size={200}
                 level="H"
                 includeMargin={true}
                 imageSettings={{
                   src: logo,
                   x: undefined,
                   y: undefined,
-                  height: 50,
-                  width: 50,
+                  height: 40,
+                  width: 40,
                   excavate: true,
                 }}
               />
             </div>
-            <p className="text-sm text-gray-600 text-center">
+            <p className="text-xs text-gray-600 text-center px-4">
               QRコードをスキャンしてプロフィールを表示
             </p>
           </div>
 
           {/* URL Copy */}
           <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-700">プロフィールURL</p>
+            <p className="text-xs font-medium text-gray-700">プロフィールURL</p>
             <div className="flex gap-2">
               <input
                 value={shareUrl}
                 readOnly
-                className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md bg-gray-50"
+                className="flex-1 px-3 py-2 text-xs border border-gray-300 rounded-md bg-gray-50 truncate"
               />
               <Button
                 onClick={handleCopy}
                 variant="outline"
                 size="icon"
-                className="shrink-0"
+                className="shrink-0 h-9 w-9"
               >
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
               </Button>
@@ -133,7 +133,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, userId 
           {/* Download Button */}
           <Button
             onClick={handleDownloadQR}
-            className="w-full"
+            className="w-full h-10"
             variant="default"
           >
             <Download className="h-4 w-4 mr-2" />

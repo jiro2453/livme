@@ -78,7 +78,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </div>
 
           {/* タイトル */}
-          <h1 className="text-[21px] font-bold text-center mb-8">ログイン</h1>
+          <h1 className="text-[15.75px] font-bold text-center mb-8">ログイン</h1>
 
           <form onSubmit={handleSubmit}>
             <div className="max-w-xs mx-auto">

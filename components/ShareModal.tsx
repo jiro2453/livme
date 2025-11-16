@@ -9,7 +9,7 @@ import { Button } from './ui/button';
 import { QRCodeSVG } from 'qrcode.react';
 import { Copy, Check, Download } from 'lucide-react';
 import { useToast } from '../hooks/useToast';
-import logo from './assets/LiVME_2.png';
+import favicon from './assets/favicon_livme.png';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -96,7 +96,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, userId 
                 level="H"
                 includeMargin={true}
                 imageSettings={{
-                  src: logo,
+                  src: favicon,
                   x: undefined,
                   y: undefined,
                   height: 40,

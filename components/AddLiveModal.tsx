@@ -155,7 +155,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
           </DialogPrimitive.Close>
 
           <DialogHeader>
-            <DialogTitle className="text-[21px] font-bold text-center">
+            <DialogTitle className="text-[15.75px] font-bold text-center">
               ライブ追加
             </DialogTitle>
           </DialogHeader>

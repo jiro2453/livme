@@ -41,7 +41,7 @@ import type { User, Live } from '../types';
 const VALIDATION_RULES = {
   MAX_NAME_LENGTH: 50,
   MAX_BIO_LENGTH: 200,
-  MAX_GALLERY_IMAGES: 6,
+  MAX_GALLERY_IMAGES: 3,
   MIN_USER_ID_LENGTH: 3,
   MAX_USER_ID_LENGTH: 30,
   USER_ID_REGEX: /^[a-zA-Z0-9_]+$/,

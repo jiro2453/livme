@@ -7,10 +7,8 @@ import {
   DialogOverlay,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from './ui/dialog';
 import { cn } from '../lib/utils';
-import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/useToast';
@@ -235,14 +233,23 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
               )}
             </div>
 
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button type="button" variant="outline" onClick={onClose} className="text-sm h-12 font-medium">
-                キャンセル
-              </Button>
-              <Button type="submit" disabled={loading} className="text-sm h-12 font-medium">
+            <div className="flex gap-3 mt-6">
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-primary text-white text-sm rounded-full px-6 py-2.5 sm:px-8 sm:py-3 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
                 {loading ? '追加中...' : '追加'}
-              </Button>
-            </DialogFooter>
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 text-sm rounded-full px-5 py-2.5 sm:px-6 sm:py-3 border border-input bg-white hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                disabled={loading}
+              >
+                キャンセル
+              </button>
+            </div>
           </form>
         </DialogPrimitive.Content>
       </DialogPortal>

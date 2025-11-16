@@ -37,11 +37,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       console.log('👤 Fetching user profile for:', userId);
 
-      // Initial load: Only fetch essential fields for fast startup
-      // Additional fields (bio, link, social_links, images) are loaded when ProfileModal opens
+      // Initial load: Fetch essential fields including social_links for SNS icons
+      // bio, link, images are loaded when ProfileModal opens
       const { data, error } = await supabase
         .from('users')
-        .select('id, user_id, name, avatar')
+        .select('id, user_id, name, avatar, social_links')
         .eq('id', userId)
         .single();
 
@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data) {
         console.log('✅ Basic user profile fetched:', { name: data.name, user_id: data.user_id });
         // Set minimal user data for fast initial load
-        // Additional fields will be loaded when ProfileModal opens
+        // Additional fields (bio, link, images) will be loaded when ProfileModal opens
         const userData: User = {
           id: data.id,
           user_id: data.user_id,
@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           avatar: data.avatar,
           bio: '',
           link: '',
-          socialLinks: {},
+          socialLinks: data.social_links || {},
           galleryImages: [],
           created_at: '',
           updated_at: '',
@@ -205,10 +205,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (updateError) throw updateError;
 
-    // Fetch only essential fields after update
+    // Fetch essential fields including social_links after update
     const { data, error: fetchError } = await supabase
       .from('users')
-      .select('id, user_id, name, avatar')
+      .select('id, user_id, name, avatar, social_links')
       .eq('id', user.id)
       .single();
 
@@ -222,6 +222,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user_id: data.user_id,
         name: data.name,
         avatar: data.avatar,
+        socialLinks: data.social_links || {},
       };
       setUser(userData);
       setUserProfile(userData);

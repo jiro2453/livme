@@ -91,7 +91,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   onChange={handleEmailChange}
                   placeholder="メールアドレス"
                   required
-                  className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                  className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 />
               </div>
 
@@ -104,7 +104,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   onChange={handlePasswordChange}
                   placeholder="パスワード"
                   required
-                  className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary pr-10"
+                  className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary pr-10"
                 />
                 <button
                   type="button"

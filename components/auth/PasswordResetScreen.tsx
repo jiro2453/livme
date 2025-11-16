@@ -83,7 +83,7 @@ export const PasswordResetScreen: React.FC<PasswordResetScreenProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="メールアドレス"
-                  className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                  className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                   required
                 />
               </div>

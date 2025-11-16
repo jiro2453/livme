@@ -683,7 +683,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         </Avatar>
 
         <div className="text-center space-y-2 w-full">
-          <h2 className="text-sm font-medium text-black">{displayUser?.name || 'Unknown'}</h2>
+          <h2 className="text-[15.75px] font-medium text-black">{displayUser?.name || 'Unknown'}</h2>
 
           {displayUser?.user_id && (
             <p className="text-xs text-gray-500">
@@ -712,7 +712,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
       {/* Attended Lives Section */}
       <div className="px-4 space-y-4">
-        <h3 className="text-sm font-medium text-black text-center">参加公演</h3>
+        <h3 className="text-[15.75px] font-medium text-black text-center">参加公演</h3>
 
         {attendedLives.length === 0 ? (
           <div className="text-center py-12 text-gray-500">

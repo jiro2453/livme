@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import {
@@ -14,7 +14,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/useToast';
-import { createLive } from '../lib/api';
+import { createLive, getArtistSuggestions, getVenueSuggestions } from '../lib/api';
 
 interface AddLiveModalProps {
   isOpen: boolean;
@@ -33,6 +33,12 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
   const [date, setDate] = useState('');
   const [venue, setVenue] = useState('');
   const [loading, setLoading] = useState(false);
+  const [artistSuggestions, setArtistSuggestions] = useState<string[]>([]);
+  const [venueSuggestions, setVenueSuggestions] = useState<string[]>([]);
+  const [showArtistSuggestions, setShowArtistSuggestions] = useState(false);
+  const [showVenueSuggestions, setShowVenueSuggestions] = useState(false);
+  const artistInputRef = useRef<HTMLInputElement>(null);
+  const venueInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -41,10 +47,54 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
     }
   }, [isOpen]);
 
+  // Fetch artist suggestions when artist input changes
+  useEffect(() => {
+    const fetchArtistSuggestions = async () => {
+      if (artist.length >= 1) {
+        const suggestions = await getArtistSuggestions(artist);
+        setArtistSuggestions(suggestions);
+      } else {
+        setArtistSuggestions([]);
+      }
+    };
+
+    const timeoutId = setTimeout(fetchArtistSuggestions, 300);
+    return () => clearTimeout(timeoutId);
+  }, [artist]);
+
+  // Fetch venue suggestions when venue input changes
+  useEffect(() => {
+    const fetchVenueSuggestions = async () => {
+      if (venue.length >= 1) {
+        const suggestions = await getVenueSuggestions(venue);
+        setVenueSuggestions(suggestions);
+      } else {
+        setVenueSuggestions([]);
+      }
+    };
+
+    const timeoutId = setTimeout(fetchVenueSuggestions, 300);
+    return () => clearTimeout(timeoutId);
+  }, [venue]);
+
   const resetForm = () => {
     setArtist('');
     setDate('');
     setVenue('');
+    setArtistSuggestions([]);
+    setVenueSuggestions([]);
+    setShowArtistSuggestions(false);
+    setShowVenueSuggestions(false);
+  };
+
+  const handleArtistSelect = (selectedArtist: string) => {
+    setArtist(selectedArtist);
+    setShowArtistSuggestions(false);
+  };
+
+  const handleVenueSelect = (selectedVenue: string) => {
+    setVenue(selectedVenue);
+    setShowVenueSuggestions(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -113,16 +163,34 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Label htmlFor="artist" className="text-sm">アーティスト名 *</Label>
               <Input
+                ref={artistInputRef}
                 id="artist"
                 value={artist}
                 onChange={(e) => setArtist(e.target.value)}
+                onFocus={() => setShowArtistSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowArtistSuggestions(false), 200)}
                 placeholder="山田太郎"
                 className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
+                autoComplete="off"
               />
+              {showArtistSuggestions && artistSuggestions.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
+                  {artistSuggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleArtistSelect(suggestion)}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -137,16 +205,34 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
               />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Label htmlFor="venue" className="text-sm">会場 *</Label>
               <Input
+                ref={venueInputRef}
                 id="venue"
                 value={venue}
                 onChange={(e) => setVenue(e.target.value)}
+                onFocus={() => setShowVenueSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowVenueSuggestions(false), 200)}
                 placeholder="渋谷クラブクアトロ"
                 className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
                 required
+                autoComplete="off"
               />
+              {showVenueSuggestions && venueSuggestions.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
+                  {venueSuggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleVenueSelect(suggestion)}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <DialogFooter className="gap-2 sm:gap-0">

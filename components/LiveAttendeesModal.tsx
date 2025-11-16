@@ -208,8 +208,8 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                   <div className="text-sm font-medium leading-tight">{month}/{day}({weekday})</div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-base mb-1 text-gray-800 truncate">{live.artist}</h3>
-                  <div className="flex items-center text-sm text-gray-600">
+                  <h3 className="font-semibold text-sm mb-1 text-gray-800 truncate">{live.artist}</h3>
+                  <div className="flex items-center text-xs text-gray-600">
                     <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
                     <span className="truncate">{live.venue}</span>
                   </div>

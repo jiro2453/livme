@@ -105,14 +105,11 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, userId 
                 }}
               />
             </div>
-            <p className="text-xs text-gray-600 text-center px-4">
-              QRコードをスキャンしてプロフィールを表示
-            </p>
           </div>
 
           {/* URL Copy */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-700">プロフィールURL</p>
+            <p className="text-xs font-medium text-gray-700">URL</p>
             <div className="flex gap-2">
               <input
                 value={shareUrl}

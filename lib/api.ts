@@ -247,6 +247,46 @@ export const getAllLives = async (): Promise<Live[]> => {
   return data || [];
 };
 
+// Get artist suggestions based on search query
+export const getArtistSuggestions = async (query: string): Promise<string[]> => {
+  if (!query || query.length < 1) return [];
+
+  const { data, error } = await supabase
+    .from('lives')
+    .select('artist')
+    .ilike('artist', `%${query}%`)
+    .limit(10);
+
+  if (error) {
+    console.error('Error fetching artist suggestions:', error);
+    return [];
+  }
+
+  // Get unique artist names
+  const uniqueArtists = [...new Set(data.map(live => live.artist))];
+  return uniqueArtists;
+};
+
+// Get venue suggestions based on search query
+export const getVenueSuggestions = async (query: string): Promise<string[]> => {
+  if (!query || query.length < 1) return [];
+
+  const { data, error } = await supabase
+    .from('lives')
+    .select('venue')
+    .ilike('venue', `%${query}%`)
+    .limit(10);
+
+  if (error) {
+    console.error('Error fetching venue suggestions:', error);
+    return [];
+  }
+
+  // Get unique venue names
+  const uniqueVenues = [...new Set(data.map(live => live.venue))];
+  return uniqueVenues;
+};
+
 export const createLive = async (live: Omit<Live, 'id' | 'created_at' | 'updated_at'>): Promise<Live | null> => {
   const { data, error } = await supabase
     .from('lives')

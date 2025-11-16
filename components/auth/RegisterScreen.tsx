@@ -107,7 +107,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="名前"
-                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
@@ -120,7 +120,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
                 placeholder="ユーザーID（英数字・ハイフン・アンダースコア 3-30文字）"
-                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
@@ -133,7 +133,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="メールアドレス"
-                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
@@ -146,7 +146,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="パスワード（8文字以上）"
-                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
@@ -159,7 +159,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="パスワード確認"
-                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
               />
             </div>

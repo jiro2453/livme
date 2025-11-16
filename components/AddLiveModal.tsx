@@ -173,7 +173,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
                 onFocus={() => setShowArtistSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowArtistSuggestions(false), 200)}
                 placeholder="山田太郎"
-                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="text-sm bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
                 autoComplete="off"
               />
@@ -200,7 +200,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="text-sm bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
               />
             </div>
@@ -215,7 +215,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
                 onFocus={() => setShowVenueSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowVenueSuggestions(false), 200)}
                 placeholder="渋谷クラブクアトロ"
-                className="text-sm bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                className="text-sm bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary"
                 required
                 autoComplete="off"
               />

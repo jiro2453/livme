@@ -81,58 +81,60 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           <h1 className="text-[21px] font-bold text-center mb-8">ログイン</h1>
 
           <form onSubmit={handleSubmit}>
-            {/* メールアドレス */}
-            <div className="mb-6">
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                placeholder="メールアドレス"
-                required
-                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
-              />
-            </div>
-
-            {/* パスワード */}
-            <div className="relative mb-2">
-              <Input
-                id="password"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={handlePasswordChange}
-                placeholder="パスワード"
-                required
-                className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
-            </div>
-
-            {/* エラーメッセージ */}
-            {errorMessage && (
-              <div className="mb-4 text-red-600 text-sm">
-                {errorMessage}
+            <div className="max-w-xs mx-auto">
+              {/* メールアドレス */}
+              <div className="mb-6">
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder="メールアドレス"
+                  required
+                  className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary"
+                />
               </div>
-            )}
 
-            {/* ログインボタン */}
-            <Button
-              type="submit"
-              className="w-full h-12 text-base font-medium mb-8"
-              disabled={loading}
-            >
-              {loading ? 'ログイン中...' : 'ログイン'}
-            </Button>
+              {/* パスワード */}
+              <div className="relative mb-6">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={handlePasswordChange}
+                  placeholder="パスワード"
+                  required
+                  className="bg-yellow-50 border-yellow-100 focus:border-primary focus:ring-primary pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+
+              {/* エラーメッセージ */}
+              {errorMessage && (
+                <div className="mb-6 text-red-600 text-sm">
+                  {errorMessage}
+                </div>
+              )}
+
+              {/* ログインボタン */}
+              <Button
+                type="submit"
+                className="w-full h-12 text-base font-medium mb-6"
+                disabled={loading}
+              >
+                {loading ? 'ログイン中...' : 'ログイン'}
+              </Button>
+            </div>
 
             {/* パスワードを忘れた方 */}
             <div className="text-center mb-4">

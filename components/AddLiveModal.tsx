@@ -162,7 +162,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2 relative">
-              <Label htmlFor="artist" className="text-sm">アーティスト名 *</Label>
+              <Label htmlFor="artist" className="text-sm text-center block">アーティスト名 *</Label>
               <Input
                 ref={artistInputRef}
                 id="artist"
@@ -192,7 +192,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="date" className="text-sm">日付 *</Label>
+              <Label htmlFor="date" className="text-sm text-center block">日付 *</Label>
               <Input
                 id="date"
                 type="date"
@@ -204,7 +204,7 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
             </div>
 
             <div className="space-y-2 relative">
-              <Label htmlFor="venue" className="text-sm">会場 *</Label>
+              <Label htmlFor="venue" className="text-sm text-center block">会場 *</Label>
               <Input
                 ref={venueInputRef}
                 id="venue"

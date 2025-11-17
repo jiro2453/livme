@@ -897,8 +897,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 </>
               ) : (
-                <div className="min-h-20 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
-                  <span className={displayUser.bio ? "text-black" : "text-gray-500"}>
+                <div className="min-h-20 rounded-lg border-2 border-primary bg-white px-4 py-3 text-sm">
+                  <span className={displayUser.bio ? "text-black whitespace-pre-wrap break-words" : "text-gray-500"}>
                     {displayUser.bio || '未設定'}
                   </span>
                 </div>

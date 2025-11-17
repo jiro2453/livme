@@ -70,11 +70,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         <CardContent className="pt-8 pb-6 px-10">
           {/* ロゴ */}
           <div className="flex justify-center mb-6">
-            <img
-              src="/LiVME_2.png"
-              alt="LiVME Logo"
-              className="h-20 w-auto"
-            />
+            <picture>
+              <source srcSet="/LiVME_2.webp" type="image/webp" />
+              <img
+                src="/LiVME_2.png"
+                alt="LiVME Logo"
+                className="h-20 w-auto"
+              />
+            </picture>
           </div>
 
           {/* タイトル */}

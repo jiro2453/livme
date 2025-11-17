@@ -4,11 +4,14 @@ export const LoadingSpinner: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       {/* Logo */}
-      <img
-        src="/LiVME_2.png"
-        alt="LiVME"
-        className="w-32 h-32 mb-8 object-contain"
-      />
+      <picture>
+        <source srcSet="/LiVME_2.webp" type="image/webp" />
+        <img
+          src="/LiVME_2.png"
+          alt="LiVME"
+          className="w-32 h-32 mb-8 object-contain"
+        />
+      </picture>
 
       {/* Dot animation */}
       <div className="flex gap-2">

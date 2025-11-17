@@ -1042,7 +1042,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div className="relative">
                     {/* SNS Icon */}
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <img src={Icons.instagram} alt="Instagram" className="w-8 h-8" loading="lazy" decoding="async" />
+                      <picture>
+                        <source srcSet={Icons.instagramWebp} type="image/webp" />
+                        <img src={Icons.instagram} alt="Instagram" className="w-8 h-8" loading="lazy" decoding="async" />
+                      </picture>
                     </div>
 
                     {/* Input Field */}
@@ -1055,7 +1058,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
-                    <img src={Icons.instagram} alt="Instagram" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
+                    <picture>
+                      <source srcSet={Icons.instagramWebp} type="image/webp" />
+                      <img src={Icons.instagram} alt="Instagram" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
+                    </picture>
                     <span className={displayUser.socialLinks?.instagram ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.instagram || '未設定'}
                     </span>
@@ -1068,7 +1074,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {isEditing ? (
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <img src={Icons.x} alt="X" className="w-8 h-8" loading="lazy" decoding="async" />
+                      <picture>
+                        <source srcSet={Icons.xWebp} type="image/webp" />
+                        <img src={Icons.x} alt="X" className="w-8 h-8" loading="lazy" decoding="async" />
+                      </picture>
                     </div>
                     <Input
                       value={formData.twitter}
@@ -1079,7 +1088,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
-                    <img src={Icons.x} alt="X" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
+                    <picture>
+                      <source srcSet={Icons.xWebp} type="image/webp" />
+                      <img src={Icons.x} alt="X" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
+                    </picture>
                     <span className={displayUser.socialLinks?.twitter ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.twitter || '未設定'}
                     </span>
@@ -1092,7 +1104,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {isEditing ? (
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                      <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8" loading="lazy" decoding="async" />
+                      <picture>
+                        <source srcSet={Icons.tiktokWebp} type="image/webp" />
+                        <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8" loading="lazy" decoding="async" />
+                      </picture>
                     </div>
                     <Input
                       value={formData.tiktok}
@@ -1103,7 +1118,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 ) : (
                   <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
-                    <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
+                    <picture>
+                      <source srcSet={Icons.tiktokWebp} type="image/webp" />
+                      <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
+                    </picture>
                     <span className={displayUser.socialLinks?.tiktok ? "text-black" : "text-gray-500"}>
                       {displayUser.socialLinks?.tiktok || '未設定'}
                     </span>

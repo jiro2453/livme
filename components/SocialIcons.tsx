@@ -32,7 +32,10 @@ export const SocialIcons: React.FC<SocialIconsProps> = ({ socialLinks, onShare }
           className="hover:opacity-80 transition-opacity"
           aria-label="Instagram"
         >
-          <img src={Icons.instagram} alt="Instagram" className="h-[35px] w-[35px]" loading="lazy" decoding="async" />
+          <picture>
+            <source srcSet={Icons.instagramWebp} type="image/webp" />
+            <img src={Icons.instagram} alt="Instagram" className="h-[35px] w-[35px]" loading="lazy" decoding="async" />
+          </picture>
         </button>
       )}
 
@@ -42,7 +45,10 @@ export const SocialIcons: React.FC<SocialIconsProps> = ({ socialLinks, onShare }
           className="hover:opacity-80 transition-opacity"
           aria-label="X (Twitter)"
         >
-          <img src={Icons.x} alt="X" className="h-[35px] w-[35px]" loading="lazy" decoding="async" />
+          <picture>
+            <source srcSet={Icons.xWebp} type="image/webp" />
+            <img src={Icons.x} alt="X" className="h-[35px] w-[35px]" loading="lazy" decoding="async" />
+          </picture>
         </button>
       )}
 
@@ -52,7 +58,10 @@ export const SocialIcons: React.FC<SocialIconsProps> = ({ socialLinks, onShare }
           className="hover:opacity-80 transition-opacity"
           aria-label="TikTok"
         >
-          <img src={Icons.tiktok} alt="TikTok" className="h-[35px] w-[35px]" loading="lazy" decoding="async" />
+          <picture>
+            <source srcSet={Icons.tiktokWebp} type="image/webp" />
+            <img src={Icons.tiktok} alt="TikTok" className="h-[35px] w-[35px]" loading="lazy" decoding="async" />
+          </picture>
         </button>
       )}
 

@@ -95,30 +95,29 @@ input, textarea, select {
   animation: accordion-up 0.3s ease-out;
 }
 
-/* カスタムスクロールバー */
+/* カスタムスクロールバー - 洗練されたミニマルデザイン */
 /* Webkit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #78B159;
+  background: rgba(120, 177, 89, 0.3);
   border-radius: 10px;
-  transition: background 0.2s ease;
+  transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6a9f4f;
+  background: rgba(120, 177, 89, 0.6);
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #78B159 #f1f1f1;
+  scrollbar-color: rgba(120, 177, 89, 0.3) transparent;
 }

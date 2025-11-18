@@ -5,7 +5,6 @@ import {
 } from './ui/dialog';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { SocialIcons } from './SocialIcons';
-import { ShareModal } from './ShareModal';
 import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { getUsersByIds } from '../lib/api';
@@ -61,8 +60,6 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   const [attendees, setAttendees] = useState<User[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [shareUserId, setShareUserId] = useState<string>('');
   const [direction, setDirection] = useState(0); // 1: 上スワイプ, -1: 下スワイプ
 
   useEffect(() => {
@@ -165,11 +162,6 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
       triggerVibration(8);
     }
   }, [currentIndex]);
-
-  const handleShareClick = (userId: string) => {
-    setShareUserId(userId);
-    setIsShareModalOpen(true);
-  };
 
   const date = new Date(live.date);
   const year = date.getFullYear();
@@ -479,17 +471,6 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
           </motion.div>
         </DialogContent>
       </Dialog>
-
-      {shareUserId && (
-        <ShareModal
-          isOpen={isShareModalOpen}
-          onClose={() => {
-            setIsShareModalOpen(false);
-            setShareUserId('');
-          }}
-          userId={shareUserId}
-        />
-      )}
     </>
   );
 };

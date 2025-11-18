@@ -13,7 +13,6 @@ export const AuthScreen: React.FC = () => {
       {view === 'login' && (
         <LoginScreen
           onSwitchToRegister={() => setView('register')}
-          onSwitchToReset={() => setView('reset')}
         />
       )}
       {view === 'register' && (

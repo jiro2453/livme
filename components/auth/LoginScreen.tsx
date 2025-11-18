@@ -8,12 +8,10 @@ import { Eye, EyeOff } from 'lucide-react';
 
 interface LoginScreenProps {
   onSwitchToRegister: () => void;
-  onSwitchToReset: () => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({
   onSwitchToRegister,
-  onSwitchToReset,
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -137,17 +135,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               >
                 {loading ? 'ログイン中...' : 'ログイン'}
               </Button>
-            </div>
-
-            {/* パスワードを忘れた方 */}
-            <div className="text-center mb-4">
-              <button
-                type="button"
-                onClick={onSwitchToReset}
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                パスワードを忘れた方はこちら
-              </button>
             </div>
 
             {/* 新規登録 */}

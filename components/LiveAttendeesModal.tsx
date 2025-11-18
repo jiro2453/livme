@@ -254,7 +254,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
 
               {/* メインカードコンテナ */}
               <div
-                className="bg-white rounded-2xl shadow-xl overflow-hidden relative min-h-[300px] max-h-[75vh]"
+                className="bg-white rounded-2xl shadow-xl overflow-hidden relative h-auto max-h-[75vh]"
                 style={{
                   paddingTop: '1.5rem',
                   transformStyle: 'preserve-3d',
@@ -290,7 +290,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       dragConstraints={{ top: 0, bottom: 0 }}
                       dragElastic={0.2}
                       onDragEnd={handleDragEnd}
-                      className="absolute inset-0 flex justify-center overflow-y-auto cursor-grab active:cursor-grabbing pb-28"
+                      className="relative w-full flex justify-center overflow-y-auto cursor-grab active:cursor-grabbing pb-28"
                       style={{
                         transformStyle: 'preserve-3d',
                         backfaceVisibility: 'hidden',

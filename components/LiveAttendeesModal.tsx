@@ -299,7 +299,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       dragConstraints={{ top: 0, bottom: 0 }}
                       dragElastic={0.2}
                       onDragEnd={handleDragEnd}
-                      className="absolute inset-0 flex justify-center overflow-y-auto cursor-grab active:cursor-grabbing pb-16"
+                      className="absolute inset-0 flex justify-center overflow-y-auto cursor-grab active:cursor-grabbing pb-28"
                       style={{
                         transformStyle: 'preserve-3d',
                         backfaceVisibility: 'hidden',

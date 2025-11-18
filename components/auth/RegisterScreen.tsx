@@ -100,7 +100,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
           </div>
 
           {/* タイトル */}
-          <h1 className="text-[21px] font-bold text-center mb-8">新規登録</h1>
+          <h1 className="text-[15.75px] font-bold text-center mb-8">新規登録</h1>
           <form onSubmit={handleSubmit}>
             {/* 名前 */}
             <div className="mb-6">

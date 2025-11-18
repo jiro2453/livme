@@ -62,7 +62,7 @@ export const PasswordResetScreen: React.FC<PasswordResetScreenProps> = ({
           </div>
 
           {/* タイトル */}
-          <h1 className="text-[21px] font-bold text-center mb-8">パスワードリセット</h1>
+          <h1 className="text-[15.75px] font-bold text-center mb-8">パスワードリセット</h1>
 
           {sent ? (
             <div>

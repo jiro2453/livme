@@ -254,7 +254,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
 
               {/* メインカードコンテナ */}
               <div
-                className="bg-white rounded-2xl shadow-xl overflow-hidden relative min-h-[300px] max-h-[550px] sm:max-h-[400px]"
+                className="bg-white rounded-2xl shadow-xl overflow-hidden relative min-h-[300px] max-h-[75vh]"
                 style={{
                   paddingTop: '1.5rem',
                   transformStyle: 'preserve-3d',

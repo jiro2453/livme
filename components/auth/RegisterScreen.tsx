@@ -100,7 +100,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
           </div>
 
           {/* タイトル */}
-          <h1 className="text-[21px] font-bold text-center mb-8">新規登録</h1>
+          <h1 className="text-[15.75px] font-bold text-center mb-8">新規登録</h1>
           <form onSubmit={handleSubmit}>
             {/* 名前 */}
             <div className="mb-6">
@@ -110,7 +110,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="名前"
-                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-[15.75px] text-[15.75px]"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
                 required
               />
             </div>
@@ -123,7 +123,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
                 placeholder="ユーザーID（英数字・ハイフン・アンダースコア 3-30文字）"
-                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-[15.75px] text-[15.75px]"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
                 required
               />
             </div>
@@ -136,7 +136,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="メールアドレス"
-                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-[15.75px] text-[15.75px]"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
                 required
               />
             </div>
@@ -149,7 +149,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="パスワード（8文字以上）"
-                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-[15.75px] text-[15.75px]"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
                 required
               />
             </div>
@@ -162,7 +162,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="パスワード確認"
-                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-[15.75px] text-[15.75px]"
+                className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
                 required
               />
             </div>
@@ -170,14 +170,14 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
             {/* 登録ボタン */}
             <Button
               type="submit"
-              className="w-full h-12 text-[15.75px] font-medium mb-8"
+              className="w-full h-12 text-base font-medium mb-8"
               disabled={loading}
             >
               {loading ? '登録中...' : '登録'}
             </Button>
 
             {/* ログインリンク */}
-            <div className="text-center text-[15.75px] text-gray-600">
+            <div className="text-center text-sm text-gray-600">
               アカウントをお持ちの方は{' '}
               <button
                 type="button"

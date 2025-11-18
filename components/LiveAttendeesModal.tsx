@@ -256,7 +256,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
               <div
                 className="bg-white rounded-2xl shadow-xl overflow-hidden relative h-auto max-h-[75vh]"
                 style={{
-                  paddingTop: '1.5rem',
+                  paddingTop: '0.75rem',
                   transformStyle: 'preserve-3d',
                   zIndex: 10,
                 }}
@@ -290,7 +290,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       dragConstraints={{ top: 0, bottom: 0 }}
                       dragElastic={0.2}
                       onDragEnd={handleDragEnd}
-                      className="relative w-full flex justify-center overflow-y-auto cursor-grab active:cursor-grabbing pb-28"
+                      className="relative w-full flex justify-center overflow-y-auto cursor-grab active:cursor-grabbing pb-12"
                       style={{
                         transformStyle: 'preserve-3d',
                         backfaceVisibility: 'hidden',
@@ -298,7 +298,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       }}
                     >
                       {currentAttendee && (
-                        <div className="flex flex-col items-center space-y-2 w-full px-6 py-6">
+                        <div className="flex flex-col items-center space-y-2 w-full px-6 py-4 pb-2">
                           {/* アバター */}
                           <motion.div
                             initial={{ scale: 0 }}
@@ -379,7 +379,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.55 }}
-                              className="w-full mb-16"
+                              className="w-full"
                             >
                               <div className="flex flex-wrap gap-x-0 gap-y-0.5 justify-center max-w-[210px] mx-auto">
                                 {currentAttendee.galleryImages.map((image: string, index: number) => (
@@ -433,7 +433,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
-                    className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-gray-400 animate-pulse"
+                    className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-gray-400 animate-pulse"
                   >
                     上にスワイプして次へ
                   </motion.div>

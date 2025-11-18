@@ -299,7 +299,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       dragConstraints={{ top: 0, bottom: 0 }}
                       dragElastic={0.2}
                       onDragEnd={handleDragEnd}
-                      className="absolute inset-0 flex items-center justify-center cursor-grab active:cursor-grabbing"
+                      className="absolute inset-0 flex justify-center overflow-y-auto cursor-grab active:cursor-grabbing pb-16"
                       style={{
                         transformStyle: 'preserve-3d',
                         backfaceVisibility: 'hidden',
@@ -307,7 +307,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       }}
                     >
                       {currentAttendee && (
-                        <div className="flex flex-col items-center space-y-2 w-full px-6">
+                        <div className="flex flex-col items-center space-y-2 w-full px-6 py-6">
                           {/* アバター */}
                           <motion.div
                             initial={{ scale: 0 }}

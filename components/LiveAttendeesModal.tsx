@@ -379,7 +379,6 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                           >
                             <SocialIcons
                               socialLinks={currentAttendee.social_links}
-                              onShare={currentAttendee.user_id === currentUserId ? () => handleShareClick(currentAttendee.user_id) : undefined}
                             />
                           </motion.div>
 

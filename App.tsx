@@ -70,6 +70,9 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     if (!user || authLoading || loading) return;
 
+    // Reset scroll position on page navigation
+    window.scrollTo(0, 0);
+
     if (urlUserId) {
       // URL contains a user_id -> show that user's profile
       if (urlUserId === user.user_id) {

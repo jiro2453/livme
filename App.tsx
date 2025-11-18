@@ -437,16 +437,16 @@ const AppContent: React.FC = () => {
             <div className="text-center space-y-2">
               <h2 className="text-[15.75px] font-semibold">{user?.name}</h2>
               <p className="text-[12.25px] text-gray-500">@ {user?.user_id}</p>
-              {user?.bio && (
-                <p className="text-sm text-gray-600 max-w-xs mx-auto">
-                  {user.bio}
-                </p>
-              )}
             </div>
             <SocialIcons
               socialLinks={user?.socialLinks}
               onShare={() => setIsShareModalOpen(true)}
             />
+            {user?.bio && (
+              <p className="text-sm text-gray-600 max-w-xs mx-auto whitespace-pre-wrap break-words text-center">
+                {user.bio}
+              </p>
+            )}
           </div>
 
           {/* Search Bar */}

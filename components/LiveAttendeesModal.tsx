@@ -389,7 +389,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.55 }}
-                              className="w-full"
+                              className="w-full mb-16"
                             >
                               <div className="flex flex-wrap gap-x-0 gap-y-0.5 justify-center max-w-[210px] mx-auto">
                                 {currentAttendee.galleryImages.map((image: string, index: number) => (

@@ -66,12 +66,12 @@ export const PasswordResetScreen: React.FC<PasswordResetScreenProps> = ({
 
           {sent ? (
             <div>
-              <p className="text-[15.75px] text-gray-600 text-center mb-8">
+              <p className="text-sm text-gray-600 text-center mb-8">
                 パスワードリセット用のメールを送信しました。メール内のリンクをクリックして、新しいパスワードを設定してください。
               </p>
               <Button
                 onClick={onSwitchToLogin}
-                className="w-full h-12 text-[15.75px] font-medium"
+                className="w-full h-12 text-base font-medium"
               >
                 ログイン画面に戻る
               </Button>
@@ -86,7 +86,7 @@ export const PasswordResetScreen: React.FC<PasswordResetScreenProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="メールアドレス"
-                  className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-[15.75px] text-[15.75px]"
+                  className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
                   required
                 />
               </div>
@@ -94,14 +94,14 @@ export const PasswordResetScreen: React.FC<PasswordResetScreenProps> = ({
               {/* 送信ボタン */}
               <Button
                 type="submit"
-                className="w-full h-12 text-[15.75px] font-medium mb-8"
+                className="w-full h-12 text-base font-medium mb-8"
                 disabled={loading}
               >
                 {loading ? '送信中...' : 'リセットメールを送信'}
               </Button>
 
               {/* ログインリンク */}
-              <div className="text-center text-[15.75px] text-gray-600">
+              <div className="text-center text-sm text-gray-600">
                 <button
                   type="button"
                   onClick={onSwitchToLogin}

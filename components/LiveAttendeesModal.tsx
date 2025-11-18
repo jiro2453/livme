@@ -364,7 +364,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               transition={{ delay: 0.4 }}
                               className="text-center"
                             >
-                              <p className="text-xs text-gray-600 max-w-xs mx-auto line-clamp-2 break-words">
+                              <p className="text-xs text-gray-600 max-w-xs mx-auto whitespace-pre-wrap break-words">
                                 {currentAttendee.bio}
                               </p>
                             </motion.div>

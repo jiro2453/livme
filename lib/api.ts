@@ -80,7 +80,7 @@ export const getUsersByIds = async (userIds: string[]): Promise<User[]> => {
 
   let query = supabase
     .from('users')
-    .select('id, user_id, name, bio, avatar, social_links, images, created_at, updated_at');
+    .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at');
 
   // Build OR condition only for the types of IDs we have
   const conditions: string[] = [];

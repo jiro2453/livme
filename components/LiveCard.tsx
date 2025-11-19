@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from './ui/card';
-import { MapPin, MoreVertical, Trash2 } from 'lucide-react';
+import { MapPin, MoreVertical, Trash2, Pencil } from 'lucide-react';
 import type { Live } from '../types';
 
 interface LiveCardProps {
   live: Live;
   onDelete?: (liveId: string) => void;
+  onEdit?: (live: Live) => void;
   onClick?: (live: Live) => void;
   showMenuButton?: boolean;
 }
@@ -13,6 +14,7 @@ interface LiveCardProps {
 export const LiveCard: React.FC<LiveCardProps> = ({
   live,
   onDelete,
+  onEdit,
   onClick,
   showMenuButton = true,
 }) => {
@@ -81,6 +83,19 @@ export const LiveCard: React.FC<LiveCardProps> = ({
                     className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32"
                     onClick={(e) => e.stopPropagation()}
                   >
+                    {onEdit && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEdit(live);
+                          setShowMenu(false);
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2 text-gray-700"
+                      >
+                        <Pencil className="h-4 w-4" />
+                        編集
+                      </button>
+                    )}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

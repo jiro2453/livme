@@ -6,6 +6,7 @@ import { LoadingSpinner } from './components/LoadingSpinner';
 import { ProfileModal } from './components/ProfileModal';
 import { SettingsModal } from './components/SettingsModal';
 import { AddLiveModal } from './components/AddLiveModal';
+import { EditLiveModal } from './components/EditLiveModal';
 import { LiveCard } from './components/LiveCard';
 import { EmptyState } from './components/EmptyState';
 import { SocialIcons } from './components/SocialIcons';
@@ -51,6 +52,8 @@ const AppContent: React.FC = () => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [liveToDelete, setLiveToDelete] = useState<string | null>(null);
+  const [isEditLiveModalOpen, setIsEditLiveModalOpen] = useState(false);
+  const [liveToEdit, setLiveToEdit] = useState<Live | null>(null);
 
   // Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -129,6 +132,11 @@ const AppContent: React.FC = () => {
   const handleDeleteLive = (liveId: string) => {
     setLiveToDelete(liveId);
     setIsDeleteConfirmOpen(true);
+  };
+
+  const handleEditLive = (live: Live) => {
+    setLiveToEdit(live);
+    setIsEditLiveModalOpen(true);
   };
 
   const confirmDeleteLive = async () => {
@@ -503,6 +511,7 @@ const AppContent: React.FC = () => {
                           key={live.id}
                           live={live}
                           onDelete={handleDeleteLive}
+                          onEdit={handleEditLive}
                           onClick={handleLiveClick}
                         />
                       ))}
@@ -543,6 +552,19 @@ const AppContent: React.FC = () => {
         userId={user.id}
         onSuccess={loadLives}
       />
+
+      {liveToEdit && (
+        <EditLiveModal
+          isOpen={isEditLiveModalOpen}
+          onClose={() => {
+            setIsEditLiveModalOpen(false);
+            setLiveToEdit(null);
+          }}
+          userId={user.id}
+          live={liveToEdit}
+          onSuccess={loadLives}
+        />
+      )}
 
       <ShareModal
         isOpen={isShareModalOpen}

@@ -347,6 +347,68 @@ export const deleteLive = async (liveId: string, userId: string): Promise<boolea
   return true;
 };
 
+// Find existing live by artist, venue, and date
+export const findExistingLive = async (artist: string, venue: string, date: string): Promise<Live | null> => {
+  const { data, error } = await supabase
+    .from('lives')
+    .select('id, artist, date, venue, image_url, created_by, created_at, updated_at')
+    .eq('artist', artist)
+    .eq('venue', venue)
+    .eq('date', date)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error finding existing live:', error);
+    return null;
+  }
+
+  return data;
+};
+
+// Update user's live attendance (move from old live to new live)
+export const updateUserLiveAttendance = async (
+  userId: string,
+  oldLiveId: string,
+  newLiveId: string
+): Promise<boolean> => {
+  // Delete old attendance
+  const { error: deleteError } = await supabase
+    .from('live_attendees')
+    .delete()
+    .eq('live_id', oldLiveId)
+    .eq('user_id', userId);
+
+  if (deleteError) {
+    console.error('Error deleting old live attendance:', deleteError);
+    return false;
+  }
+
+  // Check if already attending the new live
+  const { data: existingAttendance } = await supabase
+    .from('live_attendees')
+    .select('live_id')
+    .eq('live_id', newLiveId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  // Add new attendance only if not already attending
+  if (!existingAttendance) {
+    const { error: insertError } = await supabase
+      .from('live_attendees')
+      .insert({
+        live_id: newLiveId,
+        user_id: userId
+      });
+
+    if (insertError) {
+      console.error('Error adding new live attendance:', insertError);
+      return false;
+    }
+  }
+
+  return true;
+};
+
 // Get users attending the same live event
 export const getUsersAttendingSameLive = async (live: Live): Promise<string[]> => {
   console.log('=== live_attendeesテーブルから参加者を取得 ===');

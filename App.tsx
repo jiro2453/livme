@@ -474,28 +474,30 @@ const AppContent: React.FC = () => {
 
           {/* 参加公演 Section */}
           <div className="relative flex items-center justify-center">
-            <button
-              onClick={() => {
-                setIsSearchOpen(!isSearchOpen);
-                if (!isSearchOpen) {
-                  setTimeout(() => searchInputRef.current?.focus(), 100);
-                } else {
-                  setSearchQuery('');
-                }
-              }}
-              className="absolute left-0 p-2 text-gray-500 hover:text-primary transition-colors"
-              aria-label="検索"
-            >
-              <Search className="h-5 w-5" />
-            </button>
             <h2 className="text-[15.75px] font-semibold">参加公演</h2>
-            <button
-              onClick={() => setIsAddLiveModalOpen(true)}
-              className="absolute right-0 p-2 bg-primary text-white rounded-full hover:bg-primary/90"
-              aria-label="ライブ追加"
-            >
-              <Plus className="h-5 w-5" />
-            </button>
+            <div className="absolute right-0 flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setIsSearchOpen(!isSearchOpen);
+                  if (!isSearchOpen) {
+                    setTimeout(() => searchInputRef.current?.focus(), 100);
+                  } else {
+                    setSearchQuery('');
+                  }
+                }}
+                className="p-2 text-gray-500 hover:text-primary transition-colors"
+                aria-label="検索"
+              >
+                <Search className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => setIsAddLiveModalOpen(true)}
+                className="p-2 bg-primary text-white rounded-full hover:bg-primary/90"
+                aria-label="ライブ追加"
+              >
+                <Plus className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           {/* Search Bar */}

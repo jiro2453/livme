@@ -38,10 +38,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('👤 Fetching user profile for:', userId);
 
       // Initial load: Fetch essential fields including social_links for SNS icons and bio for top screen
-      // link and images are loaded when ProfileModal opens
+      // images are loaded when ProfileModal opens
       const { data, error } = await supabase
         .from('users')
-        .select('id, user_id, name, avatar, social_links, bio')
+        .select('id, user_id, name, avatar, social_links, bio, link')
         .eq('id', userId)
         .single();
 
@@ -53,14 +53,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data) {
         console.log('✅ Basic user profile fetched:', { name: data.name, user_id: data.user_id });
         // Set minimal user data for fast initial load
-        // Additional fields (link, images) will be loaded when ProfileModal opens
+        // Additional fields (images) will be loaded when ProfileModal opens
         const userData: User = {
           id: data.id,
           user_id: data.user_id,
           name: data.name,
           avatar: data.avatar,
           bio: data.bio || '',
-          link: '',
+          link: data.link || '',
           socialLinks: data.social_links || {},
           galleryImages: [],
           created_at: '',

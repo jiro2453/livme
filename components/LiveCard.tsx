@@ -19,6 +19,8 @@ export const LiveCard: React.FC<LiveCardProps> = ({
   showMenuButton = true,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+  const menuButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const date = new Date(live.date);
   const year = date.getFullYear();
@@ -60,8 +62,16 @@ export const LiveCard: React.FC<LiveCardProps> = ({
           {showMenuButton && (
             <div className="relative flex-shrink-0">
               <button
+                ref={menuButtonRef}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (!showMenu && menuButtonRef.current) {
+                    const rect = menuButtonRef.current.getBoundingClientRect();
+                    setMenuPosition({
+                      top: rect.bottom + 4,
+                      right: window.innerWidth - rect.right
+                    });
+                  }
                   setShowMenu(!showMenu);
                 }}
                 className="p-1 hover:bg-gray-100 rounded"
@@ -73,14 +83,15 @@ export const LiveCard: React.FC<LiveCardProps> = ({
               {showMenu && (
                 <>
                   <div
-                    className="fixed inset-0 z-10"
+                    className="fixed inset-0 z-40"
                     onClick={(e) => {
                       e.stopPropagation();
                       setShowMenu(false);
                     }}
                   />
                   <div
-                    className="absolute right-0 top-8 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32"
+                    className="fixed z-50 bg-white border border-gray-200 rounded-lg shadow-lg py-1 w-32"
+                    style={{ top: menuPosition.top, right: menuPosition.right }}
                     onClick={(e) => e.stopPropagation()}
                   >
                     {onEdit && (

@@ -409,6 +409,37 @@ export const updateUserLiveAttendance = async (
   return true;
 };
 
+// Add user attendance to an existing live
+export const addLiveAttendance = async (liveId: string, userId: string): Promise<boolean> => {
+  // Check if already attending
+  const { data: existingAttendance } = await supabase
+    .from('live_attendees')
+    .select('live_id')
+    .eq('live_id', liveId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (existingAttendance) {
+    // Already attending this live
+    return true;
+  }
+
+  // Add new attendance
+  const { error } = await supabase
+    .from('live_attendees')
+    .insert({
+      live_id: liveId,
+      user_id: userId
+    });
+
+  if (error) {
+    console.error('Error adding live attendance:', error);
+    return false;
+  }
+
+  return true;
+};
+
 // Get users attending the same live event
 export const getUsersAttendingSameLive = async (live: Live): Promise<string[]> => {
   console.log('=== live_attendeesテーブルから参加者を取得 ===');

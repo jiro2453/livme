@@ -57,6 +57,8 @@ const AppContent: React.FC = () => {
 
   // Search
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Attendees cache to avoid redundant API calls
   const attendeesCache = useRef<Map<string, string[]>>(new Map());
@@ -470,20 +472,22 @@ const AppContent: React.FC = () => {
             />
           </div>
 
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="アーティスト名・会場名で検索"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-[38px] pl-11 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 bg-gray-50/50 placeholder:text-gray-400"
-            />
-          </div>
-
           {/* 参加公演 Section */}
           <div className="relative flex items-center justify-center">
+            <button
+              onClick={() => {
+                setIsSearchOpen(!isSearchOpen);
+                if (!isSearchOpen) {
+                  setTimeout(() => searchInputRef.current?.focus(), 100);
+                } else {
+                  setSearchQuery('');
+                }
+              }}
+              className="absolute left-0 p-2 text-gray-500 hover:text-primary transition-colors"
+              aria-label="検索"
+            >
+              <Search className="h-5 w-5" />
+            </button>
             <h2 className="text-[15.75px] font-semibold">参加公演</h2>
             <button
               onClick={() => setIsAddLiveModalOpen(true)}
@@ -492,6 +496,25 @@ const AppContent: React.FC = () => {
             >
               <Plus className="h-5 w-5" />
             </button>
+          </div>
+
+          {/* Search Bar */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              isSearchOpen ? 'max-h-[50px] opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="アーティスト名・会場名で検索"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-[38px] pl-11 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 bg-gray-50/50 placeholder:text-gray-400"
+              />
+            </div>
           </div>
 
           {/* Lives List */}

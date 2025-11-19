@@ -12,7 +12,7 @@ import { cn } from '../lib/utils';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '../hooks/useToast';
-import { createLive, getArtistSuggestions, getVenueSuggestions } from '../lib/api';
+import { createLive, getArtistSuggestions, getVenueSuggestions, findExistingLive, addLiveAttendance } from '../lib/api';
 
 interface AddLiveModalProps {
   isOpen: boolean;
@@ -110,23 +110,48 @@ export const AddLiveModal: React.FC<AddLiveModalProps> = ({
     setLoading(true);
 
     try {
-      const liveData = {
-        created_by: userId,
-        artist,
-        date,
-        venue,
-      };
+      // Check if a live with the same artist, venue, and date already exists
+      const existingLive = await findExistingLive(artist, venue, date);
 
-      await createLive(liveData);
-      toast({
-        title: '追加しました',
-        description: '新しいライブを追加しました',
-        variant: 'success',
-      });
+      if (existingLive) {
+        // Add user attendance to the existing live
+        const success = await addLiveAttendance(existingLive.id, userId);
+        if (success) {
+          toast({
+            title: '追加しました',
+            description: 'ライブを追加しました',
+            variant: 'success',
+          });
+          resetForm();
+          onSuccess();
+          onClose();
+        } else {
+          toast({
+            title: 'エラー',
+            description: 'ライブの追加に失敗しました',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        // Create new live
+        const liveData = {
+          created_by: userId,
+          artist,
+          date,
+          venue,
+        };
 
-      resetForm();
-      onSuccess();
-      onClose();
+        await createLive(liveData);
+        toast({
+          title: '追加しました',
+          description: '新しいライブを追加しました',
+          variant: 'success',
+        });
+
+        resetForm();
+        onSuccess();
+        onClose();
+      }
     } catch (error: any) {
       toast({
         title: 'エラー',

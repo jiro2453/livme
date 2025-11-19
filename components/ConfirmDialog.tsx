@@ -53,7 +53,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <div className="text-center space-y-3">
             <h2 className="text-[15.75px] font-bold">{title}</h2>
             {description && (
-              <p className="text-sm text-gray-600">{description}</p>
+              <p className="text-sm text-gray-600 whitespace-pre-line">{description}</p>
             )}
           </div>
 

@@ -597,7 +597,7 @@ const AppContent: React.FC = () => {
         }}
         onConfirm={confirmDeleteLive}
         title="ライブを削除しますか？"
-        description="このライブへの参加を削除します。この操作は取り消せません。"
+        description={"このライブへの参加を削除します。\nこの操作は取り消せません。"}
         confirmText="削除"
         cancelText="キャンセル"
         variant="danger"

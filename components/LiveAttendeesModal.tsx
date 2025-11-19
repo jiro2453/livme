@@ -361,6 +361,25 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                             </motion.div>
                           )}
 
+                          {/* Link */}
+                          {currentAttendee.link && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.45 }}
+                              className="text-center"
+                            >
+                              <a
+                                href={currentAttendee.link.startsWith('http') ? currentAttendee.link : `https://${currentAttendee.link}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-primary hover:text-primary/80 underline break-all"
+                              >
+                                {currentAttendee.link}
+                              </a>
+                            </motion.div>
+                          )}
+
                           {/* SNSアイコン */}
                           <motion.div
                             initial={{ opacity: 0, y: 20 }}

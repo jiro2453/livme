@@ -120,6 +120,16 @@ export const UserLivesModal: React.FC<UserLivesModalProps> = ({
                       {user.bio}
                     </p>
                   )}
+                  {user.link && (
+                    <a
+                      href={user.link.startsWith('http') ? user.link : `https://${user.link}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-primary/80 underline break-all block"
+                    >
+                      {user.link}
+                    </a>
+                  )}
                 </div>
                 <SocialIcons
                   socialLinks={user.social_links}

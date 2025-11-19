@@ -454,6 +454,16 @@ const AppContent: React.FC = () => {
                 {user.bio}
               </p>
             )}
+            {user?.link && (
+              <a
+                href={user.link.startsWith('http') ? user.link : `https://${user.link}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:text-primary/80 underline break-all text-center"
+              >
+                {user.link}
+              </a>
+            )}
             <SocialIcons
               socialLinks={user?.socialLinks}
               onShare={() => setIsShareModalOpen(true)}

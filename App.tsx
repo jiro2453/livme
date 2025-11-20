@@ -387,6 +387,7 @@ const AppContent: React.FC = () => {
           isOwnProfile={false}
           onSuccess={() => {}}
           onLiveClick={handleProfileLiveClick}
+          onViewProfile={handleViewUserProfile}
         />
 
         {/* ProfileRing from profile (z-110) */}
@@ -605,6 +606,7 @@ const AppContent: React.FC = () => {
         }}
         onLiveClick={handleProfileLiveClick}
         attendedLives={lives}
+        onViewProfile={handleViewUserProfile}
       />
 
       <SettingsModal

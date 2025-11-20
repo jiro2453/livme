@@ -28,6 +28,7 @@ import { Icons } from './assets/Icons';
 import { LiveCard } from './LiveCard';
 import { SocialIcons } from './SocialIcons';
 import { ImageCropModal } from './ImageCropModal';
+import { FollowListModal } from './FollowListModal';
 import {
   Accordion,
   AccordionContent,
@@ -84,6 +85,7 @@ interface ProfileModalProps {
   onSuccess?: () => void;
   onLiveClick?: (live: Live) => void;
   attendedLives?: Live[]; // Pass pre-fetched lives to avoid redundant API calls
+  onViewProfile?: (userId: string) => void; // Navigate to another user's profile
 }
 
 // Preset avatar URLs - 9 images (3 animals, 3 landscapes, 3 abstract)
@@ -112,6 +114,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   onSuccess,
   onLiveClick,
   attendedLives: preFetchedLives,
+  onViewProfile,
 }) => {
   const [displayUser, setDisplayUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -126,6 +129,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
+
+  // Follow list modal state
+  const [showFollowListModal, setShowFollowListModal] = useState(false);
+  const [followListInitialTab, setFollowListInitialTab] = useState<'followers' | 'following'>('followers');
 
   // Image crop state
   const [showCropModal, setShowCropModal] = useState(false);
@@ -207,6 +214,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           setAttendedLives(lives);
           console.log('Loaded attended lives:', lives.length);
         }
+
+        // Load follower/following counts for both own profile and other profiles
+        const [followers, following_count] = await Promise.all([
+          getFollowerCount(userData.id),
+          getFollowingCount(userData.id),
+        ]);
+        setFollowerCount(followers);
+        setFollowingCount(following_count);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -915,6 +930,32 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   プロフィール編集
                 </button>
               )}
+
+              {/* Follower/Following Stats - shown when not editing */}
+              {!isEditing && (
+                <div className="flex justify-center gap-6 text-sm pt-2">
+                  <button
+                    onClick={() => {
+                      setFollowListInitialTab('followers');
+                      setShowFollowListModal(true);
+                    }}
+                    className="text-center hover:opacity-70 transition-opacity"
+                  >
+                    <div className="font-semibold text-black">{followerCount}</div>
+                    <div className="text-gray-500">フォロワー</div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFollowListInitialTab('following');
+                      setShowFollowListModal(true);
+                    }}
+                    className="text-center hover:opacity-70 transition-opacity"
+                  >
+                    <div className="font-semibold text-black">{followingCount}</div>
+                    <div className="text-gray-500">フォロー中</div>
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Name Field */}
@@ -1509,6 +1550,17 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           imageUrl={cropImageUrl}
           aspectRatio={cropMode === 'avatar' ? 1 : undefined}
           title={cropMode === 'avatar' ? 'アバター画像をクロップ' : 'ギャラリー画像をクロップ'}
+        />
+      )}
+
+      {/* Follow List Modal */}
+      {displayUser && (
+        <FollowListModal
+          isOpen={showFollowListModal}
+          onClose={() => setShowFollowListModal(false)}
+          userId={displayUser.id}
+          initialTab={followListInitialTab}
+          onUserClick={onViewProfile}
         />
       )}
     </>

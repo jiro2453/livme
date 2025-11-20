@@ -13,6 +13,10 @@ import { SocialIcons } from './components/SocialIcons';
 import { ShareModal } from './components/ShareModal';
 import { LiveAttendeesModal } from './components/LiveAttendeesModal';
 import { ConfirmDialog } from './components/ConfirmDialog';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
+import { TermsOfService } from './components/TermsOfService';
+import { CookieConsent } from './components/CookieConsent';
+import { Footer } from './components/Footer';
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar';
 import {
   Accordion,
@@ -59,6 +63,10 @@ const AppContent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Legal pages
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [showTermsOfService, setShowTermsOfService] = useState(false);
 
   // Attendees cache to avoid redundant API calls
   const attendeesCache = useRef<Map<string, string[]>>(new Map());
@@ -397,6 +405,28 @@ const AppContent: React.FC = () => {
           />
         )}
 
+        {/* Footer */}
+        <Footer
+          onOpenPrivacy={() => setShowPrivacyPolicy(true)}
+          onOpenTerms={() => setShowTermsOfService(true)}
+        />
+
+        {/* Privacy Policy */}
+        {showPrivacyPolicy && (
+          <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
+        )}
+
+        {/* Terms of Service */}
+        {showTermsOfService && (
+          <TermsOfService onClose={() => setShowTermsOfService(false)} />
+        )}
+
+        {/* Cookie Consent Banner */}
+        <CookieConsent
+          onAccept={() => {}}
+          onOpenPrivacy={() => setShowPrivacyPolicy(true)}
+        />
+
         <Toaster />
       </div>
     );
@@ -636,6 +666,28 @@ const AppContent: React.FC = () => {
         confirmText="削除"
         cancelText="キャンセル"
         variant="danger"
+      />
+
+      {/* Footer */}
+      <Footer
+        onOpenPrivacy={() => setShowPrivacyPolicy(true)}
+        onOpenTerms={() => setShowTermsOfService(true)}
+      />
+
+      {/* Privacy Policy */}
+      {showPrivacyPolicy && (
+        <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
+      )}
+
+      {/* Terms of Service */}
+      {showTermsOfService && (
+        <TermsOfService onClose={() => setShowTermsOfService(false)} />
+      )}
+
+      {/* Cookie Consent Banner */}
+      <CookieConsent
+        onAccept={() => {}}
+        onOpenPrivacy={() => setShowPrivacyPolicy(true)}
       />
 
       <Toaster />

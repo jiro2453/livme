@@ -24,9 +24,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
             >
               利用規約
             </button>
-          </div>
-          <div className="text-xs text-gray-500">
-            <p>お問い合わせ：utada.develop@gmail.com</p>
+            <span className="text-gray-300">|</span>
+            <a
+              href="https://www.notion.so/2b16b287f66b80459cc3e6e71b102bdb"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              運営者情報
+            </a>
           </div>
           <div className="text-xs text-gray-400">
             <p>© 2025 LiVME. All rights reserved.</p>

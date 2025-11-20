@@ -222,17 +222,17 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Load follow status and counts for other user profiles
   const loadFollowData = async () => {
-    if (!userId || !currentUserId || isOwnProfile) return;
+    if (!displayUser?.id || !currentUserId || isOwnProfile) return;
 
     try {
-      // Load follow status
-      const following = await isFollowing(currentUserId, userId);
+      // Load follow status - use displayUser.id (UUID) instead of userId (string)
+      const following = await isFollowing(currentUserId, displayUser.id);
       setIsFollowingUser(following);
 
       // Load follower and following counts
       const [followers, following_count] = await Promise.all([
-        getFollowerCount(userId),
-        getFollowingCount(userId),
+        getFollowerCount(displayUser.id),
+        getFollowingCount(displayUser.id),
       ]);
       setFollowerCount(followers);
       setFollowingCount(following_count);
@@ -243,20 +243,20 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Load follow data when viewing other user's profile
   useEffect(() => {
-    if (isOpen && !isOwnProfile && userId && currentUserId) {
+    if (isOpen && !isOwnProfile && displayUser?.id && currentUserId && !loading) {
       loadFollowData();
     }
-  }, [isOpen, isOwnProfile, userId, currentUserId]);
+  }, [isOpen, isOwnProfile, displayUser?.id, currentUserId, loading]);
 
   // Handle follow/unfollow action
   const handleFollowToggle = async () => {
-    if (!currentUserId || !userId || isFollowLoading) return;
+    if (!currentUserId || !displayUser?.id || isFollowLoading) return;
 
     setIsFollowLoading(true);
     try {
       if (isFollowingUser) {
-        // Unfollow
-        const success = await unfollowUser(currentUserId, userId);
+        // Unfollow - use displayUser.id (UUID) instead of userId (string)
+        const success = await unfollowUser(currentUserId, displayUser.id);
         if (success) {
           setIsFollowingUser(false);
           setFollowerCount((prev) => Math.max(0, prev - 1));
@@ -272,8 +272,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           });
         }
       } else {
-        // Follow
-        const success = await followUser(currentUserId, userId);
+        // Follow - use displayUser.id (UUID) instead of userId (string)
+        const success = await followUser(currentUserId, displayUser.id);
         if (success) {
           setIsFollowingUser(true);
           setFollowerCount((prev) => prev + 1);

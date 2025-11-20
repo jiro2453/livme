@@ -4,6 +4,7 @@ import { Toaster } from './components/ui/sonner';
 import { AuthScreen } from './components/auth/AuthScreen';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ProfileModal } from './components/ProfileModal';
+import { FollowListModal } from './components/FollowListModal';
 import { SettingsModal } from './components/SettingsModal';
 import { AddLiveModal } from './components/AddLiveModal';
 import { EditLiveModal } from './components/EditLiveModal';
@@ -25,7 +26,7 @@ import {
   AccordionTrigger,
 } from './components/ui/accordion';
 import { Plus, User as UserIcon, LogOut, Calendar, Search } from 'lucide-react';
-import { deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId } from './lib/api';
+import { deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId, getFollowerCount, getFollowingCount } from './lib/api';
 import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
 import { useProfileRouting } from './hooks/useProfileRouting';
@@ -67,6 +68,12 @@ const AppContent: React.FC = () => {
   // Legal pages
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showTermsOfService, setShowTermsOfService] = useState(false);
+
+  // Follow stats
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [showFollowListModal, setShowFollowListModal] = useState(false);
+  const [followListInitialTab, setFollowListInitialTab] = useState<'followers' | 'following'>('followers');
 
   // Attendees cache to avoid redundant API calls
   const attendeesCache = useRef<Map<string, string[]>>(new Map());
@@ -127,6 +134,14 @@ const AppContent: React.FC = () => {
       attendedLives.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
       setLives(attendedLives);
+
+      // Load follower/following counts
+      const [followers, following] = await Promise.all([
+        getFollowerCount(user.id),
+        getFollowingCount(user.id),
+      ]);
+      setFollowerCount(followers);
+      setFollowingCount(following);
     } catch (error) {
       console.error('Error loading lives:', error);
       toast({
@@ -497,6 +512,31 @@ const AppContent: React.FC = () => {
                 {user.link}
               </a>
             )}
+
+            {/* Follower/Following Stats */}
+            <div className="flex justify-center gap-6 text-sm">
+              <button
+                onClick={() => {
+                  setFollowListInitialTab('following');
+                  setShowFollowListModal(true);
+                }}
+                className="text-center hover:opacity-70 transition-opacity"
+              >
+                <div className="font-semibold text-black">{followingCount}</div>
+                <div className="text-gray-500">フォロー中</div>
+              </button>
+              <button
+                onClick={() => {
+                  setFollowListInitialTab('followers');
+                  setShowFollowListModal(true);
+                }}
+                className="text-center hover:opacity-70 transition-opacity"
+              >
+                <div className="font-semibold text-black">{followerCount}</div>
+                <div className="text-gray-500">フォロワー</div>
+              </button>
+            </div>
+
             <SocialIcons
               socialLinks={user?.socialLinks}
               onShare={() => setIsShareModalOpen(true)}
@@ -639,6 +679,15 @@ const AppContent: React.FC = () => {
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
         userId={user.user_id}
+      />
+
+      {/* Follow List Modal */}
+      <FollowListModal
+        isOpen={showFollowListModal}
+        onClose={() => setShowFollowListModal(false)}
+        userId={user.id}
+        initialTab={followListInitialTab}
+        onUserClick={handleViewUserProfile}
       />
 
       {/* ProfileRing from home (z-90) */}

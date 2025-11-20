@@ -23,7 +23,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useToast } from '../hooks/useToast';
-import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId } from '../lib/api';
+import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId, followUser, unfollowUser, isFollowing, getFollowerCount, getFollowingCount } from '../lib/api';
 import { Icons } from './assets/Icons';
 import { LiveCard } from './LiveCard';
 import { SocialIcons } from './SocialIcons';
@@ -121,6 +121,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [selectedAvatar, setSelectedAvatar] = useState<string>('');
   const [attendedLives, setAttendedLives] = useState<Live[]>([]);
 
+  // Follow-related state
+  const [isFollowingUser, setIsFollowingUser] = useState(false);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+
   // Image crop state
   const [showCropModal, setShowCropModal] = useState(false);
   const [cropImageUrl, setCropImageUrl] = useState<string>('');
@@ -211,6 +217,87 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Load follow status and counts for other user profiles
+  const loadFollowData = async () => {
+    if (!userId || !currentUserId || isOwnProfile) return;
+
+    try {
+      // Load follow status
+      const following = await isFollowing(currentUserId, userId);
+      setIsFollowingUser(following);
+
+      // Load follower and following counts
+      const [followers, following_count] = await Promise.all([
+        getFollowerCount(userId),
+        getFollowingCount(userId),
+      ]);
+      setFollowerCount(followers);
+      setFollowingCount(following_count);
+    } catch (error) {
+      console.error('Error loading follow data:', error);
+    }
+  };
+
+  // Load follow data when viewing other user's profile
+  useEffect(() => {
+    if (isOpen && !isOwnProfile && userId && currentUserId) {
+      loadFollowData();
+    }
+  }, [isOpen, isOwnProfile, userId, currentUserId]);
+
+  // Handle follow/unfollow action
+  const handleFollowToggle = async () => {
+    if (!currentUserId || !userId || isFollowLoading) return;
+
+    setIsFollowLoading(true);
+    try {
+      if (isFollowingUser) {
+        // Unfollow
+        const success = await unfollowUser(currentUserId, userId);
+        if (success) {
+          setIsFollowingUser(false);
+          setFollowerCount((prev) => Math.max(0, prev - 1));
+          toast({
+            title: 'フォロー解除しました',
+            description: `${displayUser?.name}のフォローを解除しました`,
+          });
+        } else {
+          toast({
+            title: 'エラー',
+            description: 'フォロー解除に失敗しました',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        // Follow
+        const success = await followUser(currentUserId, userId);
+        if (success) {
+          setIsFollowingUser(true);
+          setFollowerCount((prev) => prev + 1);
+          toast({
+            title: 'フォローしました',
+            description: `${displayUser?.name}をフォローしました`,
+          });
+        } else {
+          toast({
+            title: 'エラー',
+            description: 'フォローに失敗しました',
+            variant: 'destructive',
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling follow:', error);
+      toast({
+        title: 'エラー',
+        description: 'フォロー操作に失敗しました',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsFollowLoading(false);
     }
   };
 
@@ -695,6 +782,42 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <p className="text-sm text-gray-600 whitespace-pre-wrap break-words px-4">
               {displayUser.bio}
             </p>
+          )}
+
+          {/* Follower/Following Stats and Follow Button */}
+          {currentUserId && (
+            <div className="space-y-3 pt-2">
+              {/* Stats */}
+              <div className="flex justify-center gap-6 text-sm">
+                <div className="text-center">
+                  <div className="font-semibold text-black">{followerCount}</div>
+                  <div className="text-gray-500">フォロワー</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-semibold text-black">{followingCount}</div>
+                  <div className="text-gray-500">フォロー中</div>
+                </div>
+              </div>
+
+              {/* Follow Button */}
+              <Button
+                onClick={handleFollowToggle}
+                disabled={isFollowLoading}
+                className={`w-full max-w-xs mx-auto rounded-full text-sm font-medium transition-all ${
+                  isFollowingUser
+                    ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                    : 'bg-primary text-white hover:bg-primary/90'
+                }`}
+              >
+                {isFollowLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isFollowingUser ? (
+                  'フォロー中'
+                ) : (
+                  'フォロー'
+                )}
+              </Button>
+            </div>
           )}
 
           {/* Social Links */}

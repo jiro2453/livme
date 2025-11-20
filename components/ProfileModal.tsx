@@ -805,12 +805,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               {/* Stats */}
               <div className="flex justify-center gap-6 text-sm">
                 <div className="text-center">
-                  <div className="font-semibold text-black">{followerCount}</div>
-                  <div className="text-gray-500">フォロワー</div>
-                </div>
-                <div className="text-center">
                   <div className="font-semibold text-black">{followingCount}</div>
                   <div className="text-gray-500">フォロー中</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-semibold text-black">{followerCount}</div>
+                  <div className="text-gray-500">フォロワー</div>
                 </div>
               </div>
 
@@ -936,16 +936,6 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <div className="flex justify-center gap-6 text-sm pt-2">
                   <button
                     onClick={() => {
-                      setFollowListInitialTab('followers');
-                      setShowFollowListModal(true);
-                    }}
-                    className="text-center hover:opacity-70 transition-opacity"
-                  >
-                    <div className="font-semibold text-black">{followerCount}</div>
-                    <div className="text-gray-500">フォロワー</div>
-                  </button>
-                  <button
-                    onClick={() => {
                       setFollowListInitialTab('following');
                       setShowFollowListModal(true);
                     }}
@@ -953,6 +943,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   >
                     <div className="font-semibold text-black">{followingCount}</div>
                     <div className="text-gray-500">フォロー中</div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setFollowListInitialTab('followers');
+                      setShowFollowListModal(true);
+                    }}
+                    className="text-center hover:opacity-70 transition-opacity"
+                  >
+                    <div className="font-semibold text-black">{followerCount}</div>
+                    <div className="text-gray-500">フォロワー</div>
                   </button>
                 </div>
               )}

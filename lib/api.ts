@@ -587,6 +587,46 @@ export const getFollowingCount = async (userId: string): Promise<number> => {
   return count || 0;
 };
 
+// Get list of followers (users who follow this user)
+export const getFollowers = async (userId: string): Promise<User[]> => {
+  const { data, error } = await supabase
+    .from('follows')
+    .select('follower_id')
+    .eq('following_id', userId);
+
+  if (error) {
+    console.error('Error getting followers:', error);
+    return [];
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  const followerIds = data.map((follow) => follow.follower_id);
+  return getUsersByIds(followerIds);
+};
+
+// Get list of users this user is following
+export const getFollowing = async (userId: string): Promise<User[]> => {
+  const { data, error } = await supabase
+    .from('follows')
+    .select('following_id')
+    .eq('follower_id', userId);
+
+  if (error) {
+    console.error('Error getting following:', error);
+    return [];
+  }
+
+  if (!data || data.length === 0) {
+    return [];
+  }
+
+  const followingIds = data.map((follow) => follow.following_id);
+  return getUsersByIds(followingIds);
+};
+
 // Storage API
 export const uploadImage = async (file: File, path: string): Promise<string | null> => {
   const { data, error } = await supabase.storage

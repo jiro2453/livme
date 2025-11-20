@@ -804,14 +804,26 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div className="space-y-3 pt-2">
               {/* Stats */}
               <div className="flex justify-center gap-6 text-sm">
-                <div className="text-center">
+                <button
+                  onClick={() => {
+                    setFollowListInitialTab('following');
+                    setShowFollowListModal(true);
+                  }}
+                  className="text-center hover:opacity-70 transition-opacity"
+                >
                   <div className="font-semibold text-black">{followingCount}</div>
                   <div className="text-gray-500">フォロー中</div>
-                </div>
-                <div className="text-center">
+                </button>
+                <button
+                  onClick={() => {
+                    setFollowListInitialTab('followers');
+                    setShowFollowListModal(true);
+                  }}
+                  className="text-center hover:opacity-70 transition-opacity"
+                >
                   <div className="font-semibold text-black">{followerCount}</div>
                   <div className="text-gray-500">フォロワー</div>
-                </div>
+                </button>
               </div>
 
               {/* Follow Button */}

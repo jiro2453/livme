@@ -111,7 +111,7 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[80vh] p-0 bg-white overflow-hidden">
+      <DialogContent hideCloseButton className="w-[calc(100vw-2rem)] max-w-md max-h-[80vh] p-0 bg-white overflow-hidden">
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <DialogTitle className="text-lg font-semibold text-black">
             フォロー
@@ -128,27 +128,27 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
           <div className="sticky top-[65px] bg-white border-b border-gray-200 px-6">
             <TabsList className="w-full grid grid-cols-2 bg-transparent h-12">
               <TabsTrigger
-                value="followers"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent"
-              >
-                フォロワー ({followers.length})
-              </TabsTrigger>
-              <TabsTrigger
                 value="following"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent"
               >
                 フォロー中 ({following.length})
               </TabsTrigger>
+              <TabsTrigger
+                value="followers"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent"
+              >
+                フォロワー ({followers.length})
+              </TabsTrigger>
             </TabsList>
           </div>
 
           <div className="overflow-y-auto max-h-[calc(80vh-130px)] px-6 py-4">
-            <TabsContent value="followers" className="mt-0">
-              {renderUserList(followers, loadingFollowers)}
-            </TabsContent>
-
             <TabsContent value="following" className="mt-0">
               {renderUserList(following, loadingFollowing)}
+            </TabsContent>
+
+            <TabsContent value="followers" className="mt-0">
+              {renderUserList(followers, loadingFollowers)}
             </TabsContent>
           </div>
         </Tabs>

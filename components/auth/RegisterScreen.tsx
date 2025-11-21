@@ -20,7 +20,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
   const { toast } = useToast();
 
   const validateUserId = (id: string): boolean => {
-    const regex = /^[a-zA-Z0-9_-]{3,30}$/;
+    const regex = /^[a-zA-Z0-9_-]{3,15}$/;
     return regex.test(id);
   };
 
@@ -53,7 +53,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
       console.warn('⚠️ Invalid userId format');
       toast({
         title: 'エラー',
-        description: 'ユーザーIDは英数字・ハイフン・アンダースコアのみ、3-30文字で入力してください',
+        description: 'ユーザーIDは英数字・-・_のみ、3-15文字で入力してください',
         variant: 'destructive',
       });
       return;
@@ -122,7 +122,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({ onSwitchToLogin 
                 type="text"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                placeholder="ユーザーID（英数字・ハイフン・アンダースコア 3-30文字）"
+                placeholder="ユーザーID（英数字・-・_ 3-15文字）"
                 className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
                 required
               />

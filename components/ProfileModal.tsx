@@ -40,11 +40,11 @@ import type { User, Live } from '../types';
 
 // Validation Rules
 const VALIDATION_RULES = {
-  MAX_NAME_LENGTH: 50,
+  MAX_NAME_LENGTH: 15,
   MAX_BIO_LENGTH: 200,
   MAX_GALLERY_IMAGES: 3,
   MIN_USER_ID_LENGTH: 3,
-  MAX_USER_ID_LENGTH: 30,
+  MAX_USER_ID_LENGTH: 15,
   USER_ID_REGEX: /^[a-zA-Z0-9_]+$/,
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
 };

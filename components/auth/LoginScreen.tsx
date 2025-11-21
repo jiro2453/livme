@@ -62,95 +62,173 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     setErrorMessage(''); // Clear error when user types
   };
 
+  const scrollToLanding = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const landingSection = document.getElementById('landing-section');
+    if (landingSection) {
+      landingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-[#f8f9fa]">
-      <Card className="w-full max-w-md min-h-[500px] shadow-sm border border-primary/30 bg-white">
-        <CardContent className="pt-8 pb-6 px-10">
+    <div className="min-h-screen bg-[#f8f9fa]">
+      {/* ログインセクション */}
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <Card className="w-full max-w-md min-h-[500px] shadow-sm border border-primary/30 bg-white">
+          <CardContent className="pt-8 pb-6 px-10">
+            {/* ロゴ */}
+            <div className="flex justify-center mb-6">
+              <picture>
+                <source srcSet="/LiVME_2.webp" type="image/webp" />
+                <img
+                  src="/LiVME_2.png"
+                  alt="LiVME Logo"
+                  className="h-20 w-auto"
+                />
+              </picture>
+            </div>
+
+            {/* タイトル */}
+            <h1 className="text-[15.75px] font-bold text-center mb-8">ログイン</h1>
+
+            <form onSubmit={handleSubmit}>
+              <div className="max-w-xs mx-auto">
+                {/* メールアドレス */}
+                <div className="mb-6">
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="メールアドレス"
+                    required
+                    className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
+                  />
+                </div>
+
+                {/* パスワード */}
+                <div className="relative mb-6">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={handlePasswordChange}
+                    placeholder="パスワード"
+                    required
+                    className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+
+                {/* エラーメッセージ */}
+                {errorMessage && (
+                  <div className="mb-6 text-red-600 text-sm">
+                    {errorMessage}
+                  </div>
+                )}
+
+                {/* ログインボタン */}
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-medium mb-6"
+                  disabled={loading}
+                >
+                  {loading ? 'ログイン中...' : 'ログイン'}
+                </Button>
+              </div>
+
+              {/* 新規登録 */}
+              <div className="text-center text-sm text-gray-600 mb-4">
+                アカウントをお持ちでない方は{' '}
+                <button
+                  type="button"
+                  onClick={onSwitchToRegister}
+                  className="text-primary hover:underline font-medium"
+                >
+                  新規登録
+                </button>
+              </div>
+
+              {/* 利用方法へのリンク */}
+              <div className="text-center text-sm">
+                <a
+                  href="#landing-section"
+                  onClick={scrollToLanding}
+                  className="text-primary hover:underline font-medium"
+                >
+                  利用方法
+                </a>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ランディングセクション */}
+      <div
+        id="landing-section"
+        className="min-h-screen flex flex-col items-center justify-center p-8 bg-white"
+      >
+        <div className="max-w-4xl w-full text-center">
           {/* ロゴ */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-8">
             <picture>
               <source srcSet="/LiVME_2.webp" type="image/webp" />
               <img
                 src="/LiVME_2.png"
                 alt="LiVME Logo"
-                className="h-20 w-auto"
+                className="h-32 w-auto"
               />
             </picture>
           </div>
 
-          {/* タイトル */}
-          <h1 className="text-[15.75px] font-bold text-center mb-8">ログイン</h1>
+          {/* タグライン */}
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">
+            LIVEとMEをつなぐ場所
+          </h2>
 
-          <form onSubmit={handleSubmit}>
-            <div className="max-w-xs mx-auto">
-              {/* メールアドレス */}
-              <div className="mb-6">
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  placeholder="メールアドレス"
-                  required
-                  className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm"
-                />
-              </div>
-
-              {/* パスワード */}
-              <div className="relative mb-6">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={handlePasswordChange}
-                  placeholder="パスワード"
-                  required
-                  className="bg-gray-50 border-gray-200 focus:border-primary focus:ring-primary placeholder:text-sm pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-
-              {/* エラーメッセージ */}
-              {errorMessage && (
-                <div className="mb-6 text-red-600 text-sm">
-                  {errorMessage}
-                </div>
-              )}
-
-              {/* ログインボタン */}
-              <Button
-                type="submit"
-                className="w-full h-12 text-base font-medium mb-6"
-                disabled={loading}
-              >
-                {loading ? 'ログイン中...' : 'ログイン'}
-              </Button>
+          {/* 説明セクション（今後追加可能） */}
+          <div className="space-y-8 text-left max-w-2xl mx-auto">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">アーティスト・パフォーマー向け</h3>
+              <p className="text-gray-600 leading-relaxed">
+                ライブ・公演情報を簡単に管理し、ファンと直接つながることができます。
+              </p>
             </div>
 
-            {/* 新規登録 */}
-            <div className="text-center text-sm text-gray-600">
-              アカウントをお持ちでない方は{' '}
-              <button
-                type="button"
-                onClick={onSwitchToRegister}
-                className="text-primary hover:underline font-medium"
-              >
-                新規登録
-              </button>
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">ファン向け</h3>
+              <p className="text-gray-600 leading-relaxed">
+                好きなアーティストをフォローして、最新のライブ情報をチェックできます。
+              </p>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+
+          {/* トップに戻るリンク */}
+          <div className="mt-16">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-primary hover:underline font-medium"
+            >
+              ログイン画面に戻る
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

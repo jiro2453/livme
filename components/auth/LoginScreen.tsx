@@ -178,7 +178,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       {/* ランディングセクション */}
       <div
         id="landing-section"
-        className="min-h-screen flex flex-col items-center justify-center p-8 bg-white"
+        className="min-h-screen flex flex-col items-center justify-center p-8 bg-white font-sans"
       >
         <div className="max-w-4xl w-full text-center">
           {/* ロゴ動画 */}

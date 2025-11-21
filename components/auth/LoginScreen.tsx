@@ -195,7 +195,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </div>
 
           {/* タグライン */}
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-12 whitespace-nowrap">
             LIVEとMEをつなぐ場所
           </h2>
 

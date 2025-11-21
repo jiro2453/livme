@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card, CardContent } from '../ui/card';
 import { useToast } from '../../hooks/useToast';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ChevronDown } from 'lucide-react';
 
 interface LoginScreenProps {
   onSwitchToRegister: () => void;
@@ -148,7 +148,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               </div>
 
               {/* 新規登録 */}
-              <div className="text-center text-sm text-gray-600 mb-4">
+              <div className="text-center text-sm text-gray-600">
                 アカウントをお持ちでない方は{' '}
                 <button
                   type="button"
@@ -158,20 +158,21 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   新規登録
                 </button>
               </div>
-
-              {/* 利用方法へのリンク */}
-              <div className="text-center text-sm">
-                <a
-                  href="#landing-section"
-                  onClick={scrollToLanding}
-                  className="text-primary hover:underline font-medium"
-                >
-                  利用方法
-                </a>
-              </div>
             </form>
           </CardContent>
         </Card>
+
+        {/* 利用方法へのリンク（Card外） */}
+        <div className="mt-6 text-center">
+          <a
+            href="#landing-section"
+            onClick={scrollToLanding}
+            className="inline-flex flex-col items-center text-primary hover:opacity-80 transition-opacity"
+          >
+            <span className="text-sm font-medium mb-1">利用方法</span>
+            <ChevronDown className="h-5 w-5 animate-bounce" />
+          </a>
+        </div>
       </div>
 
       {/* ランディングセクション */}
@@ -180,20 +181,21 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         className="min-h-screen flex flex-col items-center justify-center p-8 bg-white"
       >
         <div className="max-w-4xl w-full text-center">
-          {/* ロゴ */}
+          {/* ロゴ動画 */}
           <div className="flex justify-center mb-8">
-            <picture>
-              <source srcSet="/LiVME_2.webp" type="image/webp" />
-              <img
-                src="/LiVME_2.png"
-                alt="LiVME Logo"
-                className="h-32 w-auto"
-              />
-            </picture>
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-32 w-auto"
+            >
+              <source src="/LiVME_2.mp4" type="video/mp4" />
+            </video>
           </div>
 
           {/* タグライン */}
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-12">
             LIVEとMEをつなぐ場所
           </h2>
 

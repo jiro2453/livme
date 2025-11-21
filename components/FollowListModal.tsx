@@ -27,6 +27,13 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
   const [loadingFollowing, setLoadingFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<'followers' | 'following'>(initialTab);
 
+  // Reset active tab when modal opens or initialTab changes
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTab(initialTab);
+    }
+  }, [isOpen, initialTab]);
+
   useEffect(() => {
     if (isOpen && userId) {
       loadFollowers();

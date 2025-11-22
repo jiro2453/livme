@@ -221,7 +221,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-xs font-semibold text-primary mb-4 text-center">特徴その2</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
-                  好きなアーティストをフォローして、最新のライブ情報をチェックできます。
+                  同じライブに参加する仲間を見つけることができます。
                 </p>
               </CardContent>
             </Card>

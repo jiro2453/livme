@@ -200,21 +200,37 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             LIVEとMEをつなぐ場所
           </h2>
 
-          {/* 説明セクション（今後追加可能） */}
-          <div className="space-y-8 text-left max-w-2xl mx-auto">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">アーティスト・パフォーマー向け</h3>
-              <p className="text-gray-600 leading-relaxed">
-                ライブ・公演情報を簡単に管理し、ファンと直接つながることができます。
-              </p>
-            </div>
+          {/* 3つのカード */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* LP1 */}
+            <Card className="shadow-sm border border-primary/30 bg-white">
+              <CardContent className="pt-8 pb-6 px-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">LP1</h3>
+                <p className="text-gray-600 leading-relaxed text-center">
+                  ライブ・公演情報を簡単に管理し、ファンと直接つながることができます。
+                </p>
+              </CardContent>
+            </Card>
 
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">ファン向け</h3>
-              <p className="text-gray-600 leading-relaxed">
-                好きなアーティストをフォローして、最新のライブ情報をチェックできます。
-              </p>
-            </div>
+            {/* LP2 */}
+            <Card className="shadow-sm border border-primary/30 bg-white">
+              <CardContent className="pt-8 pb-6 px-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">LP2</h3>
+                <p className="text-gray-600 leading-relaxed text-center">
+                  好きなアーティストをフォローして、最新のライブ情報をチェックできます。
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* LP3 */}
+            <Card className="shadow-sm border border-primary/30 bg-white">
+              <CardContent className="pt-8 pb-6 px-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">LP3</h3>
+                <p className="text-gray-600 leading-relaxed text-center">
+                  プロフィールやギャラリーで、あなたの魅力を最大限に伝えられます。
+                </p>
+              </CardContent>
+            </Card>
           </div>
 
           {/* トップに戻るリンク */}

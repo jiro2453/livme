@@ -189,7 +189,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               muted
               playsInline
               className="h-32 w-auto"
-              style={{ mixBlendMode: 'screen' }}
             >
               <source src="/LiVME_2.mp4" type="video/mp4" />
             </video>

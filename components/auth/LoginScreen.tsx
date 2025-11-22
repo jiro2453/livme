@@ -206,7 +206,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">LP1</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
-                  ライブ・公演情報を簡単に管理し、ファンと直接つながることができます。
+                  行く予定のライブや過去に参加したライブを簡単に管理できます。
                 </p>
               </CardContent>
             </Card>

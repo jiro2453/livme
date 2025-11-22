@@ -209,6 +209,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             {/* LP1 */}
             <Card className="shadow-sm border border-primary/30 bg-white">
               <CardContent className="pt-8 pb-6 px-6">
+                <div className="flex justify-center mb-4">
+                  <img
+                    src="/lp1-feature.png"
+                    alt="特徴その1"
+                    className="h-32 w-auto"
+                  />
+                </div>
                 <h3 className="text-xs font-semibold text-primary mb-4 text-center">特徴その1</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
                   行く予定のライブや過去に参加したライブを簡単に管理できます。

@@ -207,7 +207,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           {/* 3つのカード */}
           <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
             {/* LP1 */}
-            <Card className="shadow-sm border border-primary/30 bg-white">
+            <Card
+              className="shadow-sm border border-primary/30 bg-white cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => {
+                const element = document.getElementById('feature-detail-1');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その1</h3>
                 <div className="flex justify-center mb-4">
@@ -224,7 +232,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </Card>
 
             {/* LP2 */}
-            <Card className="shadow-sm border border-primary/30 bg-white">
+            <Card
+              className="shadow-sm border border-primary/30 bg-white cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => {
+                const element = document.getElementById('feature-detail-2');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その2</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
@@ -234,7 +250,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </Card>
 
             {/* LP3 */}
-            <Card className="shadow-sm border border-primary/30 bg-white">
+            <Card
+              className="shadow-sm border border-primary/30 bg-white cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => {
+                const element = document.getElementById('feature-detail-3');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その3</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
@@ -242,6 +266,54 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 </p>
               </CardContent>
             </Card>
+          </div>
+
+          {/* 特徴の詳細セクション */}
+          <div className="mt-16 space-y-12 max-w-3xl mx-auto">
+            {/* 特徴1の詳細 */}
+            <div id="feature-detail-1" className="scroll-mt-8">
+              <Card className="shadow-sm border border-primary/30 bg-white">
+                <CardContent className="pt-8 pb-6 px-8">
+                  <h3 className="text-2xl font-bold text-primary mb-6 text-center">ライブ管理機能</h3>
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    行く予定のライブや過去に参加したライブを簡単に管理できます。お気に入りのアーティストのライブ情報を登録して、いつでも確認可能です。
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    参加予定のライブをカレンダーで確認したり、過去のライブを振り返ることで、あなたのライブ体験を記録として残せます。
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 特徴2の詳細 */}
+            <div id="feature-detail-2" className="scroll-mt-8">
+              <Card className="shadow-sm border border-primary/30 bg-white">
+                <CardContent className="pt-8 pb-6 px-8">
+                  <h3 className="text-2xl font-bold text-primary mb-6 text-center">仲間を見つける</h3>
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    同じライブに参加する仲間を見つけることができます。共通の趣味を持つ新しい友達と出会えるチャンスです。
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    同じアーティストのファン同士で繋がり、ライブの感想を共有したり、一緒に参加する仲間を募集できます。
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* 特徴3の詳細 */}
+            <div id="feature-detail-3" className="scroll-mt-8">
+              <Card className="shadow-sm border border-primary/30 bg-white">
+                <CardContent className="pt-8 pb-6 px-8">
+                  <h3 className="text-2xl font-bold text-primary mb-6 text-center">プロフィール＆ギャラリー</h3>
+                  <p className="text-gray-700 leading-relaxed mb-4">
+                    プロフィールやギャラリーで、あなたの魅力を最大限に伝えられます。ライブでの思い出の写真や好きなアーティストを紹介できます。
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    自分だけのギャラリーを作成して、ライブの思い出を共有しましょう。他のユーザーとの共通点を見つけやすくなります。
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           {/* トップに戻るリンク */}

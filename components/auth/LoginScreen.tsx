@@ -201,7 +201,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </h2>
 
           {/* 3つのカード */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
             {/* LP1 */}
             <Card className="shadow-sm border border-primary/30 bg-white">
               <CardContent className="pt-8 pb-6 px-6">

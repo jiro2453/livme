@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Card, CardContent } from '../ui/card';
 import { useToast } from '../../hooks/useToast';
-import { Eye, EyeOff, ChevronDown } from 'lucide-react';
+import { Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface LoginScreenProps {
   onSwitchToRegister: () => void;
@@ -240,9 +240,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="text-primary hover:underline font-medium"
+              className="inline-flex flex-col items-center text-primary hover:opacity-80 transition-opacity"
             >
-              ログイン画面に戻る
+              <ChevronUp className="h-5 w-5 animate-bounce" />
+              <span className="text-sm font-medium mt-1">ログイン画面に戻る</span>
             </a>
           </div>
         </div>

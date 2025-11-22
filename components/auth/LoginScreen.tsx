@@ -214,7 +214,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             {/* LP2 */}
             <Card className="shadow-sm border border-primary/30 bg-white">
               <CardContent className="pt-8 pb-6 px-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">特徴その2</h3>
+                <h3 className="text-xs font-semibold text-primary mb-4 text-center">特徴その2</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
                   好きなアーティストをフォローして、最新のライブ情報をチェックできます。
                 </p>
@@ -224,7 +224,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             {/* LP3 */}
             <Card className="shadow-sm border border-primary/30 bg-white">
               <CardContent className="pt-8 pb-6 px-6">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">特徴その3</h3>
+                <h3 className="text-xs font-semibold text-primary mb-4 text-center">特徴その3</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
                   プロフィールやギャラリーで、あなたの魅力を最大限に伝えられます。
                 </p>

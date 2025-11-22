@@ -199,6 +199,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             LIVEとMEをつなぐ場所
           </h2>
 
+          {/* 説明文 */}
+          <p className="text-gray-700 leading-relaxed mb-12 max-w-3xl mx-auto">
+            LiVME-ライム-はユーザーと友達のライブ参加情報をシェアし、同じ趣味を持つ新たな仲間が見つかる無料のサービスです。
+          </p>
+
           {/* 3つのカード */}
           <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
             {/* LP1 */}

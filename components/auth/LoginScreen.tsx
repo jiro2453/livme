@@ -201,7 +201,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
           {/* 説明文 */}
           <p className="text-gray-700 leading-relaxed mb-12 max-w-3xl mx-auto">
-            LiVME-ライム-はユーザーのライブ参加情報をシェアし、同じ趣味を持つ新たな仲間が見つかる無料のサービスです。
+            LiVME-ライム-はユーザーの
+            <br className="sm:hidden" />
+            ライブ参加情報をシェアし、
+            <br className="sm:hidden" />
+            同じ趣味を持つ新たな仲間が
+            <br className="sm:hidden" />
+            見つかる無料のサービスです。
           </p>
 
           {/* 3つのカード */}
@@ -227,7 +233,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   />
                 </div>
                 <p className="text-gray-600 leading-relaxed text-center">
-                  行く予定のライブや過去に参加したライブを簡単に管理できます。
+                  行く予定のライブや
+                  <br className="sm:hidden" />
+                  過去に参加したライブを
+                  <br className="sm:hidden" />
+                  簡単に管理できます。
                 </p>
               </CardContent>
             </Card>
@@ -253,7 +263,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   />
                 </div>
                 <p className="text-gray-600 leading-relaxed text-center">
-                  同じライブに参加する仲間を見つけることができます。
+                  同じライブに参加する
+                  <br className="sm:hidden" />
+                  仲間を見つけることができます。
                 </p>
               </CardContent>
             </Card>
@@ -272,7 +284,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その3</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
-                  プロフィールやギャラリーで、あなたの魅力を最大限に伝えられます。
+                  プロフィールやギャラリーで、
+                  <br className="sm:hidden" />
+                  あなたの魅力を
+                  <br className="sm:hidden" />
+                  最大限に伝えられます。
                 </p>
               </CardContent>
             </Card>

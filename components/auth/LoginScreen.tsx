@@ -207,7 +207,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           {/* 3つのカード */}
           <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
             {/* LP1 */}
-            <Card className="shadow-sm border border-primary/30 bg-white">
+            <Card
+              id="feature-1"
+              className="shadow-sm border border-primary/30 bg-white cursor-pointer hover:shadow-md transition-shadow scroll-mt-32"
+              onClick={() => {
+                const element = document.getElementById('feature-1');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }}
+            >
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その1</h3>
                 <div className="flex justify-center mb-4">
@@ -224,7 +233,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </Card>
 
             {/* LP2 */}
-            <Card className="shadow-sm border border-primary/30 bg-white">
+            <Card
+              id="feature-2"
+              className="shadow-sm border border-primary/30 bg-white cursor-pointer hover:shadow-md transition-shadow scroll-mt-32"
+              onClick={() => {
+                const element = document.getElementById('feature-2');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }}
+            >
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その2</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
@@ -234,7 +252,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </Card>
 
             {/* LP3 */}
-            <Card className="shadow-sm border border-primary/30 bg-white">
+            <Card
+              id="feature-3"
+              className="shadow-sm border border-primary/30 bg-white cursor-pointer hover:shadow-md transition-shadow scroll-mt-32"
+              onClick={() => {
+                const element = document.getElementById('feature-3');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }}
+            >
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その3</h3>
                 <p className="text-gray-600 leading-relaxed text-center">

@@ -284,11 +284,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その3</h3>
                 <p className="text-gray-600 leading-relaxed text-center">
-                  プロフィールやギャラリーで、
-                  <br className="sm:hidden" />
-                  あなたの魅力を
-                  <br className="sm:hidden" />
-                  最大限に伝えられます。
+                  ライブを楽しみます。
                 </p>
               </CardContent>
             </Card>

@@ -1611,6 +1611,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           isOpen={showFollowListModal}
           onClose={() => setShowFollowListModal(false)}
           userId={displayUser.id}
+          currentUserId={currentUserId}
           initialTab={followListInitialTab}
           onUserClick={onViewProfile}
         />

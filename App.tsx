@@ -686,6 +686,7 @@ const AppContent: React.FC = () => {
         isOpen={showFollowListModal}
         onClose={() => setShowFollowListModal(false)}
         userId={user.id}
+        currentUserId={user.id}
         initialTab={followListInitialTab}
         onUserClick={handleViewUserProfile}
       />

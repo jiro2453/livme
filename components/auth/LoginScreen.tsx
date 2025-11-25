@@ -287,7 +287,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   <img
                     src="/lp3-feature.png"
                     alt="特徴その3"
-                    className="h-48 w-auto"
+                    className="h-48 w-auto scale-125"
                   />
                 </div>
                 <p className="text-gray-600 leading-relaxed text-center">

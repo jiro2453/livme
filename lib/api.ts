@@ -62,6 +62,40 @@ export const getUserByUserId = async (userId: string): Promise<User | null> => {
   return null;
 };
 
+// Search users by user_id with prefix matching
+export const searchUsersByUserId = async (query: string): Promise<User[]> => {
+  if (!query || query.trim().length === 0) {
+    return [];
+  }
+
+  console.log('searchUsersByUserId呼び出し:', query);
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, user_id, name, bio, avatar, link, social_links, images, created_at, updated_at')
+    .ilike('user_id', `${query.trim()}%`)
+    .limit(20);
+
+  if (error) {
+    console.error('Error searching users:', error);
+    return [];
+  }
+
+  if (!data || data.length === 0) {
+    console.log('No users found for query:', query);
+    return [];
+  }
+
+  console.log(`Found ${data.length} users for query:`, query);
+
+  // Convert snake_case to camelCase for UI
+  return data.map(user => ({
+    ...user,
+    socialLinks: user.social_links,
+    galleryImages: user.images,
+  }));
+};
+
 // Get multiple users by their IDs in a single query
 // Supports both UUID (id column) and string (user_id column)
 export const getUsersByIds = async (userIds: string[]): Promise<User[]> => {

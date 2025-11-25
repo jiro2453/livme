@@ -761,6 +761,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     onClose();
   };
 
+  // Enter edit mode
+  const handleEnterEditMode = () => {
+    console.log('=== Entering edit mode ===');
+    console.log('Current avatar:', displayUser?.avatar);
+    console.log('formData.avatar:', formData.avatar);
+    // Initialize selectedAvatar with current avatar when entering edit mode
+    setSelectedAvatar(displayUser?.avatar || formData.avatar || '');
+    // Reset userIdStatus to idle when entering edit mode
+    setUserIdStatus('idle');
+    // Clear any previous errors
+    setErrors({});
+    console.log('Setting isEditing to true');
+    setIsEditing(true);
+  };
+
   if (loading || !displayUser) {
     return (
       <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
@@ -939,19 +954,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               {!isEditing && isOwnProfile && (
                 <button
                   type="button"
-                  onClick={() => {
-                    console.log('=== Edit button clicked ===');
-                    console.log('Current avatar:', displayUser?.avatar);
-                    console.log('formData.avatar:', formData.avatar);
-                    // Initialize selectedAvatar with current avatar when entering edit mode
-                    setSelectedAvatar(displayUser?.avatar || formData.avatar || '');
-                    // Reset userIdStatus to idle when entering edit mode
-                    setUserIdStatus('idle');
-                    // Clear any previous errors
-                    setErrors({});
-                    console.log('Setting isEditing to true');
-                    setIsEditing(true);
-                  }}
+                  onClick={handleEnterEditMode}
                   className="w-full bg-primary text-white text-sm rounded-full px-4 py-2 hover:bg-primary/90 max-w-xs"
                 >
                   プロフィール編集
@@ -1007,7 +1010,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   )}
                 </>
               ) : (
-                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-black text-sm">
+                <div
+                  onClick={isOwnProfile ? handleEnterEditMode : undefined}
+                  className={`h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-black text-sm ${isOwnProfile ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''}`}
+                >
                   {displayUser.name}
                 </div>
               )}
@@ -1054,7 +1060,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   )}
                 </>
               ) : (
-                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
+                <div
+                  onClick={isOwnProfile ? handleEnterEditMode : undefined}
+                  className={`h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm ${isOwnProfile ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''}`}
+                >
                   <span className="text-gray-500 font-medium mr-2">@</span>
                   <span className={displayUser.user_id ? "text-black" : "text-gray-500"}>
                     {displayUser.user_id || '未設定'}
@@ -1088,7 +1097,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   </div>
                 </>
               ) : (
-                <div className="min-h-20 rounded-lg border-2 border-primary bg-white px-4 py-3 text-sm">
+                <div
+                  onClick={isOwnProfile ? handleEnterEditMode : undefined}
+                  className={`min-h-20 rounded-lg border-2 border-primary bg-white px-4 py-3 text-sm ${isOwnProfile ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''}`}
+                >
                   <span className={displayUser.bio ? "text-black whitespace-pre-wrap break-words" : "text-gray-500"}>
                     {displayUser.bio || '未設定'}
                   </span>
@@ -1118,12 +1130,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   )}
                 </>
               ) : (
-                <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
+                <div
+                  onClick={isOwnProfile ? handleEnterEditMode : undefined}
+                  className={`h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm ${isOwnProfile ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''}`}
+                >
                   {displayUser.link ? (
                     <a
                       href={displayUser.link.startsWith('http') ? displayUser.link : `https://${displayUser.link}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="text-primary hover:text-primary/80 underline flex items-center gap-1"
                     >
                       <ExternalLink className="w-3 h-3" />
@@ -1248,7 +1264,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     />
                   </div>
                 ) : (
-                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
+                  <div
+                    onClick={isOwnProfile ? handleEnterEditMode : undefined}
+                    className={`h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm ${isOwnProfile ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''}`}
+                  >
                     <picture>
                       <source srcSet={Icons.instagramWebp} type="image/webp" />
                       <img src={Icons.instagram} alt="Instagram" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
@@ -1278,7 +1297,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     />
                   </div>
                 ) : (
-                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
+                  <div
+                    onClick={isOwnProfile ? handleEnterEditMode : undefined}
+                    className={`h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm ${isOwnProfile ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''}`}
+                  >
                     <picture>
                       <source srcSet={Icons.xWebp} type="image/webp" />
                       <img src={Icons.x} alt="X" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />
@@ -1308,7 +1330,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     />
                   </div>
                 ) : (
-                  <div className="h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm">
+                  <div
+                    onClick={isOwnProfile ? handleEnterEditMode : undefined}
+                    className={`h-12 rounded-lg border-2 border-primary bg-white flex items-center justify-center px-4 text-sm ${isOwnProfile ? 'cursor-pointer hover:bg-gray-50 transition-colors' : ''}`}
+                  >
                     <picture>
                       <source srcSet={Icons.tiktokWebp} type="image/webp" />
                       <img src={Icons.tiktok} alt="TikTok" className="w-8 h-8 mr-4" loading="lazy" decoding="async" />

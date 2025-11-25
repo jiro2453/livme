@@ -283,6 +283,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             >
               <CardContent className="pt-8 pb-6 px-6">
                 <h3 className="text-[15px] font-semibold text-primary mb-4 text-center">特徴その3</h3>
+                <div className="flex justify-center mb-4">
+                  <img
+                    src="/lp3-feature.png"
+                    alt="特徴その3"
+                    className="h-48 w-auto"
+                  />
+                </div>
                 <p className="text-gray-600 leading-relaxed text-center">
                   ライブを楽しみます。
                 </p>

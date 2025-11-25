@@ -56,6 +56,19 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
     }
   }, [isOpen, userId]);
 
+  // Incremental search - auto search when query changes
+  useEffect(() => {
+    if (activeTab !== 'search' || !searchQuery.trim()) {
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      handleSearch();
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, activeTab]);
+
   const loadFollowers = async () => {
     setLoadingFollowers(true);
     try {
@@ -233,13 +246,13 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
                 value="following"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent text-xs"
               >
-                フォロー中 ({following.length})
+                フォロー中
               </TabsTrigger>
               <TabsTrigger
                 value="followers"
                 className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent text-xs"
               >
-                フォロワー ({followers.length})
+                フォロワー
               </TabsTrigger>
               <TabsTrigger
                 value="search"

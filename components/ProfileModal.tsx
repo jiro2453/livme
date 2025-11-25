@@ -665,6 +665,22 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           throw new Error('更新結果が空です');
         }
 
+        // Update displayUser immediately with the saved data for instant UI feedback
+        setDisplayUser(prev => prev ? {
+          ...prev,
+          name: formData.name,
+          user_id: formData.user_id,
+          bio: formData.bio,
+          link: formData.link,
+          avatar: formData.avatar,
+          galleryImages: formData.galleryImages,
+          socialLinks: {
+            instagram: formData.instagram,
+            twitter: formData.twitter,
+            tiktok: formData.tiktok,
+          },
+        } : null);
+
         toast({
           title: '保存しました',
           description: 'プロフィールを更新しました',
@@ -672,9 +688,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         });
 
         setIsEditing(false);
-        await loadProfile();
 
-        // Notify parent component to refresh profile data
+        // Notify parent component to refresh profile data in the background
         if (onSuccess) {
           onSuccess();
         }

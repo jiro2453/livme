@@ -255,19 +255,19 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
             <TabsList className="w-full grid grid-cols-3 bg-transparent h-12">
               <TabsTrigger
                 value="following"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent text-xs"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent text-xs"
               >
                 フォロー中
               </TabsTrigger>
               <TabsTrigger
                 value="followers"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent text-xs"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent text-xs"
               >
                 フォロワー
               </TabsTrigger>
               <TabsTrigger
                 value="search"
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none bg-transparent text-xs"
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none rounded-none bg-transparent text-xs"
               >
                 友達を見つける
               </TabsTrigger>

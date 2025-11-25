@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { getFollowers, getFollowing, getUserByUserId, followUser, isFollowing } from '../lib/api';
+import { getFollowers, getFollowing, searchUsersByUserId, followUser, isFollowing } from '../lib/api';
 import { useToast } from '../hooks/useToast';
 import type { User } from '../types';
 
@@ -34,7 +34,7 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResult, setSearchResult] = useState<User | null>(null);
+  const [searchResults, setSearchResults] = useState<User[]>([]);
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
   const [followingStatus, setFollowingStatus] = useState<Record<string, boolean>>({});
@@ -100,30 +100,41 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
     }
   };
 
-  // Search for user by user_id
+  // Search for users by user_id (prefix match)
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
       setSearchError('ユーザーIDを入力してください');
+      setSearchResults([]);
       return;
     }
 
     setSearching(true);
     setSearchError('');
-    setSearchResult(null);
+    setSearchResults([]);
 
     try {
-      const user = await getUserByUserId(searchQuery.trim());
+      const users = await searchUsersByUserId(searchQuery.trim());
 
-      if (!user) {
+      // Filter out current user from results
+      const filteredUsers = users.filter(user => user.id !== currentUserId);
+
+      if (filteredUsers.length === 0) {
         setSearchError('ユーザーが見つかりませんでした');
-      } else if (user.id === currentUserId) {
-        setSearchError('自分自身は検索できません');
       } else {
-        setSearchResult(user);
-        // Check if already following this user
+        setSearchResults(filteredUsers);
+        // Check following status for all results
         if (currentUserId) {
-          const following = await isFollowing(currentUserId, user.id);
-          setFollowingStatus({ [user.id]: following });
+          const statusChecks = await Promise.all(
+            filteredUsers.map(async (user) => {
+              const following = await isFollowing(currentUserId, user.id);
+              return { userId: user.id, following };
+            })
+          );
+          const newStatus: Record<string, boolean> = {};
+          statusChecks.forEach(({ userId, following }) => {
+            newStatus[userId] = following;
+          });
+          setFollowingStatus(newStatus);
         }
       }
     } catch (error) {
@@ -313,54 +324,58 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
                   )}
                 </div>
 
-                {/* Search Result */}
-                {searchResult && (
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex items-center gap-3">
-                      <Avatar
-                        className="h-12 w-12 cursor-pointer"
-                        onClick={() => handleUserClick(searchResult)}
-                      >
-                        <AvatarImage src={searchResult.avatar || ''} />
-                        <AvatarFallback className="bg-gray-400 text-white">
-                          {searchResult.name?.charAt(0) || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div
-                        className="flex-1 cursor-pointer"
-                        onClick={() => handleUserClick(searchResult)}
-                      >
-                        <div className="font-medium text-sm text-black">
-                          {searchResult.name}
-                        </div>
-                        {searchResult.user_id && (
-                          <div className="text-xs text-gray-500">
-                            @{searchResult.user_id}
+                {/* Search Results */}
+                {searchResults.length > 0 && (
+                  <div className="space-y-2">
+                    {searchResults.map((user) => (
+                      <div key={user.id} className="border border-gray-200 rounded-lg p-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar
+                            className="h-12 w-12 cursor-pointer"
+                            onClick={() => handleUserClick(user)}
+                          >
+                            <AvatarImage src={user.avatar || ''} />
+                            <AvatarFallback className="bg-gray-400 text-white">
+                              {user.name?.charAt(0) || 'U'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div
+                            className="flex-1 cursor-pointer"
+                            onClick={() => handleUserClick(user)}
+                          >
+                            <div className="font-medium text-sm text-black">
+                              {user.name}
+                            </div>
+                            {user.user_id && (
+                              <div className="text-xs text-gray-500">
+                                @{user.user_id}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      {currentUserId && (
-                        <Button
-                          onClick={() => handleFollowToggle(searchResult)}
-                          disabled={followLoading[searchResult.id]}
-                          variant={followingStatus[searchResult.id] ? 'outline' : 'default'}
-                          className="px-4 py-2 text-sm"
-                        >
-                          {followLoading[searchResult.id] ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : followingStatus[searchResult.id] ? (
-                            'フォロー中'
-                          ) : (
-                            'フォロー'
+                          {currentUserId && (
+                            <Button
+                              onClick={() => handleFollowToggle(user)}
+                              disabled={followLoading[user.id]}
+                              variant={followingStatus[user.id] ? 'outline' : 'default'}
+                              className="px-4 py-2 text-sm"
+                            >
+                              {followLoading[user.id] ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : followingStatus[user.id] ? (
+                                'フォロー中'
+                              ) : (
+                                'フォロー'
+                              )}
+                            </Button>
                           )}
-                        </Button>
-                      )}
-                    </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
 
                 {/* No Result Message */}
-                {!searchResult && !searching && !searchError && searchQuery && (
+                {searchResults.length === 0 && !searching && !searchError && searchQuery && (
                   <div className="flex flex-col items-center justify-center py-12 text-gray-500">
                     <Search className="w-12 h-12 mb-2 text-gray-300" />
                     <p className="text-sm">ユーザーIDで検索してください</p>

@@ -3,7 +3,6 @@ import { X, Loader2, User as UserIcon, Search } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
-import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { getFollowers, getFollowing, searchUsersByUserId, followUser, isFollowing } from '../lib/api';
 import { useToast } from '../hooks/useToast';
@@ -287,35 +286,23 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
               <div className="space-y-4">
                 {/* Search Input */}
                 <div className="space-y-2">
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <Input
-                        value={searchQuery}
-                        onChange={(e) => {
-                          setSearchQuery(e.target.value);
-                          setSearchError('');
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            handleSearch();
-                          }
-                        }}
-                        placeholder="ユーザーIDを入力"
-                        className="pl-10"
-                      />
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    </div>
-                    <Button
-                      onClick={handleSearch}
-                      disabled={searching || !searchQuery.trim()}
-                      className="px-6"
-                    >
-                      {searching ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        '検索'
-                      )}
-                    </Button>
+                  <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setSearchError('');
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSearch();
+                        }
+                      }}
+                      placeholder="ユーザーIDを入力"
+                      className="w-full h-[38px] pl-11 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 bg-gray-50/50 placeholder:text-gray-400"
+                    />
                   </div>
 
                   {/* Error Message */}

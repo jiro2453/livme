@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed": "tsx scripts/seedUsers.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
@@ -41,9 +42,11 @@
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.16",
+    "dotenv": "^17.2.3",
     "postcss": "^8.4.33",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.0.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.3.3",
     "vite": "^5.0.11"
   }

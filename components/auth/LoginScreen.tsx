@@ -5,6 +5,9 @@ import { Input } from '../ui/input';
 import { Card, CardContent } from '../ui/card';
 import { useToast } from '../../hooks/useToast';
 import { Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
+import { Footer } from '../Footer';
+import { PrivacyPolicy } from '../PrivacyPolicy';
+import { TermsOfService } from '../TermsOfService';
 
 interface LoginScreenProps {
   onSwitchToRegister: () => void;
@@ -18,6 +21,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [showTermsOfService, setShowTermsOfService] = useState(false);
   const { signIn } = useAuth();
   const { toast } = useToast();
 
@@ -311,24 +316,24 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <span className="text-sm font-medium mt-1">ログイン画面に戻る</span>
             </a>
           </div>
-
-          {/* フッター */}
-          <footer className="mt-20 pt-8 pb-12 border-t border-gray-200">
-            <div className="text-center space-y-4">
-              <div className="flex justify-center items-center gap-6 text-sm text-gray-600">
-                <a href="#" className="hover:text-primary transition-colors">利用規約</a>
-                <span className="text-gray-300">|</span>
-                <a href="#" className="hover:text-primary transition-colors">プライバシーポリシー</a>
-                <span className="text-gray-300">|</span>
-                <a href="#" className="hover:text-primary transition-colors">お問い合わせ</a>
-              </div>
-              <p className="text-sm text-gray-500">
-                © 2024 LiVME. All rights reserved.
-              </p>
-            </div>
-          </footer>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer
+        onOpenPrivacy={() => setShowPrivacyPolicy(true)}
+        onOpenTerms={() => setShowTermsOfService(true)}
+      />
+
+      {/* Privacy Policy */}
+      {showPrivacyPolicy && (
+        <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
+      )}
+
+      {/* Terms of Service */}
+      {showTermsOfService && (
+        <TermsOfService onClose={() => setShowTermsOfService(false)} />
+      )}
     </div>
   );
 };

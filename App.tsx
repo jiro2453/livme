@@ -598,7 +598,13 @@ const AppContent: React.FC = () => {
               </div>
             ) : lives.length === 0 ? (
               <EmptyState
-                message="ライブ情報がありません。追加してみましょう！"
+                message={
+                  <>
+                    ライブ情報がありません。
+                    <br />
+                    追加してみましょう！
+                  </>
+                }
                 icon={<Calendar className="h-12 w-12 mb-4 text-gray-400" />}
               />
             ) : filteredLives.length === 0 ? (

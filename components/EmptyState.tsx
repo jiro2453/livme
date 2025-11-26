@@ -2,7 +2,7 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 
 interface EmptyStateProps {
-  message: string;
+  message: string | React.ReactNode;
   icon?: React.ReactNode;
 }
 

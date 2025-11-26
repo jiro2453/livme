@@ -175,7 +175,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
-          className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none sm:w-full focus:outline-none"
+          className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none focus:outline-none overflow-hidden"
           style={{ zIndex }}
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
@@ -254,11 +254,12 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
 
               {/* メインカードコンテナ */}
               <div
-                className="bg-white rounded-2xl shadow-xl overflow-hidden relative min-h-[400px] max-h-[75vh]"
+                className="bg-white rounded-2xl shadow-xl overflow-hidden relative min-h-[400px] max-h-[75vh] w-full"
                 style={{
                   paddingTop: '0.75rem',
                   transformStyle: 'preserve-3d',
                   zIndex: 10,
+                  maxWidth: '100%',
                 }}
               >
                 {loading ? (
@@ -298,7 +299,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       }}
                     >
                       {currentAttendee && (
-                        <div className="flex flex-col items-center space-y-2 w-full px-6 py-4 pb-2">
+                        <div className="flex flex-col items-center space-y-2 w-full px-6 py-4 pb-2 overflow-x-hidden">
                           {/* アバター */}
                           <motion.div
                             initial={{ scale: 0 }}
@@ -367,13 +368,13 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.45 }}
-                              className="text-center"
+                              className="text-center w-full max-w-full px-2"
                             >
                               <a
                                 href={currentAttendee.link.startsWith('http') ? currentAttendee.link : `https://${currentAttendee.link}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs text-primary hover:text-primary/80 underline break-all"
+                                className="text-xs text-primary hover:text-primary/80 underline break-all overflow-wrap-anywhere inline-block max-w-full"
                               >
                                 {currentAttendee.link}
                               </a>

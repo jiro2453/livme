@@ -175,7 +175,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
-          className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none focus:outline-none overflow-hidden"
+          className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none focus:outline-none"
           style={{ zIndex }}
           onOpenAutoFocus={(e) => e.preventDefault()}
         >

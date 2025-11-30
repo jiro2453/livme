@@ -60,12 +60,12 @@ export const PrivacyPolicy: React.FC<PrivacyPolicyProps> = ({ onClose }) => {
             <h3 className="text-base font-semibold mt-4 mb-2">Supabase</h3>
             <p>データベースおよび認証サービスとして利用しています。詳細は<a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary underline">Supabaseのプライバシーポリシー</a>をご確認ください。</p>
 
-            <h3 className="text-base font-semibold mt-4 mb-2">Google AdSense</h3>
+            <h3 className="text-base font-semibold mt-4 mb-2">忍者AdMax</h3>
             <p>
-              本サービスは、広告配信のためにGoogle AdSenseを使用しています。
-              Google AdSenseは、Cookieを使用してユーザーの興味に基づいた広告を表示します。
-              Cookieの使用を無効にする方法については、
-              <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener noreferrer" className="text-primary underline">Googleの広告設定ページ</a>
+              本サービスは、広告配信のために忍者AdMaxを使用しています。
+              忍者AdMaxは、Cookieを使用して広告を表示します。
+              詳細については、
+              <a href="https://www.ninja.co.jp/privacy/" target="_blank" rel="noopener noreferrer" className="text-primary underline">忍者ツールズのプライバシーポリシー</a>
               をご確認ください。
             </p>
           </section>

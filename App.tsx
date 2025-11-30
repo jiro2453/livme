@@ -18,6 +18,7 @@ import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { TermsOfService } from './components/TermsOfService';
 import { CookieConsent } from './components/CookieConsent';
 import { Footer } from './components/Footer';
+import { AdMaxBanner } from './components/AdMaxBanner';
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar';
 import {
   Accordion,
@@ -421,6 +422,11 @@ const AppContent: React.FC = () => {
           />
         )}
 
+        {/* Advertisement */}
+        <div className="flex justify-center py-8">
+          <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} />
+        </div>
+
         {/* Footer */}
         <Footer
           onOpenPrivacy={() => setShowPrivacyPolicy(true)}
@@ -727,6 +733,11 @@ const AppContent: React.FC = () => {
         cancelText="キャンセル"
         variant="danger"
       />
+
+      {/* Advertisement */}
+      <div className="flex justify-center py-8">
+        <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} />
+      </div>
 
       {/* Footer */}
       <Footer

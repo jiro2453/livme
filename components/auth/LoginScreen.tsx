@@ -6,6 +6,7 @@ import { Card, CardContent } from '../ui/card';
 import { useToast } from '../../hooks/useToast';
 import { Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 import { Footer } from '../Footer';
+import { AdMaxBanner } from '../AdMaxBanner';
 import { PrivacyPolicy } from '../PrivacyPolicy';
 import { TermsOfService } from '../TermsOfService';
 
@@ -317,6 +318,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </a>
           </div>
         </div>
+      </div>
+
+      {/* Advertisement */}
+      <div className="flex justify-center py-8">
+        <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} />
       </div>
 
       {/* Footer */}

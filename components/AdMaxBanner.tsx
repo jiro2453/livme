@@ -14,45 +14,36 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
   className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scriptLoadedRef = useRef(false);
 
   useEffect(() => {
     // 広告IDが設定されていない場合は何もしない
-    if (!admaxId) {
-      console.warn('AdMax ID is not set. Please set VITE_ADMAX_ID in your .env file');
+    if (!admaxId || !containerRef.current) {
       return;
     }
 
-    // 既にスクリプトがロードされている場合はスキップ
-    if (scriptLoadedRef.current) {
-      return;
-    }
+    // 既存のスクリプトをクリア
+    containerRef.current.innerHTML = '';
 
-    // 忍者AdMaxのスクリプトを動的に追加
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.async = true;
+    // AdMax設定スクリプトを作成
+    const configScript = document.createElement('script');
+    configScript.type = 'text/javascript';
+    configScript.innerHTML = `
+      var admax_id = '${admaxId}';
+      var admax_width = '${width}';
+      var admax_height = '${height}';
+    `;
 
-    // AdMax変数をグローバルスコープに設定
-    (window as any).admax_id = admaxId;
-    (window as any).admax_width = width;
-    (window as any).admax_height = height;
+    // AdMaxスクリプトを作成
+    const adScript = document.createElement('script');
+    adScript.type = 'text/javascript';
+    adScript.src = `https://adm.shinobi.jp/s/${admaxId}`;
+    adScript.async = true;
 
-    // AdMaxのスクリプトURLを設定
-    script.src = `https://adm.shinobi.jp/s/${admaxId}`;
+    // スクリプトを追加
+    containerRef.current.appendChild(configScript);
+    containerRef.current.appendChild(adScript);
 
-    if (containerRef.current) {
-      containerRef.current.appendChild(script);
-      scriptLoadedRef.current = true;
-    }
-
-    return () => {
-      // クリーンアップ
-      if (containerRef.current && script.parentNode) {
-        containerRef.current.removeChild(script);
-      }
-      scriptLoadedRef.current = false;
-    };
+    // クリーンアップは不要（広告の表示を維持）
   }, [admaxId, width, height]);
 
   // 広告IDが設定されていない場合はプレースホルダーを表示
@@ -74,7 +65,7 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
     <div
       ref={containerRef}
       className={`admax-banner ${className}`}
-      style={{ width: `${width}px`, height: `${height}px` }}
+      style={{ minWidth: `${width}px`, minHeight: `${height}px` }}
     />
   );
 };

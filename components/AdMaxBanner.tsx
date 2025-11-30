@@ -15,6 +15,10 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // デバッグ用：環境変数の確認
+  console.log('AdMaxBanner - admaxId:', admaxId);
+  console.log('AdMaxBanner - all env vars:', import.meta.env);
+
   useEffect(() => {
     // 広告IDが設定されていない場合は何もしない
     if (!admaxId || !containerRef.current) {

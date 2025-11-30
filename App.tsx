@@ -37,6 +37,9 @@ const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
   const { urlUserId, navigateToProfile, navigateToHome } = useProfileRouting();
 
+  // デバッグ用：環境変数の確認
+  console.log('App - VITE_ADMAX_ID:', import.meta.env.VITE_ADMAX_ID);
+
   // Data
   const [lives, setLives] = useState<Live[]>([]);
   const [loading, setLoading] = useState(true);

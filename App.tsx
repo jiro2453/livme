@@ -423,7 +423,7 @@ const AppContent: React.FC = () => {
         )}
 
         {/* Advertisement */}
-        <div className="flex justify-center py-8">
+        <div className="hidden md:flex justify-center py-8">
           <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} width="468" height="60" />
         </div>
 
@@ -735,7 +735,7 @@ const AppContent: React.FC = () => {
       />
 
       {/* Advertisement */}
-      <div className="flex justify-center py-8">
+      <div className="hidden md:flex justify-center py-8">
         <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} width="468" height="60" />
       </div>
 

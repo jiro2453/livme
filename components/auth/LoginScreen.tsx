@@ -322,7 +322,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
       {/* Advertisement */}
       <div className="flex justify-center py-8">
-        <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} width="728" height="90" />
+        <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} width="468" height="60" />
       </div>
 
       {/* Footer */}

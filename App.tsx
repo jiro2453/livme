@@ -427,7 +427,9 @@ const AppContent: React.FC = () => {
           dangerouslySetInnerHTML={{
             __html: `
               <!-- admax -->
-              <script src="https://adm.shinobi.jp/s/876840f38c1c0ad3c567c5c59bc376d0"></script>
+              <div class="admax-ads" data-admax-id="876840f38c1c0ad3c567c5c59bc376d0" style="display:inline-block;width:468px;height:60px;"></div>
+              <script type="text/javascript">(admaxads = window.admaxads || []).push({admax_id: "876840f38c1c0ad3c567c5c59bc376d0",type: "banner"});</script>
+              <script type="text/javascript" charset="utf-8" src="https://adm.shinobi.jp/st/t.js" async></script>
               <!-- admax -->
             `
           }}
@@ -746,7 +748,9 @@ const AppContent: React.FC = () => {
         dangerouslySetInnerHTML={{
           __html: `
             <!-- admax -->
-            <script src="https://adm.shinobi.jp/s/876840f38c1c0ad3c567c5c59bc376d0"></script>
+            <div class="admax-ads" data-admax-id="876840f38c1c0ad3c567c5c59bc376d0" style="display:inline-block;width:468px;height:60px;"></div>
+            <script type="text/javascript">(admaxads = window.admaxads || []).push({admax_id: "876840f38c1c0ad3c567c5c59bc376d0",type: "banner"});</script>
+            <script type="text/javascript" charset="utf-8" src="https://adm.shinobi.jp/st/t.js" async></script>
             <!-- admax -->
           `
         }}

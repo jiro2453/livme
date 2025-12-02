@@ -18,7 +18,6 @@ import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { TermsOfService } from './components/TermsOfService';
 import { CookieConsent } from './components/CookieConsent';
 import { Footer } from './components/Footer';
-import { AdMaxBanner } from './components/AdMaxBanner';
 import { Avatar, AvatarImage, AvatarFallback } from './components/ui/avatar';
 import {
   Accordion,
@@ -423,9 +422,16 @@ const AppContent: React.FC = () => {
         )}
 
         {/* Advertisement */}
-        <div className="hidden md:flex justify-center py-8">
-          <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} width="468" height="60" />
-        </div>
+        <div
+          className="hidden md:flex justify-center py-8"
+          dangerouslySetInnerHTML={{
+            __html: `
+              <!-- admax -->
+              <script src="https://adm.shinobi.jp/s/efaf282581e42f1495e85b76ad8e2d51"></script>
+              <!-- admax -->
+            `
+          }}
+        />
 
         {/* Footer */}
         <Footer
@@ -735,9 +741,16 @@ const AppContent: React.FC = () => {
       />
 
       {/* Advertisement */}
-      <div className="hidden md:flex justify-center py-8">
-        <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} width="468" height="60" />
-      </div>
+      <div
+        className="hidden md:flex justify-center py-8"
+        dangerouslySetInnerHTML={{
+          __html: `
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/efaf282581e42f1495e85b76ad8e2d51"></script>
+            <!-- admax -->
+          `
+        }}
+      />
 
       {/* Footer */}
       <Footer

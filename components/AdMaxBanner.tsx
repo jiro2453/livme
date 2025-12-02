@@ -24,24 +24,20 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
     // 既存のスクリプトをクリア
     containerRef.current.innerHTML = '';
 
-    // AdMax設定スクリプトを作成
-    const configScript = document.createElement('script');
-    configScript.type = 'text/javascript';
-    configScript.innerHTML = `
-      var admax_id = '${admaxId}';
-      var admax_width = '${width}';
-      var admax_height = '${height}';
-    `;
+    // 開始コメント
+    const startComment = document.createComment(' admax ');
 
-    // AdMaxスクリプトを作成
+    // AdMaxスクリプトを作成（シンプルな形式）
     const adScript = document.createElement('script');
-    adScript.type = 'text/javascript';
     adScript.src = `https://adm.shinobi.jp/s/${admaxId}`;
-    adScript.async = true;
+
+    // 終了コメント
+    const endComment = document.createComment(' admax ');
 
     // スクリプトを追加
-    containerRef.current.appendChild(configScript);
+    containerRef.current.appendChild(startComment);
     containerRef.current.appendChild(adScript);
+    containerRef.current.appendChild(endComment);
 
     // クリーンアップは不要（広告の表示を維持）
   }, [admaxId, width, height]);

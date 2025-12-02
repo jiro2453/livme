@@ -6,7 +6,6 @@ import { Card, CardContent } from '../ui/card';
 import { useToast } from '../../hooks/useToast';
 import { Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 import { Footer } from '../Footer';
-import { AdMaxBanner } from '../AdMaxBanner';
 import { PrivacyPolicy } from '../PrivacyPolicy';
 import { TermsOfService } from '../TermsOfService';
 
@@ -321,9 +320,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       </div>
 
       {/* Advertisement */}
-      <div className="hidden md:flex justify-center py-8">
-        <AdMaxBanner admaxId={import.meta.env.VITE_ADMAX_ID} width="468" height="60" />
-      </div>
+      <div
+        className="hidden md:flex justify-center py-8"
+        dangerouslySetInnerHTML={{
+          __html: `
+            <!-- admax -->
+            <script src="https://adm.shinobi.jp/s/efaf282581e42f1495e85b76ad8e2d51"></script>
+            <!-- admax -->
+          `
+        }}
+      />
 
       {/* Footer */}
       <Footer

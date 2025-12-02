@@ -325,7 +325,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         dangerouslySetInnerHTML={{
           __html: `
             <!-- admax -->
-            <script src="https://adm.shinobi.jp/s/efaf282581e42f1495e85b76ad8e2d51"></script>
+            <script src="https://adm.shinobi.jp/s/876840f38c1c0ad3c567c5c59bc376d0"></script>
             <!-- admax -->
           `
         }}

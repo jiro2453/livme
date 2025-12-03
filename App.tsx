@@ -742,7 +742,7 @@ const AppContent: React.FC = () => {
         variant="danger"
       />
 
-      {/* Advertisement */}
+      {/* Advertisement - PC */}
       <div
         className="hidden md:flex justify-center py-8"
         dangerouslySetInnerHTML={{
@@ -750,6 +750,20 @@ const AppContent: React.FC = () => {
             <!-- admax -->
             <div class="admax-ads" data-admax-id="876840f38c1c0ad3c567c5c59bc376d0" style="display:inline-block;width:468px;height:60px;"></div>
             <script type="text/javascript">(admaxads = window.admaxads || []).push({admax_id: "876840f38c1c0ad3c567c5c59bc376d0",type: "banner"});</script>
+            <script type="text/javascript" charset="utf-8" src="https://adm.shinobi.jp/st/t.js" async></script>
+            <!-- admax -->
+          `
+        }}
+      />
+
+      {/* Advertisement - Mobile */}
+      <div
+        className="md:hidden flex justify-center py-8"
+        dangerouslySetInnerHTML={{
+          __html: `
+            <!-- admax -->
+            <div class="admax-ads" data-admax-id="4174e0f1018f53d91bd8e5469070a83e" style="display:inline-block;"></div>
+            <script type="text/javascript">(admaxads = window.admaxads || []).push({admax_id: "4174e0f1018f53d91bd8e5469070a83e",type: "banner"});</script>
             <script type="text/javascript" charset="utf-8" src="https://adm.shinobi.jp/st/t.js" async></script>
             <!-- admax -->
           `

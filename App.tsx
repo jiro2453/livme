@@ -31,6 +31,7 @@ import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
 import { useProfileRouting } from './hooks/useProfileRouting';
 import type { Live, User } from './types';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
@@ -79,6 +80,23 @@ const AppContent: React.FC = () => {
   const attendeesCache = useRef<Map<string, string[]>>(new Map());
 
   const { toast } = useToast();
+
+  // Initialize Status Bar for iOS
+  useEffect(() => {
+    const initStatusBar = async () => {
+      try {
+        // Set status bar style to dark content (black text on white background)
+        await StatusBar.setStyle({ style: Style.Dark });
+        // Set background color to match header
+        await StatusBar.setBackgroundColor({ color: '#ffffff' });
+      } catch (error) {
+        // Status Bar API is only available on native platforms
+        console.log('Status Bar not available (web platform)');
+      }
+    };
+
+    initStatusBar();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -466,7 +484,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-primary">
+      <header className="sticky top-0 z-40 bg-white border-b border-primary" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-[546px] mx-auto px-4 py-0.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 w-[88px]">

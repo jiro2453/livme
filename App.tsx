@@ -484,7 +484,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-primary" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <header className="sticky top-0 z-40 bg-white border-b border-primary ios-safe-top">
         <div className="max-w-[546px] mx-auto px-4 py-0.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 w-[88px]">

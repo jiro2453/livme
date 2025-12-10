@@ -85,6 +85,8 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const initStatusBar = async () => {
       try {
+        // Prevent status bar from overlaying the web content
+        await StatusBar.setOverlaysWebView({ overlay: false });
         // Set status bar style to dark content (black text on white background)
         await StatusBar.setStyle({ style: Style.Dark });
         // Set background color to match header

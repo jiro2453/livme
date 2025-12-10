@@ -5,7 +5,13 @@ const config: CapacitorConfig = {
   appName: 'Livme',
   webDir: 'dist',
   ios: {
-    contentInset: 'automatic'
+    contentInset: 'automatic',
+    scheme: 'App'
+  },
+  server: {
+    hostname: 'livme.net',
+    androidScheme: 'https',
+    iosScheme: 'https'
   },
   plugins: {
     StatusBar: {

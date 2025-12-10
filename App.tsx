@@ -85,8 +85,8 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const initStatusBar = async () => {
       try {
-        // Prevent status bar from overlaying the web content
-        await StatusBar.setOverlaysWebView({ overlay: false });
+        // Allow status bar to overlay the web content
+        await StatusBar.setOverlaysWebView({ overlay: true });
         // Set status bar style to dark content (black text on white background)
         await StatusBar.setStyle({ style: Style.Dark });
         // Set background color to match header
@@ -486,7 +486,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f8f9fa]">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-primary">
+      <header className="sticky top-0 z-40 bg-white border-b border-primary ios-safe-top">
         <div className="max-w-[546px] mx-auto px-4 py-0.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 w-[88px]">

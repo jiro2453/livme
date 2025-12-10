@@ -32,6 +32,7 @@ import { useToast } from './hooks/useToast';
 import { useProfileRouting } from './hooks/useProfileRouting';
 import type { Live, User } from './types';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { App as CapacitorApp } from '@capacitor/app';
 
 const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
@@ -98,6 +99,49 @@ const AppContent: React.FC = () => {
     };
 
     initStatusBar();
+  }, []);
+
+  // Handle deep links from iOS app
+  useEffect(() => {
+    let listenerHandle: any;
+
+    const setupDeepLinkListener = async () => {
+      listenerHandle = await CapacitorApp.addListener('appUrlOpen', (data: any) => {
+        console.log('🔗 Deep link opened:', data.url);
+
+        try {
+          const url = new URL(data.url);
+          const pathname = url.pathname;
+
+          // Extract user_id from pathname (e.g., "/jiro2453" -> "jiro2453")
+          const userId = pathname.replace(/^\//, '').split('/')[0];
+
+          if (userId && userId.length > 0) {
+            console.log('🔗 Navigating to profile:', userId);
+            // Use history API to update URL without reload
+            window.history.pushState({}, '', `/${userId}`);
+            // Trigger routing
+            const event = new PopStateEvent('popstate');
+            window.dispatchEvent(event);
+          } else {
+            console.log('🔗 Navigating to home');
+            window.history.pushState({}, '', '/');
+            const event = new PopStateEvent('popstate');
+            window.dispatchEvent(event);
+          }
+        } catch (error) {
+          console.error('❌ Error parsing deep link:', error);
+        }
+      });
+    };
+
+    setupDeepLinkListener();
+
+    return () => {
+      if (listenerHandle) {
+        listenerHandle.remove();
+      }
+    };
   }, []);
 
   useEffect(() => {

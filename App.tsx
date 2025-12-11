@@ -506,6 +506,27 @@ const AppContent: React.FC = () => {
 
   const groupedLives = groupLivesByMonth(filteredLives);
 
+  // Calculate default open months (within the last year)
+  const getDefaultOpenMonths = (groupedLives: Record<string, Live[]>): string[] => {
+    const now = new Date();
+    const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+
+    return Object.keys(groupedLives).filter(monthKey => {
+      // Parse "2025年12月" format
+      const match = monthKey.match(/(\d+)年(\d+)月/);
+      if (!match) return false;
+
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10);
+      const monthDate = new Date(year, month - 1, 1);
+
+      // Keep month open if it's after or equal to one year ago
+      return monthDate >= oneYearAgo;
+    });
+  };
+
+  const defaultOpenMonths = getDefaultOpenMonths(groupedLives);
+
   // 他ユーザーのプロフィール画面表示時
   if (showUserProfile && selectedUser) {
     return (
@@ -745,7 +766,7 @@ const AppContent: React.FC = () => {
                 <p>「{searchQuery}」に一致する公演が見つかりませんでした</p>
               </div>
             ) : (
-              <Accordion type="multiple" className="w-full" defaultValue={Object.keys(groupedLives)}>
+              <Accordion type="multiple" className="w-full" defaultValue={defaultOpenMonths}>
                 {Object.entries(groupedLives).map(([month, monthLives]) => (
                   <AccordionItem key={month} value={month}>
                     <AccordionTrigger>{month}</AccordionTrigger>

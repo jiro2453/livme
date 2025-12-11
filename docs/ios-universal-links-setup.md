@@ -17,7 +17,7 @@ Universal Linksを設定すると、`https://livme.net/user_id` のようなWeb�
 
 `public/.well-known/apple-app-site-association` ファイルは既に作成されています。
 
-**重要**: このファイルを編集して、`TEAMID` を実際のApple Team IDに置き換えてください。
+**注意**: Team ID `4DP5GLZ7H4` は既に設定済みです。
 
 ```json
 {
@@ -25,7 +25,7 @@ Universal Linksを設定すると、`https://livme.net/user_id` のようなWeb�
     "apps": [],
     "details": [
       {
-        "appID": "YOUR_TEAM_ID.com.livme.app",
+        "appID": "4DP5GLZ7H4.com.livme.app",
         "paths": [
           "/*"
         ]

@@ -31,6 +31,8 @@ import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
 import { useProfileRouting } from './hooks/useProfileRouting';
 import type { Live, User } from './types';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { App as CapacitorApp } from '@capacitor/app';
 
 const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
@@ -79,6 +81,68 @@ const AppContent: React.FC = () => {
   const attendeesCache = useRef<Map<string, string[]>>(new Map());
 
   const { toast } = useToast();
+
+  // Initialize Status Bar for iOS
+  useEffect(() => {
+    const initStatusBar = async () => {
+      try {
+        // Allow status bar to overlay the web content
+        await StatusBar.setOverlaysWebView({ overlay: true });
+        // Set status bar style to dark content (black text on white background)
+        await StatusBar.setStyle({ style: Style.Dark });
+        // Set background color to match header
+        await StatusBar.setBackgroundColor({ color: '#ffffff' });
+      } catch (error) {
+        // Status Bar API is only available on native platforms
+        console.log('Status Bar not available (web platform)');
+      }
+    };
+
+    initStatusBar();
+  }, []);
+
+  // Handle deep links from iOS app
+  useEffect(() => {
+    let listenerHandle: any;
+
+    const setupDeepLinkListener = async () => {
+      listenerHandle = await CapacitorApp.addListener('appUrlOpen', (data: any) => {
+        console.log('🔗 Deep link opened:', data.url);
+
+        try {
+          const url = new URL(data.url);
+          const pathname = url.pathname;
+
+          // Extract user_id from pathname (e.g., "/jiro2453" -> "jiro2453")
+          const userId = pathname.replace(/^\//, '').split('/')[0];
+
+          if (userId && userId.length > 0) {
+            console.log('🔗 Navigating to profile:', userId);
+            // Use history API to update URL without reload
+            window.history.pushState({}, '', `/${userId}`);
+            // Trigger routing
+            const event = new PopStateEvent('popstate');
+            window.dispatchEvent(event);
+          } else {
+            console.log('🔗 Navigating to home');
+            window.history.pushState({}, '', '/');
+            const event = new PopStateEvent('popstate');
+            window.dispatchEvent(event);
+          }
+        } catch (error) {
+          console.error('❌ Error parsing deep link:', error);
+        }
+      });
+    };
+
+    setupDeepLinkListener();
+
+    return () => {
+      if (listenerHandle) {
+        listenerHandle.remove();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -464,9 +528,9 @@ const AppContent: React.FC = () => {
 
   // ホーム画面
   return (
-    <div className="min-h-screen bg-[#f8f9fa]">
+    <div className="min-h-full bg-[#f8f9fa]">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-primary">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-primary ios-safe-top">
         <div className="max-w-[546px] mx-auto px-4 py-0.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 w-[88px]">
@@ -497,7 +561,7 @@ const AppContent: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[546px] mx-auto px-4 py-8">
+      <main className="max-w-[546px] mx-auto px-4 pb-8 pt-[calc(56px+env(safe-area-inset-top))]">
         <div className="space-y-6">
           {/* Profile Section */}
           <div className="flex flex-col items-center space-y-4">

@@ -27,3 +27,9 @@ dist-ssr
 .env
 .env.local
 .env.production
+
+# Capacitor
+ios/App/Pods
+ios/App/Podfile.lock
+ios/App/build
+ios/App/DerivedData

@@ -75,20 +75,27 @@ body {
 }
 
 /* iOS Fixed Header - Prevent bouncing/stretching on overscroll */
-header.fixed {
-  position: fixed;
-  transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
-  will-change: transform;
-  isolation: isolate;
-  pointer-events: auto;
+header {
+  position: fixed !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  -webkit-transform-style: preserve-3d !important;
+  transform-style: preserve-3d !important;
+  will-change: transform !important;
+  isolation: isolate !important;
+  pointer-events: auto !important;
   /* iOS Safari特有の対策 */
-  -webkit-perspective: 1000;
-  perspective: 1000;
+  -webkit-perspective: 1000 !important;
+  perspective: 1000 !important;
+}
+
+/* Main scrollable area */
+main {
+  overscroll-behavior: none !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
 }
 
 button {

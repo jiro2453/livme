@@ -151,12 +151,14 @@ const AppContent: React.FC = () => {
 
     const preventOverscroll = (e: TouchEvent) => {
       const target = e.target as HTMLElement;
+
       // ヘッダー内の要素へのタッチは許可
       if (target.closest('header')) {
         return;
       }
 
-      const scrollContainer = document.getElementById('root');
+      // main要素を取得
+      const scrollContainer = document.querySelector('main');
       if (!scrollContainer) return;
 
       const scrollTop = scrollContainer.scrollTop;
@@ -171,25 +173,33 @@ const AppContent: React.FC = () => {
         const deltaY = currentY - startY;
 
         // 最上部で上方向にスクロールしようとしている場合
-        if (startScrollTop === 0 && deltaY > 0) {
+        if (startScrollTop <= 1 && deltaY > 0) {
           e.preventDefault();
+          e.stopPropagation();
           return;
         }
 
         // 最下部で下方向にスクロールしようとしている場合
-        if (startScrollTop + clientHeight >= scrollHeight && deltaY < 0) {
+        const isAtBottom = startScrollTop + clientHeight >= scrollHeight - 1;
+        if (isAtBottom && deltaY < 0) {
           e.preventDefault();
+          e.stopPropagation();
           return;
         }
       }
     };
 
-    document.addEventListener('touchstart', preventOverscroll, { passive: false });
-    document.addEventListener('touchmove', preventOverscroll, { passive: false });
+    // documentとbodyの両方にリスナーを追加
+    document.addEventListener('touchstart', preventOverscroll, { passive: false, capture: true });
+    document.addEventListener('touchmove', preventOverscroll, { passive: false, capture: true });
+    document.body.addEventListener('touchstart', preventOverscroll, { passive: false, capture: true });
+    document.body.addEventListener('touchmove', preventOverscroll, { passive: false, capture: true });
 
     return () => {
-      document.removeEventListener('touchstart', preventOverscroll);
-      document.removeEventListener('touchmove', preventOverscroll);
+      document.removeEventListener('touchstart', preventOverscroll, true);
+      document.removeEventListener('touchmove', preventOverscroll, true);
+      document.body.removeEventListener('touchstart', preventOverscroll, true);
+      document.body.removeEventListener('touchmove', preventOverscroll, true);
     };
   }, []);
 
@@ -577,9 +587,9 @@ const AppContent: React.FC = () => {
 
   // ホーム画面
   return (
-    <div className="h-full bg-[#f8f9fa]">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-primary ios-safe-top">
+    <>
+      {/* Header - Completely independent */}
+      <header className="fixed top-0 left-0 right-0 z-[9999] bg-white border-b border-primary ios-safe-top" style={{ position: 'fixed' }}>
         <div className="max-w-[546px] mx-auto px-4 py-0.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 w-[88px]">
@@ -610,7 +620,8 @@ const AppContent: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[546px] mx-auto px-4 pb-8 pt-[calc(56px+env(safe-area-inset-top))]">
+      <main className="h-full overflow-y-auto bg-[#f8f9fa]">
+        <div className="max-w-[546px] mx-auto px-4 pb-8 pt-[calc(56px+env(safe-area-inset-top))]">
         <div className="space-y-6">
           {/* Profile Section */}
           <div className="flex flex-col items-center space-y-4">
@@ -763,6 +774,7 @@ const AppContent: React.FC = () => {
             )}
           </div>
         </div>
+        </div>
       </main>
 
       {/* Modals */}
@@ -892,7 +904,7 @@ const AppContent: React.FC = () => {
       />
 
       <Toaster />
-    </div>
+    </>
   );
 };
 

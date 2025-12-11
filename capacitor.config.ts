@@ -5,8 +5,9 @@ const config: CapacitorConfig = {
   appName: 'Livme',
   webDir: 'dist',
   ios: {
-    contentInset: 'automatic',
-    scheme: 'App'
+    contentInset: 'never',
+    scheme: 'App',
+    scrollEnabled: false
   },
   server: {
     hostname: 'livme.net',

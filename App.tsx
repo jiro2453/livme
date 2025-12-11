@@ -144,19 +144,11 @@ const AppContent: React.FC = () => {
     };
   }, []);
 
-  // Prevent iOS overscroll/bounce effect
+  // Prevent iOS overscroll/bounce effect - ABSOLUTE PREVENTION
   useEffect(() => {
-    let startY = 0;
-    let startScrollTop = 0;
+    let lastY = 0;
 
     const preventOverscroll = (e: TouchEvent) => {
-      const target = e.target as HTMLElement;
-
-      // ヘッダー内の要素へのタッチは許可
-      if (target.closest('header')) {
-        return;
-      }
-
       // main要素を取得
       const scrollContainer = document.querySelector('main');
       if (!scrollContainer) return;
@@ -164,42 +156,44 @@ const AppContent: React.FC = () => {
       const scrollTop = scrollContainer.scrollTop;
       const scrollHeight = scrollContainer.scrollHeight;
       const clientHeight = scrollContainer.clientHeight;
+      const maxScrollTop = scrollHeight - clientHeight;
 
       if (e.type === 'touchstart') {
-        startY = e.touches[0].pageY;
-        startScrollTop = scrollTop;
+        lastY = e.touches[0].clientY;
       } else if (e.type === 'touchmove') {
-        const currentY = e.touches[0].pageY;
-        const deltaY = currentY - startY;
+        const currentY = e.touches[0].clientY;
+        const deltaY = lastY - currentY; // positive = scrolling down, negative = scrolling up
 
-        // 最上部で上方向にスクロールしようとしている場合
-        if (startScrollTop <= 1 && deltaY > 0) {
+        // 最上部で上にスクロールしようとしている（引っ張ろうとしている）
+        if (scrollTop <= 0 && deltaY < 0) {
           e.preventDefault();
-          e.stopPropagation();
-          return;
+          e.stopImmediatePropagation();
+          scrollContainer.scrollTop = 0;
+          return false;
         }
 
-        // 最下部で下方向にスクロールしようとしている場合
-        const isAtBottom = startScrollTop + clientHeight >= scrollHeight - 1;
-        if (isAtBottom && deltaY < 0) {
+        // 最下部で下にスクロールしようとしている
+        if (scrollTop >= maxScrollTop && deltaY > 0) {
           e.preventDefault();
-          e.stopPropagation();
-          return;
+          e.stopImmediatePropagation();
+          scrollContainer.scrollTop = maxScrollTop;
+          return false;
         }
+
+        lastY = currentY;
       }
     };
 
-    // documentとbodyの両方にリスナーを追加
-    document.addEventListener('touchstart', preventOverscroll, { passive: false, capture: true });
-    document.addEventListener('touchmove', preventOverscroll, { passive: false, capture: true });
-    document.body.addEventListener('touchstart', preventOverscroll, { passive: false, capture: true });
-    document.body.addEventListener('touchmove', preventOverscroll, { passive: false, capture: true });
+    // より早い段階でキャプチャ
+    const options = { passive: false, capture: true };
+    document.addEventListener('touchstart', preventOverscroll, options);
+    document.addEventListener('touchmove', preventOverscroll, options);
+    document.addEventListener('touchend', preventOverscroll, options);
 
     return () => {
       document.removeEventListener('touchstart', preventOverscroll, true);
       document.removeEventListener('touchmove', preventOverscroll, true);
-      document.body.removeEventListener('touchstart', preventOverscroll, true);
-      document.body.removeEventListener('touchmove', preventOverscroll, true);
+      document.removeEventListener('touchend', preventOverscroll, true);
     };
   }, []);
 

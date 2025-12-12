@@ -531,10 +531,19 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   // Handle crop complete
   const handleCropComplete = (croppedImageBase64: string) => {
+    console.log('=== handleCropComplete called ===');
+    console.log('cropMode:', cropMode);
+    console.log('croppedImageBase64 length:', croppedImageBase64.length);
+
     if (cropMode === 'avatar') {
+      console.log('Setting avatar...');
       setSelectedAvatar(croppedImageBase64);
       // formData.avatarも更新して、保存時に反映されるようにする
-      setFormData(prev => ({ ...prev, avatar: croppedImageBase64 }));
+      setFormData(prev => {
+        console.log('Updating formData.avatar');
+        return { ...prev, avatar: croppedImageBase64 };
+      });
+      console.log('Avatar set successfully. Please click "保存する" to save changes.');
     } else if (cropMode === 'gallery') {
       setFormData(prev => ({
         ...prev,

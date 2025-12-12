@@ -83,6 +83,29 @@ const AppContent: React.FC = () => {
 
   const { toast } = useToast();
 
+  // Global scroll enablement - ensure scrolling works on all pages
+  useEffect(() => {
+    // Apply styles to both html and body for maximum compatibility
+    const html = document.documentElement;
+    const body = document.body;
+
+    // Enable scrolling globally
+    html.style.overflow = 'auto';
+    html.style.position = 'static';
+    body.style.overflow = 'auto';
+    body.style.position = 'static';
+
+    // Remove any height restrictions
+    html.style.height = 'auto';
+    body.style.height = 'auto';
+
+    // Enable touch/trackpad scrolling
+    body.style.touchAction = 'auto';
+    body.style.webkitOverflowScrolling = 'touch';
+
+    // Cleanup is not necessary as we want these to persist
+  }, []);
+
   useEffect(() => {
     if (user) {
       loadLives();
@@ -116,45 +139,22 @@ const AppContent: React.FC = () => {
     }
   }, [urlUserId, user, authLoading, loading]);
 
-  // Ensure body overflow is set correctly when viewing other user profiles
+  // Re-enable scrolling when viewing other user profiles
+  // (in case a Dialog disabled it)
   useEffect(() => {
     if (showUserProfile) {
-      // Enable scrolling when viewing another user's profile
-      // Apply styles to both html and body for maximum compatibility
       const html = document.documentElement;
       const body = document.body;
 
-      // Store original values
-      const originalHtmlOverflow = html.style.overflow;
-      const originalHtmlPosition = html.style.position;
-      const originalBodyOverflow = body.style.overflow;
-      const originalBodyPosition = body.style.position;
-
-      // Force scrolling to be enabled
+      // Re-apply scroll settings
       html.style.overflow = 'auto';
       html.style.position = 'static';
       body.style.overflow = 'auto';
       body.style.position = 'static';
-
-      // Remove any height restrictions
       html.style.height = 'auto';
       body.style.height = 'auto';
-
-      // Enable touch/trackpad scrolling
       body.style.touchAction = 'auto';
       body.style.webkitOverflowScrolling = 'touch';
-
-      return () => {
-        // Restore original values
-        html.style.overflow = originalHtmlOverflow;
-        html.style.position = originalHtmlPosition;
-        body.style.overflow = originalBodyOverflow;
-        body.style.position = originalBodyPosition;
-        body.style.height = '';
-        html.style.height = '';
-        body.style.touchAction = '';
-        body.style.webkitOverflowScrolling = '';
-      };
     }
   }, [showUserProfile]);
 

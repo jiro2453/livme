@@ -116,6 +116,20 @@ const AppContent: React.FC = () => {
     }
   }, [urlUserId, user, authLoading, loading]);
 
+  // Ensure body overflow is set correctly when viewing other user profiles
+  useEffect(() => {
+    if (showUserProfile) {
+      // Enable scrolling when viewing another user's profile
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'static';
+    }
+    return () => {
+      // Cleanup on unmount
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+    };
+  }, [showUserProfile]);
+
   const loadLives = async () => {
     if (!user) return;
 
@@ -399,7 +413,7 @@ const AppContent: React.FC = () => {
   // 他ユーザーのプロフィール画面表示時
   if (showUserProfile && selectedUser) {
     return (
-      <div className="h-screen overflow-y-auto bg-[#f8f9fa]">
+      <div className="min-h-screen bg-[#f8f9fa]">
         {/* ProfileModal as full page (not modal) */}
         <ProfileModal
           isOpen={true}

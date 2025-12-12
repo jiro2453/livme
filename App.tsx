@@ -77,6 +77,9 @@ const AppContent: React.FC = () => {
   const [showFollowListModal, setShowFollowListModal] = useState(false);
   const [followListInitialTab, setFollowListInitialTab] = useState<'followers' | 'following'>('followers');
 
+  // Navigation loading state
+  const [isNavigatingToProfile, setIsNavigatingToProfile] = useState(false);
+
   // Attendees cache to avoid redundant API calls
   const attendeesCache = useRef<Map<string, string[]>>(new Map());
 
@@ -329,6 +332,7 @@ const AppContent: React.FC = () => {
   const handleViewUserProfile = async (userId: string) => {
     // View another user's profile (full-screen with URL change)
     console.log('🔍 handleViewUserProfile called with userId:', userId);
+    setIsNavigatingToProfile(true);
     try {
       const userData = await getUserByUserId(userId);
       console.log('👤 getUserByUserId result:', userData);
@@ -340,12 +344,14 @@ const AppContent: React.FC = () => {
           description: 'ユーザーが見つかりませんでした',
           variant: 'destructive',
         });
+        setIsNavigatingToProfile(false);
         return;
       }
 
       setSelectedUser(userData);
       setShowUserProfile(true);
       navigateToProfile(userId);
+      setIsNavigatingToProfile(false);
     } catch (error) {
       console.error('Error loading user profile:', error);
       toast({
@@ -354,6 +360,7 @@ const AppContent: React.FC = () => {
         variant: 'destructive',
       });
       navigateToHome();
+      setIsNavigatingToProfile(false);
     }
   };
 
@@ -931,6 +938,16 @@ const AppContent: React.FC = () => {
         onAccept={() => {}}
         onOpenPrivacy={() => setShowPrivacyPolicy(true)}
       />
+
+      {/* Navigation Loading Overlay */}
+      {isNavigatingToProfile && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
+          <div className="bg-white rounded-xl p-8 flex flex-col items-center gap-4 shadow-xl">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            <p className="text-sm text-gray-600">読み込み中...</p>
+          </div>
+        </div>
+      )}
 
       <Toaster />
     </>

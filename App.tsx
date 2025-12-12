@@ -392,7 +392,7 @@ const AppContent: React.FC = () => {
   // 他ユーザーのプロフィール画面表示時
   if (showUserProfile && selectedUser) {
     return (
-      <div className="min-h-screen bg-[#f8f9fa]">
+      <div className="h-screen overflow-y-auto bg-[#f8f9fa]">
         {/* ProfileModal as full page (not modal) */}
         <ProfileModal
           isOpen={true}

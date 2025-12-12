@@ -1463,7 +1463,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       ) : (
         /* 他ユーザーのプロフィール: 通常のページとして表示 */
         isOpen && (
-          <div className="min-h-screen bg-[#f8f9fa] pb-8">
+          <div className="bg-[#f8f9fa] pb-8">
             {/* 戻るボタン */}
             <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
               <div className="max-w-[546px] mx-auto px-4 py-3">

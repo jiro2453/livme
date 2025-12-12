@@ -756,10 +756,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const handleClose = () => {
     console.log('=== handleClose called ===');
     console.log('showAvatarSelector:', showAvatarSelector);
+    console.log('showCropModal:', showCropModal);
 
-    // Don't close main modal if avatar selector is open
-    if (showAvatarSelector) {
-      console.log('Avatar selector is open, preventing main modal close');
+    // Don't close main modal if avatar selector or crop modal is open
+    if (showAvatarSelector || showCropModal) {
+      console.log('Avatar selector or crop modal is open, preventing main modal close');
       return;
     }
 
@@ -787,7 +788,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   if (loading || !displayUser) {
     return (
-      <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
+      <Dialog open={isOpen && !showAvatarSelector && !showCropModal} onOpenChange={handleClose}>
         <DialogContent>
           <VisuallyHidden>
             <DialogTitle>プロフィール読み込み中</DialogTitle>
@@ -1448,7 +1449,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     <>
       {/* 自分のプロフィール: モーダル表示 */}
       {isOwnProfile ? (
-        <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
+        <Dialog open={isOpen && !showAvatarSelector && !showCropModal} onOpenChange={handleClose}>
           <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[70vh] sm:h-auto sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full !top-[10vh] !translate-y-0 sm:!top-[50%] sm:!translate-y-[-50%] overflow-hidden">
             <VisuallyHidden>
               <DialogTitle>{isEditing ? 'プロフィール編集' : 'プロフィール'}</DialogTitle>

@@ -511,7 +511,11 @@ const AppContent: React.FC = () => {
     const now = new Date();
     const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1);
 
-    return Object.keys(groupedLives).filter(monthKey => {
+    console.log('=== Accordion Default Open Calculation ===');
+    console.log('Today:', now.toISOString());
+    console.log('One year ago:', oneYearAgo.toISOString());
+
+    const openMonths = Object.keys(groupedLives).filter(monthKey => {
       // Parse "2025年12月" format
       const match = monthKey.match(/(\d+)年(\d+)月/);
       if (!match) return false;
@@ -520,9 +524,15 @@ const AppContent: React.FC = () => {
       const month = parseInt(match[2], 10);
       const monthDate = new Date(year, month - 1, 1);
 
+      const shouldOpen = monthDate >= oneYearAgo;
+      console.log(`${monthKey}: ${monthDate.toISOString()} >= ${oneYearAgo.toISOString()} = ${shouldOpen}`);
+
       // Keep month open if it's after or equal to one year ago
-      return monthDate >= oneYearAgo;
+      return shouldOpen;
     });
+
+    console.log('Open months:', openMonths);
+    return openMonths;
   };
 
   const defaultOpenMonths = getDefaultOpenMonths(groupedLives);

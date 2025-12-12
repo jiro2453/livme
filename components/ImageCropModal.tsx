@@ -89,8 +89,22 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
 
     const cropX = crop.x * scaleX;
     const cropY = crop.y * scaleY;
+    const cropWidth = crop.width * scaleX;
+    const cropHeight = crop.height * scaleY;
 
     ctx.save();
+
+    // For circular crop (avatar), create a circular clipping path
+    if (aspectRatio === 1) {
+      const centerX = cropWidth / 2;
+      const centerY = cropHeight / 2;
+      const radius = Math.min(cropWidth, cropHeight) / 2;
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.clip();
+    }
 
     ctx.translate(-cropX, -cropY);
     ctx.drawImage(
@@ -120,7 +134,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
           };
           reader.readAsDataURL(blob);
         },
-        'image/jpeg',
+        'image/png',
         0.95
       );
     });
@@ -177,6 +191,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
                 onChange={(_, percentCrop) => setCrop(percentCrop)}
                 onComplete={(c) => setCompletedCrop(c)}
                 aspect={aspectRatio}
+                circularCrop={aspectRatio === 1}
                 minWidth={50}
                 minHeight={50}
               >

@@ -512,7 +512,7 @@ const AppContent: React.FC = () => {
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1; // 1-12
 
-    return Object.keys(groupedLives).filter(monthKey => {
+    const openMonths = Object.keys(groupedLives).filter(monthKey => {
       // Parse "2025年12月" format
       const match = monthKey.match(/(\d+)年(\d+)月/);
       if (!match) return false;
@@ -532,6 +532,11 @@ const AppContent: React.FC = () => {
         return false;
       }
     });
+
+    // Debug: Show alert with calculation result
+    alert(`年: ${currentYear}, 月: ${currentMonth}\n開く月: ${openMonths.join(', ')}`);
+
+    return openMonths;
   };
 
   const defaultOpenMonths = getDefaultOpenMonths(groupedLives);

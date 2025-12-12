@@ -509,30 +509,29 @@ const AppContent: React.FC = () => {
   // Calculate default open months (within the last year)
   const getDefaultOpenMonths = (groupedLives: Record<string, Live[]>): string[] => {
     const now = new Date();
-    const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1; // 1-12
 
-    console.log('=== Accordion Default Open Calculation ===');
-    console.log('Today:', now.toISOString());
-    console.log('One year ago:', oneYearAgo.toISOString());
-
-    const openMonths = Object.keys(groupedLives).filter(monthKey => {
+    return Object.keys(groupedLives).filter(monthKey => {
       // Parse "2025年12月" format
       const match = monthKey.match(/(\d+)年(\d+)月/);
       if (!match) return false;
 
       const year = parseInt(match[1], 10);
       const month = parseInt(match[2], 10);
-      const monthDate = new Date(year, month - 1, 1);
 
-      const shouldOpen = monthDate >= oneYearAgo;
-      console.log(`${monthKey}: ${monthDate.toISOString()} >= ${oneYearAgo.toISOString()} = ${shouldOpen}`);
-
-      // Keep month open if it's after or equal to one year ago
-      return shouldOpen;
+      // Calculate if this month is within the last 12 months
+      if (year === currentYear) {
+        // This year - all months are open
+        return true;
+      } else if (year === currentYear - 1) {
+        // Last year - only months >= current month are open
+        return month >= currentMonth;
+      } else {
+        // More than 1 year ago - close
+        return false;
+      }
     });
-
-    console.log('Open months:', openMonths);
-    return openMonths;
   };
 
   const defaultOpenMonths = getDefaultOpenMonths(groupedLives);

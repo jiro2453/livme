@@ -520,8 +520,11 @@ const AppContent: React.FC = () => {
       const year = parseInt(match[1], 10);
       const month = parseInt(match[2], 10);
 
-      // Calculate if this month is within the last 12 months
-      if (year === currentYear) {
+      // Calculate if this month is within the last 12 months or future
+      if (year > currentYear) {
+        // Future years - open
+        return true;
+      } else if (year === currentYear) {
         // This year - all months are open
         return true;
       } else if (year === currentYear - 1) {
@@ -532,9 +535,6 @@ const AppContent: React.FC = () => {
         return false;
       }
     });
-
-    // Debug: Show alert with calculation result
-    alert(`年: ${currentYear}, 月: ${currentMonth}\n開く月: ${openMonths.join(', ')}`);
 
     return openMonths;
   };

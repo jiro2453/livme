@@ -149,8 +149,25 @@ const AppContent: React.FC = () => {
     let lastY = 0;
 
     const preventOverscroll = (e: TouchEvent) => {
-      // main要素を取得
-      const scrollContainer = document.querySelector('main');
+      // タッチターゲットから最も近いスクロールコンテナを探す
+      const target = e.target as HTMLElement;
+
+      // モーダル内かどうかを確認
+      const modalContent = target.closest('[role="dialog"]');
+      let scrollContainer: HTMLElement | null = null;
+
+      if (modalContent) {
+        // モーダル内の場合、モーダル内のスクロール可能な要素を探す
+        scrollContainer = target.closest('.overflow-y-auto') as HTMLElement;
+        if (!scrollContainer) {
+          // モーダル自体がスクロール可能な場合
+          scrollContainer = modalContent.querySelector('.overflow-y-auto') as HTMLElement;
+        }
+      } else {
+        // モーダル外の場合は通常通りmain要素を使用
+        scrollContainer = document.querySelector('main');
+      }
+
       if (!scrollContainer) return;
 
       const scrollTop = scrollContainer.scrollTop;

@@ -1453,8 +1453,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       ) : (
         /* 他ユーザーのプロフィール: 通常のページとして表示 */
         isOpen && (
-          <div className="min-h-screen bg-[#f8f9fa]">
-            {/* 戻るボタン */}
+          <>
+            {/* 戻るボタン - 固定ヘッダー */}
             <div className="fixed top-0 left-0 right-0 z-[9999] bg-white border-b border-gray-200 ios-safe-top">
               <div className="max-w-[546px] mx-auto px-4 py-3">
                 <button
@@ -1467,10 +1467,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 </button>
               </div>
             </div>
-            <div className="w-full max-w-md mx-auto pt-[calc(56px+env(safe-area-inset-top))] pb-8">
-              {otherUserContent}
+            {/* スクロール可能なメインコンテンツ */}
+            <div className="h-full overflow-y-auto bg-[#f8f9fa]">
+              <div className="w-full max-w-md mx-auto pt-[calc(56px+env(safe-area-inset-top))] pb-8">
+                {otherUserContent}
+              </div>
             </div>
-          </div>
+          </>
         )
       )}
 

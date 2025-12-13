@@ -31,6 +31,8 @@ import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
 import { useProfileRouting } from './hooks/useProfileRouting';
 import type { Live, User } from './types';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { App as CapacitorApp } from '@capacitor/app';
 
 const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
@@ -104,6 +106,121 @@ const AppContent: React.FC = () => {
     body.style.touchAction = 'auto';
     body.style.webkitOverflowScrolling = 'touch';
   }, [user, authLoading]); // Re-apply when auth state changes
+
+  // Initialize Status Bar for iOS
+  useEffect(() => {
+    const initStatusBar = async () => {
+      try {
+        // Allow status bar to overlay the web content
+        await StatusBar.setOverlaysWebView({ overlay: true });
+        // Set status bar style to dark content (black text on white background)
+        await StatusBar.setStyle({ style: Style.Dark });
+        // Set background color to match header
+        await StatusBar.setBackgroundColor({ color: '#ffffff' });
+      } catch (error) {
+        // Status Bar API is only available on native platforms
+        console.log('Status Bar not available (web platform)');
+      }
+    };
+
+    initStatusBar();
+  }, []);
+
+  // Handle deep links from iOS app
+  useEffect(() => {
+    let listenerHandle: any;
+
+    const setupDeepLinkListener = async () => {
+      listenerHandle = await CapacitorApp.addListener('appUrlOpen', (data: any) => {
+        console.log('🔗 Deep link opened:', data.url);
+
+        try {
+          const url = new URL(data.url);
+          const pathname = url.pathname;
+
+          // Extract user_id from pathname (e.g., "/jiro2453" -> "jiro2453")
+          const userId = pathname.replace(/^\//, '').split('/')[0];
+
+          if (userId && userId.length > 0) {
+            console.log('🔗 Navigating to profile:', userId);
+            // Use history API to update URL without reload
+            window.history.pushState({}, '', `/${userId}`);
+            // Trigger routing
+            const event = new PopStateEvent('popstate');
+            window.dispatchEvent(event);
+          } else {
+            console.log('🔗 Navigating to home');
+            window.history.pushState({}, '', '/');
+            const event = new PopStateEvent('popstate');
+            window.dispatchEvent(event);
+          }
+        } catch (error) {
+          console.error('❌ Error parsing deep link:', error);
+        }
+      });
+    };
+
+    setupDeepLinkListener();
+
+    return () => {
+      if (listenerHandle) {
+        listenerHandle.remove();
+      }
+    };
+  }, []);
+
+  // Prevent iOS overscroll/bounce effect - ABSOLUTE PREVENTION
+  useEffect(() => {
+    let lastY = 0;
+
+    const preventOverscroll = (e: TouchEvent) => {
+      // main要素を取得
+      const scrollContainer = document.querySelector('main');
+      if (!scrollContainer) return;
+
+      const scrollTop = scrollContainer.scrollTop;
+      const scrollHeight = scrollContainer.scrollHeight;
+      const clientHeight = scrollContainer.clientHeight;
+      const maxScrollTop = scrollHeight - clientHeight;
+
+      if (e.type === 'touchstart') {
+        lastY = e.touches[0].clientY;
+      } else if (e.type === 'touchmove') {
+        const currentY = e.touches[0].clientY;
+        const deltaY = lastY - currentY; // positive = scrolling down, negative = scrolling up
+
+        // 最上部で上にスクロールしようとしている（引っ張ろうとしている）
+        if (scrollTop <= 0 && deltaY < 0) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          scrollContainer.scrollTop = 0;
+          return false;
+        }
+
+        // 最下部で下にスクロールしようとしている
+        if (scrollTop >= maxScrollTop && deltaY > 0) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          scrollContainer.scrollTop = maxScrollTop;
+          return false;
+        }
+
+        lastY = currentY;
+      }
+    };
+
+    // より早い段階でキャプチャ
+    const options = { passive: false, capture: true };
+    document.addEventListener('touchstart', preventOverscroll, options);
+    document.addEventListener('touchmove', preventOverscroll, options);
+    document.addEventListener('touchend', preventOverscroll, options);
+
+    return () => {
+      document.removeEventListener('touchstart', preventOverscroll, true);
+      document.removeEventListener('touchmove', preventOverscroll, true);
+      document.removeEventListener('touchend', preventOverscroll, true);
+    };
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -437,6 +554,27 @@ const AppContent: React.FC = () => {
 
   const groupedLives = groupLivesByMonth(filteredLives);
 
+  // Calculate default open months (within the last year)
+  const getDefaultOpenMonths = (groupedLives: Record<string, Live[]>): string[] => {
+    const now = new Date();
+    const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+
+    return Object.keys(groupedLives).filter(monthKey => {
+      // Parse "2025年12月" format
+      const match = monthKey.match(/(\d+)年(\d+)月/);
+      if (!match) return false;
+
+      const year = parseInt(match[1], 10);
+      const month = parseInt(match[2], 10);
+      const monthDate = new Date(year, month - 1, 1);
+
+      // Keep month open if it's after or equal to one year ago
+      return monthDate >= oneYearAgo;
+    });
+  };
+
+  const defaultOpenMonths = getDefaultOpenMonths(groupedLives);
+
   // 他ユーザーのプロフィール画面表示時
   if (showUserProfile && selectedUser) {
     return (
@@ -512,9 +650,9 @@ const AppContent: React.FC = () => {
 
   // ホーム画面
   return (
-    <div className="min-h-screen bg-[#f8f9fa]">
-      {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-primary">
+    <>
+      {/* Header - Completely independent */}
+      <header className="fixed top-0 left-0 right-0 z-[9999] bg-white border-b border-primary ios-safe-top" style={{ position: 'fixed' }}>
         <div className="max-w-[546px] mx-auto px-4 py-0.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 w-[88px]">
@@ -545,7 +683,8 @@ const AppContent: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[546px] mx-auto px-4 py-8">
+      <main className="h-full overflow-y-auto bg-[#f8f9fa]">
+        <div className="max-w-[546px] mx-auto px-4 pb-8 pt-[calc(56px+env(safe-area-inset-top))]">
         <div className="space-y-6">
           {/* Profile Section */}
           <div className="flex flex-col items-center space-y-4">
@@ -675,7 +814,7 @@ const AppContent: React.FC = () => {
                 <p>「{searchQuery}」に一致する公演が見つかりませんでした</p>
               </div>
             ) : (
-              <Accordion type="multiple" className="w-full" defaultValue={Object.keys(groupedLives)}>
+              <Accordion type="multiple" className="w-full" defaultValue={defaultOpenMonths}>
                 {Object.entries(groupedLives).map(([month, monthLives]) => (
                   <AccordionItem key={month} value={month}>
                     <AccordionTrigger>{month}</AccordionTrigger>
@@ -697,6 +836,7 @@ const AppContent: React.FC = () => {
               </Accordion>
             )}
           </div>
+        </div>
         </div>
       </main>
 
@@ -851,7 +991,7 @@ const AppContent: React.FC = () => {
       )}
 
       <Toaster />
-    </div>
+    </>
   );
 };
 

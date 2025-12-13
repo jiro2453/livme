@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "4DP5GLZ7H4.com.livme.app",
+        "paths": [
+          "/*"
+        ]
+      }
+    ]
+  }
+}

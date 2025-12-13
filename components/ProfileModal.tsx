@@ -1453,9 +1453,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       ) : (
         /* 他ユーザーのプロフィール: 通常のページとして表示 */
         isOpen && (
-          <div className="min-h-screen bg-[#f8f9fa] pb-8">
+          <div className="min-h-screen bg-[#f8f9fa]">
             {/* 戻るボタン */}
-            <div className="sticky top-0 z-40 bg-white border-b border-gray-200">
+            <div className="fixed top-0 left-0 right-0 z-[9999] bg-white border-b border-gray-200 ios-safe-top">
               <div className="max-w-[546px] mx-auto px-4 py-3">
                 <button
                   onClick={handleClose}
@@ -1467,7 +1467,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 </button>
               </div>
             </div>
-            <div className="w-full max-w-md mx-auto">
+            <div className="w-full max-w-md mx-auto pt-[calc(56px+env(safe-area-inset-top))] pb-8">
               {otherUserContent}
             </div>
           </div>

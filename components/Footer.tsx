@@ -10,7 +10,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) =>
     <footer className="bg-gray-50 border-t border-gray-200 mt-12 py-6">
       <div className="max-w-[546px] mx-auto px-4">
         <div className="flex flex-col items-center space-y-3">
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex items-center gap-3 text-xs text-gray-600">
             <button
               onClick={onOpenPrivacy}
               className="hover:text-primary transition-colors"

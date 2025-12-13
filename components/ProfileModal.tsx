@@ -1440,7 +1440,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       {/* 自分のプロフィール: モーダル表示 */}
       {isOwnProfile ? (
         <Dialog open={isOpen && !showAvatarSelector} onOpenChange={handleClose}>
-          <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[70vh] sm:h-auto sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full !top-[10vh] !translate-y-0 sm:!top-[50%] sm:!translate-y-[-50%] overflow-hidden">
+          <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[70vh] sm:h-auto sm:max-h-[90vh] flex flex-col p-0 bg-white sm:w-full !top-[calc(56px+env(safe-area-inset-top)+1rem)] !translate-y-0 sm:!top-[50%] sm:!translate-y-[-50%] overflow-hidden z-[10000]">
             <VisuallyHidden>
               <DialogTitle>{isEditing ? 'プロフィール編集' : 'プロフィール'}</DialogTitle>
             </VisuallyHidden>

@@ -544,7 +544,7 @@ const AppContent: React.FC = () => {
   // 他ユーザーのプロフィール画面表示時
   if (showUserProfile && selectedUser) {
     return (
-      <div className="min-h-screen bg-[#f8f9fa]">
+      <>
         {/* ProfileModal as full page (not modal) */}
         <ProfileModal
           isOpen={true}
@@ -573,26 +573,6 @@ const AppContent: React.FC = () => {
           />
         )}
 
-        {/* Advertisement */}
-        <div
-          className="hidden md:flex justify-center py-8"
-          dangerouslySetInnerHTML={{
-            __html: `
-              <!-- admax -->
-              <div class="admax-ads" data-admax-id="876840f38c1c0ad3c567c5c59bc376d0" style="display:inline-block;width:468px;height:60px;"></div>
-              <script type="text/javascript">(admaxads = window.admaxads || []).push({admax_id: "876840f38c1c0ad3c567c5c59bc376d0",type: "banner"});</script>
-              <script type="text/javascript" charset="utf-8" src="https://adm.shinobi.jp/st/t.js" async></script>
-              <!-- admax -->
-            `
-          }}
-        />
-
-        {/* Footer */}
-        <Footer
-          onOpenPrivacy={() => setShowPrivacyPolicy(true)}
-          onOpenTerms={() => setShowTermsOfService(true)}
-        />
-
         {/* Privacy Policy */}
         {showPrivacyPolicy && (
           <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
@@ -610,7 +590,7 @@ const AppContent: React.FC = () => {
         />
 
         <Toaster />
-      </div>
+      </>
     );
   }
 

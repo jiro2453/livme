@@ -84,6 +84,7 @@ const AppContent: React.FC = () => {
   const { toast } = useToast();
 
   // Global scroll enablement - ensure scrolling works on all pages
+  // Re-apply on auth state changes to handle login/logout transitions
   useEffect(() => {
     // Apply styles to both html and body for maximum compatibility
     const html = document.documentElement;
@@ -102,9 +103,7 @@ const AppContent: React.FC = () => {
     // Enable touch/trackpad scrolling
     body.style.touchAction = 'auto';
     body.style.webkitOverflowScrolling = 'touch';
-
-    // Cleanup is not necessary as we want these to persist
-  }, []);
+  }, [user, authLoading]); // Re-apply when auth state changes
 
   useEffect(() => {
     if (user) {

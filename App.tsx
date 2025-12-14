@@ -708,7 +708,7 @@ const AppContent: React.FC = () => {
           </div>
 
           {/* 参加公演 Section */}
-          <div>
+          <div className="relative">
             <div className="relative flex items-center justify-center mb-4">
               <h2 className="text-[15.75px] font-semibold">参加公演</h2>
               <div className="absolute right-0 flex items-center gap-2">
@@ -738,12 +738,9 @@ const AppContent: React.FC = () => {
 
             {/* Search Bar - 絶対配置でコンテンツの位置に影響を与えない */}
             <div
-              className={`absolute left-4 right-4 z-10 overflow-hidden transition-all duration-300 ease-in-out ${
+              className={`absolute left-0 right-0 z-10 overflow-hidden transition-all duration-300 ease-in-out ${
                 isSearchOpen ? 'max-h-[50px] opacity-100' : 'max-h-0 opacity-0'
               }`}
-              style={{
-                top: isSearchOpen ? '0' : '-50px',
-              }}
             >
               <div className="relative bg-[#f8f9fa] pb-2">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />

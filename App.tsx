@@ -716,7 +716,12 @@ const AppContent: React.FC = () => {
                   onClick={() => {
                     setIsSearchOpen(!isSearchOpen);
                     if (!isSearchOpen) {
-                      setTimeout(() => searchInputRef.current?.focus(), 100);
+                      // スクロール位置をトップに戻してからフォーカス
+                      const mainElement = document.querySelector('main');
+                      if (mainElement) {
+                        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                      setTimeout(() => searchInputRef.current?.focus(), 300);
                     } else {
                       setSearchQuery('');
                     }
@@ -750,6 +755,13 @@ const AppContent: React.FC = () => {
                   placeholder="アーティスト名・会場名で検索"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => {
+                    // フォーカス時にスクロール位置をトップに戻す
+                    const mainElement = document.querySelector('main');
+                    if (mainElement) {
+                      mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
                   className="w-full h-[38px] pl-11 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 bg-white placeholder:text-gray-400 shadow-sm"
                 />
               </div>

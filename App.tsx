@@ -145,7 +145,11 @@ const AppContent: React.FC = () => {
   }, []);
 
   // Prevent iOS overscroll/bounce effect - ABSOLUTE PREVENTION
+  // ログイン画面では無効化
   useEffect(() => {
+    // ログイン画面（user === null）の場合は無効化
+    if (!user) return;
+
     let lastY = 0;
 
     const preventOverscroll = (e: TouchEvent) => {
@@ -212,7 +216,7 @@ const AppContent: React.FC = () => {
       document.removeEventListener('touchmove', preventOverscroll, true);
       document.removeEventListener('touchend', preventOverscroll, true);
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (user) {

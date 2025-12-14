@@ -756,10 +756,24 @@ const AppContent: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => {
-                    // フォーカス時にスクロール位置をトップに戻す
+                    // フォーカス時にスクロール位置をトップに戻す（複数回実行してiOSのキーボード表示に対応）
+                    const scrollToTop = () => {
+                      const mainElement = document.querySelector('main');
+                      if (mainElement) {
+                        mainElement.scrollTop = 0;
+                      }
+                    };
+
+                    scrollToTop();
+                    setTimeout(scrollToTop, 0);
+                    setTimeout(scrollToTop, 100);
+                    setTimeout(scrollToTop, 300);
+                  }}
+                  onClick={() => {
+                    // クリック時にもスクロール位置をトップに戻す
                     const mainElement = document.querySelector('main');
                     if (mainElement) {
-                      mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+                      mainElement.scrollTop = 0;
                     }
                   }}
                   className="w-full h-[38px] pl-11 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 bg-white placeholder:text-gray-400 shadow-sm"

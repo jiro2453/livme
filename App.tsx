@@ -144,6 +144,20 @@ const AppContent: React.FC = () => {
     };
   }, []);
 
+  // ログイン画面とメイン画面でのoverflow設定を切り替え
+  useEffect(() => {
+    const rootElement = document.getElementById('root');
+    if (!rootElement) return;
+
+    if (user) {
+      // ログイン後：overflow-hiddenに設定（メイン画面用）
+      rootElement.style.overflow = 'hidden';
+    } else {
+      // ログイン前：overflow-y-autoに設定（ログイン画面スクロール用）
+      rootElement.style.overflow = 'auto';
+    }
+  }, [user]);
+
   // Prevent iOS overscroll/bounce effect - ABSOLUTE PREVENTION
   // ログイン画面では無効化
   useEffect(() => {

@@ -96,8 +96,12 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
 
     ctx.save();
 
-    // 円形クロップの場合、円形のクリッピングパスを作成
+    // 円形クロップの場合、白背景を塗ってから円形のクリッピングパスを作成
     if (circularCrop) {
+      // 白背景を塗る（JPEG形式でファイルサイズを抑えるため）
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, cropWidth, cropHeight);
+
       const centerX = cropWidth / 2;
       const centerY = cropHeight / 2;
       const radius = Math.min(cropWidth, cropHeight) / 2;
@@ -136,8 +140,8 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
           };
           reader.readAsDataURL(blob);
         },
-        circularCrop ? 'image/png' : 'image/jpeg',
-        0.95
+        'image/jpeg',
+        0.85
       );
     });
   }

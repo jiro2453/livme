@@ -708,7 +708,7 @@ const AppContent: React.FC = () => {
           </div>
 
           {/* 参加公演 Section */}
-          <div className="relative">
+          <div>
             <div className="relative flex items-center justify-center mb-4">
               <h2 className="text-[15.75px] font-semibold">参加公演</h2>
               <div className="absolute right-0 flex items-center gap-2">
@@ -736,13 +736,13 @@ const AppContent: React.FC = () => {
               </div>
             </div>
 
-            {/* Search Bar - 絶対配置でコンテンツの位置に影響を与えない */}
+            {/* Search Bar - 下に伸びる */}
             <div
-              className={`absolute left-0 right-0 z-10 overflow-hidden transition-all duration-300 ease-in-out ${
-                isSearchOpen ? 'max-h-[50px] opacity-100' : 'max-h-0 opacity-0'
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                isSearchOpen ? 'max-h-[50px] opacity-100 mb-4' : 'max-h-0 opacity-0 mb-0'
               }`}
             >
-              <div className="relative bg-[#f8f9fa] pb-2">
+              <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   ref={searchInputRef}
@@ -754,13 +754,6 @@ const AppContent: React.FC = () => {
                 />
               </div>
             </div>
-
-            {/* 検索バーが開いている時のスペーサー */}
-            <div
-              className={`transition-all duration-300 ease-in-out ${
-                isSearchOpen ? 'h-[50px]' : 'h-0'
-              }`}
-            />
 
             {/* Lives List */}
             {loading ? (

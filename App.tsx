@@ -736,13 +736,16 @@ const AppContent: React.FC = () => {
               </div>
             </div>
 
-            {/* Search Bar */}
+            {/* Search Bar - 絶対配置でコンテンツの位置に影響を与えない */}
             <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                isSearchOpen ? 'max-h-[50px] opacity-100 mb-4' : 'max-h-0 opacity-0'
+              className={`absolute left-4 right-4 z-10 overflow-hidden transition-all duration-300 ease-in-out ${
+                isSearchOpen ? 'max-h-[50px] opacity-100' : 'max-h-0 opacity-0'
               }`}
+              style={{
+                top: isSearchOpen ? '0' : '-50px',
+              }}
             >
-              <div className="relative">
+              <div className="relative bg-[#f8f9fa] pb-2">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   ref={searchInputRef}
@@ -750,10 +753,17 @@ const AppContent: React.FC = () => {
                   placeholder="アーティスト名・会場名で検索"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-[38px] pl-11 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 bg-gray-50/50 placeholder:text-gray-400"
+                  className="w-full h-[38px] pl-11 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/30 bg-white placeholder:text-gray-400 shadow-sm"
                 />
               </div>
             </div>
+
+            {/* 検索バーが開いている時のスペーサー */}
+            <div
+              className={`transition-all duration-300 ease-in-out ${
+                isSearchOpen ? 'h-[50px]' : 'h-0'
+              }`}
+            />
 
             {/* Lives List */}
             {loading ? (

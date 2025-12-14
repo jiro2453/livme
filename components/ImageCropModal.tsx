@@ -12,6 +12,7 @@ interface ImageCropModalProps {
   imageUrl: string;
   aspectRatio?: number; // 1 for square (avatar), undefined for free (gallery)
   title?: string;
+  circularCrop?: boolean; // true for circular crop (avatar)
 }
 
 function centerAspectCrop(
@@ -43,6 +44,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
   imageUrl,
   aspectRatio,
   title = '画像をクロップ',
+  circularCrop = false,
 }) => {
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
@@ -89,8 +91,22 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
 
     const cropX = crop.x * scaleX;
     const cropY = crop.y * scaleY;
+    const cropWidth = crop.width * scaleX;
+    const cropHeight = crop.height * scaleY;
 
     ctx.save();
+
+    // 円形クロップの場合、円形のクリッピングパスを作成
+    if (circularCrop) {
+      const centerX = cropWidth / 2;
+      const centerY = cropHeight / 2;
+      const radius = Math.min(cropWidth, cropHeight) / 2;
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.clip();
+    }
 
     ctx.translate(-cropX, -cropY);
     ctx.drawImage(
@@ -120,7 +136,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
           };
           reader.readAsDataURL(blob);
         },
-        'image/jpeg',
+        circularCrop ? 'image/png' : 'image/jpeg',
         0.95
       );
     });
@@ -179,6 +195,7 @@ export const ImageCropModal: React.FC<ImageCropModalProps> = ({
                 aspect={aspectRatio}
                 minWidth={50}
                 minHeight={50}
+                circularCrop={circularCrop}
               >
                 <img
                   ref={imgRef}

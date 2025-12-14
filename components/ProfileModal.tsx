@@ -1605,6 +1605,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           imageUrl={cropImageUrl}
           aspectRatio={cropMode === 'avatar' ? 1 : undefined}
           title={cropMode === 'avatar' ? 'アバター画像をクロップ' : 'ギャラリー画像をクロップ'}
+          circularCrop={cropMode === 'avatar'}
         />
       )}
 

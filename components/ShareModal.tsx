@@ -21,7 +21,18 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, userId 
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
-  const shareUrl = `${window.location.origin}/${userId}`;
+  // Capacitorアプリ内ではwindow.location.originが「capacitor://」になるため、正しいHTTPSのURLを使用
+  const getShareUrl = () => {
+    const origin = window.location.origin;
+    // capacitor://で始まる場合は本番URLを使用
+    if (origin.startsWith('capacitor://')) {
+      return `https://livme.net/${userId}`;
+    }
+    // それ以外（開発環境など）は現在のoriginを使用
+    return `${origin}/${userId}`;
+  };
+
+  const shareUrl = getShareUrl();
 
   const handleCopy = async () => {
     try {

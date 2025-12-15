@@ -36,7 +36,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 
 const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
-  const { urlUserId, currentRoute, navigateToProfile, navigateToHome, navigateToPrivacy, navigateToTerms } = useProfileRouting();
+  const { urlUserId, currentRoute, navigateToProfile, navigateToHome } = useProfileRouting();
 
   // Data
   const [lives, setLives] = useState<Live[]>([]);

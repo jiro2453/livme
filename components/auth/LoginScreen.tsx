@@ -6,8 +6,6 @@ import { Card, CardContent } from '../ui/card';
 import { useToast } from '../../hooks/useToast';
 import { Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 import { Footer } from '../Footer';
-import { PrivacyPolicy } from '../PrivacyPolicy';
-import { TermsOfService } from '../TermsOfService';
 
 interface LoginScreenProps {
   onSwitchToRegister: () => void;
@@ -21,8 +19,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
-  const [showTermsOfService, setShowTermsOfService] = useState(false);
   const { signIn } = useAuth();
   const { toast } = useToast();
 
@@ -320,20 +316,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       </div>
 
       {/* Footer */}
-      <Footer
-        onOpenPrivacy={() => setShowPrivacyPolicy(true)}
-        onOpenTerms={() => setShowTermsOfService(true)}
-      />
-
-      {/* Privacy Policy */}
-      {showPrivacyPolicy && (
-        <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
-      )}
-
-      {/* Terms of Service */}
-      {showTermsOfService && (
-        <TermsOfService onClose={() => setShowTermsOfService(false)} />
-      )}
+      <Footer />
     </div>
   );
 };

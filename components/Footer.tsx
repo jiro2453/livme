@@ -1,29 +1,24 @@
 import React from 'react';
 
-interface FooterProps {
-  onOpenPrivacy: () => void;
-  onOpenTerms: () => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
+export const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-50 border-t border-gray-200 mt-12 py-6">
       <div className="max-w-[546px] mx-auto px-4">
         <div className="flex flex-col items-center space-y-3">
           <div className="flex items-center gap-4 text-sm text-gray-600">
-            <button
-              onClick={onOpenPrivacy}
+            <a
+              href="/privacy"
               className="hover:text-primary transition-colors"
             >
               プライバシーポリシー
-            </button>
+            </a>
             <span className="text-gray-300">|</span>
-            <button
-              onClick={onOpenTerms}
+            <a
+              href="/terms"
               className="hover:text-primary transition-colors"
             >
               利用規約
-            </button>
+            </a>
             <span className="text-gray-300">|</span>
             <a
               href="https://www.notion.so/2b16b287f66b80459cc3e6e71b102bdb"

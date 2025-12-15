@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 
 interface CookieConsentProps {
   onAccept: () => void;
-  onOpenPrivacy: () => void;
 }
 
-export const CookieConsent: React.FC<CookieConsentProps> = ({ onAccept, onOpenPrivacy }) => {
+export const CookieConsent: React.FC<CookieConsentProps> = ({ onAccept }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -38,12 +37,12 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({ onAccept, onOpenPr
               当サイトでは、サービスの利便性向上および広告配信のためにCookieを使用しています。
               Cookieの使用に同意いただけない場合、一部のサービス機能が利用できない可能性があります。
               詳しくは
-              <button
-                onClick={onOpenPrivacy}
+              <a
+                href="/privacy"
                 className="text-primary underline hover:text-primary/80 mx-1"
               >
                 プライバシーポリシー
-              </button>
+              </a>
               をご確認ください。
             </p>
           </div>

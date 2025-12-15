@@ -46,20 +46,7 @@ const parseRoute = (path: string): { type: 'home' | 'privacy' | 'terms' | 'profi
   return { type: 'profile', value: trimmedPath };
 };
 
-/**
- * Extract user_id from pathname
- * @param path - URL pathname (e.g., "/jiro2453")
- * @returns user_id or null
- *
- * Examples:
- * - "/" -> null
- * - "/jiro2453" -> "jiro2453"
- * - "/jiro2453/profile" -> null (invalid format)
- */
-const getUserIdFromPath = (path: string): string | null => {
-  const route = parseRoute(path);
-  return route.type === 'profile' ? route.value : null;
-};
+// Removed getUserIdFromPath - no longer needed as we use parseRoute directly
 
 /**
  * Update browser URL without page reload

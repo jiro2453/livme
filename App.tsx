@@ -36,7 +36,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 
 const AppContent: React.FC = () => {
   const { user, loading: authLoading, signOut, refreshUserProfile } = useAuth();
-  const { urlUserId, navigateToProfile, navigateToHome } = useProfileRouting();
+  const { urlUserId, currentRoute, navigateToProfile, navigateToHome, navigateToPrivacy, navigateToTerms } = useProfileRouting();
 
   // Data
   const [lives, setLives] = useState<Live[]>([]);
@@ -67,9 +67,7 @@ const AppContent: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Legal pages
-  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
-  const [showTermsOfService, setShowTermsOfService] = useState(false);
+  // Legal pages - now controlled by URL routing (removed state)
 
   // Follow stats
   const [followerCount, setFollowerCount] = useState(0);
@@ -533,6 +531,15 @@ const AppContent: React.FC = () => {
     }
   };
 
+  // Privacy Policy and Terms of Service pages (accessible without authentication)
+  if (currentRoute === 'privacy') {
+    return <PrivacyPolicy onClose={navigateToHome} />;
+  }
+
+  if (currentRoute === 'terms') {
+    return <TermsOfService onClose={navigateToHome} />;
+  }
+
   if (authLoading) {
     return <LoadingSpinner />;
   }
@@ -622,26 +629,10 @@ const AppContent: React.FC = () => {
         />
 
         {/* Footer */}
-        <Footer
-          onOpenPrivacy={() => setShowPrivacyPolicy(true)}
-          onOpenTerms={() => setShowTermsOfService(true)}
-        />
-
-        {/* Privacy Policy */}
-        {showPrivacyPolicy && (
-          <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
-        )}
-
-        {/* Terms of Service */}
-        {showTermsOfService && (
-          <TermsOfService onClose={() => setShowTermsOfService(false)} />
-        )}
+        <Footer />
 
         {/* Cookie Consent Banner */}
-        <CookieConsent
-          onAccept={() => {}}
-          onOpenPrivacy={() => setShowPrivacyPolicy(true)}
-        />
+        <CookieConsent onAccept={() => {}} />
 
         <Toaster />
       </div>
@@ -959,26 +950,10 @@ const AppContent: React.FC = () => {
       />
 
       {/* Footer */}
-      <Footer
-        onOpenPrivacy={() => setShowPrivacyPolicy(true)}
-        onOpenTerms={() => setShowTermsOfService(true)}
-      />
-
-      {/* Privacy Policy */}
-      {showPrivacyPolicy && (
-        <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />
-      )}
-
-      {/* Terms of Service */}
-      {showTermsOfService && (
-        <TermsOfService onClose={() => setShowTermsOfService(false)} />
-      )}
+      <Footer />
 
       {/* Cookie Consent Banner */}
-      <CookieConsent
-        onAccept={() => {}}
-        onOpenPrivacy={() => setShowPrivacyPolicy(true)}
-      />
+      <CookieConsent onAccept={() => {}} />
 
       {/* Navigation Loading Overlay */}
       {isNavigatingToProfile && (

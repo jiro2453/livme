@@ -11,6 +11,42 @@ const getPathFromUrl = (): string => {
 };
 
 /**
+ * Parse pathname into route type and identifier
+ * @param path - URL pathname
+ * @returns Route information
+ *
+ * Examples:
+ * - "/" -> { type: 'home', value: null }
+ * - "/privacy" -> { type: 'privacy', value: null }
+ * - "/terms" -> { type: 'terms', value: null }
+ * - "/jiro2453" -> { type: 'profile', value: 'jiro2453' }
+ */
+const parseRoute = (path: string): { type: 'home' | 'privacy' | 'terms' | 'profile'; value: string | null } => {
+  const trimmedPath = path.replace(/^\//, ''); // Remove leading slash
+
+  // Empty path -> home
+  if (!trimmedPath) {
+    return { type: 'home', value: null };
+  }
+
+  // Contains additional slashes -> invalid, treat as home
+  if (trimmedPath.includes('/')) {
+    return { type: 'home', value: null };
+  }
+
+  // Special routes
+  if (trimmedPath === 'privacy') {
+    return { type: 'privacy', value: null };
+  }
+  if (trimmedPath === 'terms') {
+    return { type: 'terms', value: null };
+  }
+
+  // Otherwise, treat as user profile
+  return { type: 'profile', value: trimmedPath };
+};
+
+/**
  * Extract user_id from pathname
  * @param path - URL pathname (e.g., "/jiro2453")
  * @returns user_id or null
@@ -21,14 +57,8 @@ const getPathFromUrl = (): string => {
  * - "/jiro2453/profile" -> null (invalid format)
  */
 const getUserIdFromPath = (path: string): string | null => {
-  const trimmedPath = path.replace(/^\//, ''); // Remove leading slash
-
-  // Empty or contains additional slashes -> invalid
-  if (!trimmedPath || trimmedPath.includes('/')) {
-    return null;
-  }
-
-  return trimmedPath;
+  const route = parseRoute(path);
+  return route.type === 'profile' ? route.value : null;
 };
 
 /**
@@ -49,14 +79,20 @@ const updateUrl = (path: string): void => {
  * - Home: /
  * - Own profile: / (no URL change)
  * - Other user's profile: /:user_id
+ * - Privacy policy: /privacy
+ * - Terms of service: /terms
  *
  * @returns {Object} routing utilities
  * - urlUserId: Current user_id from URL (null for home)
+ * - currentRoute: Current route type
  * - navigateToProfile: Navigate to user profile
  * - navigateToHome: Navigate to home
+ * - navigateToPrivacy: Navigate to privacy policy
+ * - navigateToTerms: Navigate to terms of service
  */
 export const useProfileRouting = () => {
   const [urlUserId, setUrlUserId] = useState<string | null>(null);
+  const [currentRoute, setCurrentRoute] = useState<'home' | 'privacy' | 'terms' | 'profile'>('home');
 
   useEffect(() => {
     /**
@@ -64,8 +100,9 @@ export const useProfileRouting = () => {
      */
     const handleLocationChange = () => {
       const path = getPathFromUrl();
-      const userId = getUserIdFromPath(path);
-      setUrlUserId(userId);
+      const route = parseRoute(path);
+      setCurrentRoute(route.type);
+      setUrlUserId(route.type === 'profile' ? route.value : null);
     };
 
     // Initial check
@@ -86,6 +123,7 @@ export const useProfileRouting = () => {
   const navigateToProfile = useCallback((userId: string) => {
     updateUrl(userId);
     setUrlUserId(userId);
+    setCurrentRoute('profile');
   }, []);
 
   /**
@@ -94,11 +132,33 @@ export const useProfileRouting = () => {
   const navigateToHome = useCallback(() => {
     updateUrl('/');
     setUrlUserId(null);
+    setCurrentRoute('home');
+  }, []);
+
+  /**
+   * Navigate to privacy policy page
+   */
+  const navigateToPrivacy = useCallback(() => {
+    updateUrl('privacy');
+    setUrlUserId(null);
+    setCurrentRoute('privacy');
+  }, []);
+
+  /**
+   * Navigate to terms of service page
+   */
+  const navigateToTerms = useCallback(() => {
+    updateUrl('terms');
+    setUrlUserId(null);
+    setCurrentRoute('terms');
   }, []);
 
   return {
     urlUserId,
+    currentRoute,
     navigateToProfile,
     navigateToHome,
+    navigateToPrivacy,
+    navigateToTerms,
   };
 };

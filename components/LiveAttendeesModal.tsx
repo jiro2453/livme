@@ -261,7 +261,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
 
               {/* メインカードコンテナ */}
               <div
-                className="bg-white rounded-2xl shadow-xl overflow-hidden relative min-h-[400px] max-h-[75vh] w-full"
+                className="bg-white rounded-2xl shadow-xl overflow-hidden relative max-h-[75vh] w-full"
                 style={{
                   paddingTop: '0.75rem',
                   transformStyle: 'preserve-3d',
@@ -306,7 +306,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                       }}
                     >
                       {currentAttendee && (
-                        <div className="flex flex-col items-center space-y-1.5 w-full px-6 py-4 pb-2 overflow-x-hidden">
+                        <div className="flex flex-col items-center space-y-1.5 w-full px-6 pt-2 pb-3 overflow-x-hidden">
                           {/* アバター */}
                           <motion.div
                             initial={{ scale: 0 }}

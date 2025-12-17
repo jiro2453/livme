@@ -867,6 +867,8 @@ const AppContent: React.FC = () => {
       <AdMaxBanner
         adMaxId="4174e0f1018f53d91bd8e5469070a83e"
         className="md:hidden flex justify-center py-8"
+        width="320px"
+        height="100px"
       />
 
       {/* Footer */}

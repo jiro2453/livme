@@ -7,6 +7,13 @@ interface AdMaxBannerProps {
   height?: string;
 }
 
+// Extend window type for AdMax
+declare global {
+  interface Window {
+    admaxads: any[];
+  }
+}
+
 export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
   adMaxId,
   className = '',
@@ -14,13 +21,19 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
   height
 }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
+  const isLoadedRef = useRef(false);
 
   useEffect(() => {
     const container = adContainerRef.current;
-    if (!container) return;
+    if (!container || isLoadedRef.current) return;
+
+    console.log('[AdMaxBanner] Initializing ad:', adMaxId);
 
     // Clear any existing content
     container.innerHTML = '';
+
+    // Initialize admaxads array if not exists
+    window.admaxads = window.admaxads || [];
 
     // Create ad div
     const adDiv = document.createElement('div');
@@ -32,30 +45,45 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
       (height ? `height:${height};` : '');
     adDiv.setAttribute('style', style);
 
-    // Create push script
-    const pushScript = document.createElement('script');
-    pushScript.type = 'text/javascript';
-    pushScript.text = `(admaxads = window.admaxads || []).push({admax_id: "${adMaxId}", type: "banner"});`;
-
-    // Create loader script only if not already loaded
-    const loaderScript = document.createElement('script');
-    loaderScript.type = 'text/javascript';
-    loaderScript.charset = 'utf-8';
-    loaderScript.src = 'https://adm.shinobi.jp/st/t.js';
-    loaderScript.async = true;
-
-    // Append elements
+    // Append ad div first
     container.appendChild(adDiv);
-    container.appendChild(pushScript);
-    
-    // Check if loader script is already in document
-    if (!document.querySelector('script[src="https://adm.shinobi.jp/st/t.js"]')) {
-      container.appendChild(loaderScript);
+
+    // Push to admaxads array
+    try {
+      window.admaxads.push({ admax_id: adMaxId, type: "banner" });
+      console.log('[AdMaxBanner] Pushed to admaxads:', adMaxId);
+    } catch (error) {
+      console.error('[AdMaxBanner] Error pushing to admaxads:', error);
     }
 
+    // Load script if not already loaded
+    const existingScript = document.querySelector('script[src="https://adm.shinobi.jp/st/t.js"]');
+    if (!existingScript) {
+      const loaderScript = document.createElement('script');
+      loaderScript.type = 'text/javascript';
+      loaderScript.charset = 'utf-8';
+      loaderScript.src = 'https://adm.shinobi.jp/st/t.js';
+      loaderScript.async = true;
+
+      loaderScript.onload = () => {
+        console.log('[AdMaxBanner] Script loaded successfully');
+      };
+
+      loaderScript.onerror = () => {
+        console.error('[AdMaxBanner] Failed to load script');
+      };
+
+      document.body.appendChild(loaderScript);
+      console.log('[AdMaxBanner] Script appended to body');
+    } else {
+      console.log('[AdMaxBanner] Script already exists');
+    }
+
+    isLoadedRef.current = true;
+
     return () => {
-      // Cleanup on unmount
-      container.innerHTML = '';
+      // Don't clear on unmount to preserve ads
+      console.log('[AdMaxBanner] Component unmounting:', adMaxId);
     };
   }, [adMaxId, width, height]);
 

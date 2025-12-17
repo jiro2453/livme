@@ -168,59 +168,6 @@ const AppContent: React.FC = () => {
     };
   }, []);
 
-  // Prevent iOS overscroll/bounce effect - ABSOLUTE PREVENTION
-  useEffect(() => {
-    let lastY = 0;
-
-    const preventOverscroll = (e: TouchEvent) => {
-      // main要素を取得
-      const scrollContainer = document.querySelector('main');
-      if (!scrollContainer) return;
-
-      const scrollTop = scrollContainer.scrollTop;
-      const scrollHeight = scrollContainer.scrollHeight;
-      const clientHeight = scrollContainer.clientHeight;
-      const maxScrollTop = scrollHeight - clientHeight;
-
-      if (e.type === 'touchstart') {
-        lastY = e.touches[0].clientY;
-      } else if (e.type === 'touchmove') {
-        const currentY = e.touches[0].clientY;
-        const deltaY = lastY - currentY; // positive = scrolling down, negative = scrolling up
-
-        // 最上部で上にスクロールしようとしている（引っ張ろうとしている）
-        if (scrollTop <= 0 && deltaY < 0) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          scrollContainer.scrollTop = 0;
-          return false;
-        }
-
-        // 最下部で下にスクロールしようとしている
-        if (scrollTop >= maxScrollTop && deltaY > 0) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          scrollContainer.scrollTop = maxScrollTop;
-          return false;
-        }
-
-        lastY = currentY;
-      }
-    };
-
-    // より早い段階でキャプチャ
-    const options = { passive: false, capture: true };
-    document.addEventListener('touchstart', preventOverscroll, options);
-    document.addEventListener('touchmove', preventOverscroll, options);
-    document.addEventListener('touchend', preventOverscroll, options);
-
-    return () => {
-      document.removeEventListener('touchstart', preventOverscroll, true);
-      document.removeEventListener('touchmove', preventOverscroll, true);
-      document.removeEventListener('touchend', preventOverscroll, true);
-    };
-  }, []);
-
   useEffect(() => {
     if (user) {
       loadLives();
@@ -661,7 +608,7 @@ const AppContent: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="h-full overflow-y-auto bg-[#f8f9fa]">
+      <main className="h-full overflow-y-auto bg-[#f8f9fa] overscroll-behavior-y-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
         <div className="max-w-[546px] mx-auto px-4 pb-8 pt-[calc(56px+env(safe-area-inset-top))]">
         <div className="space-y-6">
           {/* Profile Section */}

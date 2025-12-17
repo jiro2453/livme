@@ -176,10 +176,10 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogPortal>
-          {/* Custom transparent overlay for LiveAttendeesModal */}
+          {/* Custom overlay for LiveAttendeesModal with dark background */}
           <DialogPrimitive.Overlay
-            className="fixed inset-0 bg-transparent"
-            style={{ zIndex: zIndex ? zIndex - 1 : 10000 }}
+            className="fixed inset-0 bg-black/80"
+            style={{ zIndex: zIndex ? zIndex - 1 : 10000, pointerEvents: 'none' }}
           />
           <DialogPrimitive.Content
             className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none focus:outline-none"

@@ -14,15 +14,13 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
   height
 }) => {
   const adContainerRef = useRef<HTMLDivElement>(null);
-  const scriptLoadedRef = useRef(false);
 
   useEffect(() => {
-    // Prevent double loading in development mode
-    if (scriptLoadedRef.current) return;
-    scriptLoadedRef.current = true;
-
     const container = adContainerRef.current;
     if (!container) return;
+
+    // Clear any existing content
+    container.innerHTML = '';
 
     // Create ad div
     const adDiv = document.createElement('div');
@@ -39,7 +37,7 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
     pushScript.type = 'text/javascript';
     pushScript.text = `(admaxads = window.admaxads || []).push({admax_id: "${adMaxId}", type: "banner"});`;
 
-    // Create loader script
+    // Create loader script only if not already loaded
     const loaderScript = document.createElement('script');
     loaderScript.type = 'text/javascript';
     loaderScript.charset = 'utf-8';
@@ -49,14 +47,15 @@ export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
     // Append elements
     container.appendChild(adDiv);
     container.appendChild(pushScript);
-    container.appendChild(loaderScript);
+    
+    // Check if loader script is already in document
+    if (!document.querySelector('script[src="https://adm.shinobi.jp/st/t.js"]')) {
+      container.appendChild(loaderScript);
+    }
 
     return () => {
       // Cleanup on unmount
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
-      }
-      scriptLoadedRef.current = false;
+      container.innerHTML = '';
     };
   }, [adMaxId, width, height]);
 

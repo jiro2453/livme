@@ -1,67 +1,64 @@
 import React, { useEffect, useRef } from 'react';
 
 interface AdMaxBannerProps {
-  admaxId?: string;
+  adMaxId: string;
+  className?: string;
   width?: string;
   height?: string;
-  className?: string;
 }
 
 export const AdMaxBanner: React.FC<AdMaxBannerProps> = ({
-  admaxId,
-  width = '300',
-  height = '250',
+  adMaxId,
   className = '',
+  width,
+  height
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const adContainerRef = useRef<HTMLDivElement>(null);
+  const scriptLoadedRef = useRef(false);
 
   useEffect(() => {
-    // 広告IDが設定されていない場合は何もしない
-    if (!admaxId || !containerRef.current) {
-      return;
-    }
+    // Prevent double loading in development mode
+    if (scriptLoadedRef.current) return;
+    scriptLoadedRef.current = true;
 
-    // 既存のスクリプトをクリア
-    containerRef.current.innerHTML = '';
+    const container = adContainerRef.current;
+    if (!container) return;
 
-    // 開始コメント
-    const startComment = document.createComment(' admax ');
+    // Create ad div
+    const adDiv = document.createElement('div');
+    adDiv.className = 'admax-ads';
+    adDiv.setAttribute('data-admax-id', adMaxId);
 
-    // AdMaxスクリプトを作成（シンプルな形式）
-    const adScript = document.createElement('script');
-    adScript.src = `https://adm.shinobi.jp/s/${admaxId}`;
+    const style = 'display:inline-block;' +
+      (width ? `width:${width};` : '') +
+      (height ? `height:${height};` : '');
+    adDiv.setAttribute('style', style);
 
-    // 終了コメント
-    const endComment = document.createComment(' admax ');
+    // Create push script
+    const pushScript = document.createElement('script');
+    pushScript.type = 'text/javascript';
+    pushScript.text = `(admaxads = window.admaxads || []).push({admax_id: "${adMaxId}", type: "banner"});`;
 
-    // スクリプトを追加
-    containerRef.current.appendChild(startComment);
-    containerRef.current.appendChild(adScript);
-    containerRef.current.appendChild(endComment);
+    // Create loader script
+    const loaderScript = document.createElement('script');
+    loaderScript.type = 'text/javascript';
+    loaderScript.charset = 'utf-8';
+    loaderScript.src = 'https://adm.shinobi.jp/st/t.js';
+    loaderScript.async = true;
 
-    // クリーンアップは不要（広告の表示を維持）
-  }, [admaxId, width, height]);
+    // Append elements
+    container.appendChild(adDiv);
+    container.appendChild(pushScript);
+    container.appendChild(loaderScript);
 
-  // 広告IDが設定されていない場合はプレースホルダーを表示
-  if (!admaxId) {
-    return (
-      <div
-        className={`flex items-center justify-center bg-gray-100 border border-gray-300 rounded-lg ${className}`}
-        style={{ width: `${width}px`, height: `${height}px` }}
-      >
-        <div className="text-center text-gray-500 text-sm px-4">
-          <p className="font-semibold">広告スペース</p>
-          <p className="text-xs mt-1">VITE_ADMAX_IDを設定してください</p>
-        </div>
-      </div>
-    );
-  }
+    return () => {
+      // Cleanup on unmount
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+      scriptLoadedRef.current = false;
+    };
+  }, [adMaxId, width, height]);
 
-  return (
-    <div
-      ref={containerRef}
-      className={`admax-banner ${className}`}
-      style={{ minWidth: `${width}px`, minHeight: `${height}px` }}
-    />
-  );
+  return <div ref={adContainerRef} className={className} />;
 };

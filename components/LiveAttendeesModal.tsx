@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
-  DialogContent,
+  DialogPortal,
 } from './ui/dialog';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { SocialIcons } from './SocialIcons';
@@ -9,6 +9,7 @@ import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { getUsersByIds } from '../lib/api';
 import type { Live, User } from '../types';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 interface LiveAttendeesModalProps {
   isOpen: boolean;
@@ -174,12 +175,17 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent
-          hideCloseButton={true}
-          className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none focus:outline-none"
-          style={{ zIndex }}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-        >
+        <DialogPortal>
+          {/* Custom transparent overlay for LiveAttendeesModal */}
+          <DialogPrimitive.Overlay
+            className="fixed inset-0 bg-transparent"
+            style={{ zIndex: zIndex ? zIndex - 1 : 10000 }}
+          />
+          <DialogPrimitive.Content
+            className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none focus:outline-none"
+            style={{ zIndex }}
+            onOpenAutoFocus={(e) => e.preventDefault()}
+          >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -497,8 +503,9 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
               )}
             </div>
           </motion.div>
-        </DialogContent>
-      </Dialog>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    </Dialog>
     </>
   );
 };

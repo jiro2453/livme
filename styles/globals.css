@@ -28,7 +28,7 @@
 html {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
-  overflow: hidden;
+  overflow: auto;
   width: 100%;
   height: 100%;
   position: relative;
@@ -42,8 +42,8 @@ body {
   overscroll-behavior: none;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  touch-action: pan-y pan-x;
+  overflow: auto;
+  touch-action: auto;
   margin: 0;
   padding: 0;
 }
@@ -51,7 +51,7 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
   overscroll-behavior: none;
   position: relative;
 }
@@ -94,7 +94,7 @@ header {
 main {
   overscroll-behavior: none !important;
   -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
+  touch-action: auto !important;
 }
 
 button {

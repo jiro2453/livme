@@ -175,6 +175,7 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent
+          hideCloseButton={true}
           className="w-[calc(100vw-2rem)] max-w-md p-0 gap-0 bg-transparent border-0 shadow-none focus:outline-none"
           style={{ zIndex }}
           onOpenAutoFocus={(e) => e.preventDefault()}
@@ -429,13 +430,17 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.6 }}
                               className="w-full text-center"
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onTouchStart={(e) => e.stopPropagation()}
                             >
                               <button
+                                type="button"
                                 onClick={() => {
                                   onViewProfile(currentAttendee.user_id);
                                   onClose();
                                 }}
-                                className="text-primary text-[10px] font-medium underline hover:text-primary/80 transition-colors"
+                                className="text-primary text-[10px] font-medium underline hover:text-primary/80 transition-colors cursor-pointer touch-auto"
+                                style={{ touchAction: 'auto', pointerEvents: 'auto' }}
                               >
                                 もっとみる
                               </button>
@@ -467,6 +472,8 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
                   className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 bg-white/80 rounded-full px-2 py-2 backdrop-blur-sm"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
                 >
                   <div className="text-xs text-gray-600 font-medium">
                     {currentIndex + 1}/{attendees.length}
@@ -475,10 +482,12 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
                     {attendees.map((_, index) => (
                       <motion.button
                         key={index}
+                        type="button"
                         onClick={() => handleDotClick(index)}
-                        className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                        className={`w-1.5 h-1.5 rounded-full transition-colors cursor-pointer ${
                           index === currentIndex ? 'bg-primary' : 'bg-gray-300'
                         }`}
+                        style={{ touchAction: 'auto', pointerEvents: 'auto' }}
                         whileHover={{ scale: 1.2 }}
                         whileTap={{ scale: 0.9 }}
                       />

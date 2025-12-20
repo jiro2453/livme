@@ -701,49 +701,6 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     console.log('=== deleteUserAccount called ===');
     console.log('userId:', userId);
 
-    // First, check what data exists for this user
-    const { data: existingAttendees } = await supabase
-      .from('live_attendees')
-      .select('*')
-      .eq('user_id', userId);
-    console.log('Existing live_attendees before delete:', existingAttendees?.length || 0);
-
-    const { data: existingLives } = await supabase
-      .from('lives')
-      .select('*')
-      .eq('created_by', userId);
-    console.log('Existing lives before delete:', existingLives?.length || 0);
-
-    const { data: existingFollowers } = await supabase
-      .from('follows')
-      .select('*')
-      .eq('follower_id', userId);
-    console.log('Existing follows (as follower) before delete:', existingFollowers?.length || 0);
-
-    const { data: existingFollowing } = await supabase
-      .from('follows')
-      .select('*')
-      .eq('following_id', userId);
-    console.log('Existing follows (as following) before delete:', existingFollowing?.length || 0);
-
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId);
-    console.log('Existing user before delete:', existingUser?.length || 0);
-    if (existingUser && existingUser.length > 0) {
-      console.log('User data:', existingUser[0]);
-    }
-
-    // Temporary alert for debugging
-    alert(`削除前のデータ確認:
-ユーザーID: ${userId}
-user: ${existingUser?.length || 0}件
-lives: ${existingLives?.length || 0}件
-attendees: ${existingAttendees?.length || 0}件
-followers: ${existingFollowers?.length || 0}件
-following: ${existingFollowing?.length || 0}件`);
-
     // 1. Delete from live_attendees
     const { data: attendeesData, error: attendeesError } = await supabase
       .from('live_attendees')
@@ -753,10 +710,8 @@ following: ${existingFollowing?.length || 0}件`);
 
     if (attendeesError) {
       console.error('Error deleting live_attendees:', attendeesError);
-      console.error('Error details:', JSON.stringify(attendeesError, null, 2));
       throw attendeesError;
     }
-    console.log('Deleted live_attendees:', attendeesData?.length || 0);
 
     // 2. Delete lives created by this user
     const { data: livesData, error: livesError } = await supabase
@@ -767,10 +722,8 @@ following: ${existingFollowing?.length || 0}件`);
 
     if (livesError) {
       console.error('Error deleting lives:', livesError);
-      console.error('Error details:', JSON.stringify(livesError, null, 2));
       throw livesError;
     }
-    console.log('Deleted lives:', livesData?.length || 0);
 
     // 3. Delete from follows (as follower)
     const { data: followersData, error: followersError } = await supabase
@@ -781,10 +734,8 @@ following: ${existingFollowing?.length || 0}件`);
 
     if (followersError) {
       console.error('Error deleting followers:', followersError);
-      console.error('Error details:', JSON.stringify(followersError, null, 2));
       throw followersError;
     }
-    console.log('Deleted followers:', followersData?.length || 0);
 
     // 4. Delete from follows (as following)
     const { data: followingData, error: followingError } = await supabase
@@ -795,10 +746,8 @@ following: ${existingFollowing?.length || 0}件`);
 
     if (followingError) {
       console.error('Error deleting following:', followingError);
-      console.error('Error details:', JSON.stringify(followingError, null, 2));
       throw followingError;
     }
-    console.log('Deleted following:', followingData?.length || 0);
 
     // 5. Delete user profile
     const { data: userData, error: userError } = await supabase
@@ -809,18 +758,8 @@ following: ${existingFollowing?.length || 0}件`);
 
     if (userError) {
       console.error('Error deleting user:', userError);
-      console.error('Error details:', JSON.stringify(userError, null, 2));
       throw userError;
     }
-    console.log('Deleted user:', userData?.length || 0);
-
-    // Show deletion results
-    alert(`削除結果:
-attendees: ${attendeesData?.length || 0}件削除
-lives: ${livesData?.length || 0}件削除
-followers: ${followersData?.length || 0}件削除
-following: ${followingData?.length || 0}件削除
-user: ${userData?.length || 0}件削除`);
 
     // 6. Sign out from Supabase Auth
     await supabase.auth.signOut();

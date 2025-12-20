@@ -701,6 +701,40 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     console.log('=== deleteUserAccount called ===');
     console.log('userId:', userId);
 
+    // First, check what data exists for this user
+    const { data: existingAttendees } = await supabase
+      .from('live_attendees')
+      .select('*')
+      .eq('user_id', userId);
+    console.log('Existing live_attendees before delete:', existingAttendees?.length || 0);
+
+    const { data: existingLives } = await supabase
+      .from('lives')
+      .select('*')
+      .eq('created_by', userId);
+    console.log('Existing lives before delete:', existingLives?.length || 0);
+
+    const { data: existingFollowers } = await supabase
+      .from('follows')
+      .select('*')
+      .eq('follower_id', userId);
+    console.log('Existing follows (as follower) before delete:', existingFollowers?.length || 0);
+
+    const { data: existingFollowing } = await supabase
+      .from('follows')
+      .select('*')
+      .eq('following_id', userId);
+    console.log('Existing follows (as following) before delete:', existingFollowing?.length || 0);
+
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId);
+    console.log('Existing user before delete:', existingUser?.length || 0);
+    if (existingUser && existingUser.length > 0) {
+      console.log('User data:', existingUser[0]);
+    }
+
     // 1. Delete from live_attendees
     const { data: attendeesData, error: attendeesError } = await supabase
       .from('live_attendees')

@@ -735,6 +735,15 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
       console.log('User data:', existingUser[0]);
     }
 
+    // Temporary alert for debugging
+    alert(`削除前のデータ確認:
+ユーザーID: ${userId}
+user: ${existingUser?.length || 0}件
+lives: ${existingLives?.length || 0}件
+attendees: ${existingAttendees?.length || 0}件
+followers: ${existingFollowers?.length || 0}件
+following: ${existingFollowing?.length || 0}件`);
+
     // 1. Delete from live_attendees
     const { data: attendeesData, error: attendeesError } = await supabase
       .from('live_attendees')
@@ -804,6 +813,14 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
       throw userError;
     }
     console.log('Deleted user:', userData?.length || 0);
+
+    // Show deletion results
+    alert(`削除結果:
+attendees: ${attendeesData?.length || 0}件削除
+lives: ${livesData?.length || 0}件削除
+followers: ${followersData?.length || 0}件削除
+following: ${followingData?.length || 0}件削除
+user: ${userData?.length || 0}件削除`);
 
     // 6. Sign out from Supabase Auth
     await supabase.auth.signOut();

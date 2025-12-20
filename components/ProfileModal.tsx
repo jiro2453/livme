@@ -1687,7 +1687,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
       {/* Account Deletion Confirmation Dialog */}
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <DialogContent className="w-[calc(100vw-2rem)] max-w-sm sm:w-full">
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-sm sm:w-full z-[10001]">
           <DialogTitle className="text-center text-lg font-semibold">アカウント削除の確認</DialogTitle>
           <div className="space-y-4 pt-4">
             <p className="text-sm text-gray-700 text-center leading-relaxed">

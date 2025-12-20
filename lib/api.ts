@@ -702,11 +702,10 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     console.log('userId:', userId);
 
     // 1. Delete from live_attendees
-    const { data: attendeesData, error: attendeesError } = await supabase
+    const { error: attendeesError } = await supabase
       .from('live_attendees')
       .delete()
-      .eq('user_id', userId)
-      .select();
+      .eq('user_id', userId);
 
     if (attendeesError) {
       console.error('Error deleting live_attendees:', attendeesError);
@@ -714,11 +713,10 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     }
 
     // 2. Delete lives created by this user
-    const { data: livesData, error: livesError } = await supabase
+    const { error: livesError } = await supabase
       .from('lives')
       .delete()
-      .eq('created_by', userId)
-      .select();
+      .eq('created_by', userId);
 
     if (livesError) {
       console.error('Error deleting lives:', livesError);
@@ -726,11 +724,10 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     }
 
     // 3. Delete from follows (as follower)
-    const { data: followersData, error: followersError } = await supabase
+    const { error: followersError } = await supabase
       .from('follows')
       .delete()
-      .eq('follower_id', userId)
-      .select();
+      .eq('follower_id', userId);
 
     if (followersError) {
       console.error('Error deleting followers:', followersError);
@@ -738,11 +735,10 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     }
 
     // 4. Delete from follows (as following)
-    const { data: followingData, error: followingError } = await supabase
+    const { error: followingError } = await supabase
       .from('follows')
       .delete()
-      .eq('following_id', userId)
-      .select();
+      .eq('following_id', userId);
 
     if (followingError) {
       console.error('Error deleting following:', followingError);
@@ -750,11 +746,10 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     }
 
     // 5. Delete user profile
-    const { data: userData, error: userError } = await supabase
+    const { error: userError } = await supabase
       .from('users')
       .delete()
-      .eq('id', userId)
-      .select();
+      .eq('id', userId);
 
     if (userError) {
       console.error('Error deleting user:', userError);

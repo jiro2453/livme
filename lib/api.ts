@@ -702,59 +702,74 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     console.log('userId:', userId);
 
     // 1. Delete from live_attendees
-    const { error: attendeesError } = await supabase
+    const { data: attendeesData, error: attendeesError } = await supabase
       .from('live_attendees')
       .delete()
-      .eq('user_id', userId);
+      .eq('user_id', userId)
+      .select();
 
     if (attendeesError) {
       console.error('Error deleting live_attendees:', attendeesError);
+      console.error('Error details:', JSON.stringify(attendeesError, null, 2));
       throw attendeesError;
     }
+    console.log('Deleted live_attendees:', attendeesData?.length || 0);
 
     // 2. Delete lives created by this user
-    const { error: livesError } = await supabase
+    const { data: livesData, error: livesError } = await supabase
       .from('lives')
       .delete()
-      .eq('created_by', userId);
+      .eq('created_by', userId)
+      .select();
 
     if (livesError) {
       console.error('Error deleting lives:', livesError);
+      console.error('Error details:', JSON.stringify(livesError, null, 2));
       throw livesError;
     }
+    console.log('Deleted lives:', livesData?.length || 0);
 
     // 3. Delete from follows (as follower)
-    const { error: followersError } = await supabase
+    const { data: followersData, error: followersError } = await supabase
       .from('follows')
       .delete()
-      .eq('follower_id', userId);
+      .eq('follower_id', userId)
+      .select();
 
     if (followersError) {
       console.error('Error deleting followers:', followersError);
+      console.error('Error details:', JSON.stringify(followersError, null, 2));
       throw followersError;
     }
+    console.log('Deleted followers:', followersData?.length || 0);
 
     // 4. Delete from follows (as following)
-    const { error: followingError } = await supabase
+    const { data: followingData, error: followingError } = await supabase
       .from('follows')
       .delete()
-      .eq('following_id', userId);
+      .eq('following_id', userId)
+      .select();
 
     if (followingError) {
       console.error('Error deleting following:', followingError);
+      console.error('Error details:', JSON.stringify(followingError, null, 2));
       throw followingError;
     }
+    console.log('Deleted following:', followingData?.length || 0);
 
     // 5. Delete user profile
-    const { error: userError } = await supabase
+    const { data: userData, error: userError } = await supabase
       .from('users')
       .delete()
-      .eq('id', userId);
+      .eq('id', userId)
+      .select();
 
     if (userError) {
       console.error('Error deleting user:', userError);
+      console.error('Error details:', JSON.stringify(userError, null, 2));
       throw userError;
     }
+    console.log('Deleted user:', userData?.length || 0);
 
     // 6. Sign out from Supabase Auth
     await supabase.auth.signOut();

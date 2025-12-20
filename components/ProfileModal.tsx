@@ -1695,11 +1695,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           >
             <DialogTitle className="text-center text-lg font-semibold">アカウント削除の確認</DialogTitle>
             <div className="space-y-4 pt-4">
-              <p className="text-sm text-gray-700 text-center leading-relaxed">
-                １度削除すると同じアカウントは利用できません。
-                <br />
-                本当に削除しますか？
-              </p>
+              <div className="text-sm text-gray-700 text-center leading-relaxed space-y-1">
+                <div className="whitespace-nowrap">１度削除すると同じアカウントは利用できません。</div>
+                <div>本当に削除しますか？</div>
+              </div>
               <div className="flex gap-3 pt-2">
                 <Button
                   onClick={() => setShowDeleteConfirm(false)}

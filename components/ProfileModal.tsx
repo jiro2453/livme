@@ -23,7 +23,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useToast } from '../hooks/useToast';
-import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId, followUser, unfollowUser, isFollowing, getFollowerCount, getFollowingCount } from '../lib/api';
+import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId, followUser, unfollowUser, isFollowing, getFollowerCount, getFollowingCount, deleteUserAccount } from '../lib/api';
 import { Icons } from './assets/Icons';
 import { LiveCard } from './LiveCard';
 import { SocialIcons } from './SocialIcons';
@@ -156,6 +156,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [errors, setErrors] = useState<FormErrors>({});
   const [userIdStatus, setUserIdStatus] = useState<UserIdStatus>('idle');
   const [isCheckingUserId, setIsCheckingUserId] = useState(false);
+
+  // Account deletion state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { toast } = useToast();
   const userIdCheckTimeout = useRef<NodeJS.Timeout>();
@@ -774,6 +778,51 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     setErrors({});
     console.log('Setting isEditing to true');
     setIsEditing(true);
+  };
+
+  // Handle account deletion
+  const handleDeleteAccount = async () => {
+    if (!currentUserId) {
+      console.error('No current user ID');
+      return;
+    }
+
+    console.log('=== handleDeleteAccount called ===');
+    console.log('currentUserId:', currentUserId);
+
+    setIsDeleting(true);
+    try {
+      const success = await deleteUserAccount(currentUserId);
+
+      if (success) {
+        toast({
+          title: 'アカウントを削除しました',
+          description: 'ご利用ありがとうございました',
+          variant: 'success',
+        });
+
+        // Close modal and dialog
+        setShowDeleteConfirm(false);
+        onClose();
+
+        // User will be automatically signed out by the deleteUserAccount function
+      } else {
+        toast({
+          title: 'エラー',
+          description: 'アカウントの削除に失敗しました',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      toast({
+        title: 'エラー',
+        description: 'アカウントの削除中にエラーが発生しました',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   if (loading || !displayUser) {
@@ -1401,6 +1450,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               </div>
             )}
 
+            {/* Account Deletion Section - only shown when not editing */}
+            {!isEditing && isOwnProfile && (
+              <div className="space-y-2 pb-4">
+                <div className="pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteConfirm(true)}
+                    className="w-full text-sm text-red-600 hover:text-red-700 py-2 text-center transition-colors"
+                  >
+                    アカウントを削除
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* 編集モード時の下部スペース確保 */}
             {isEditing && <div className="pb-4" />}
           </div>
@@ -1620,6 +1684,37 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           onUserClick={onViewProfile}
         />
       )}
+
+      {/* Account Deletion Confirmation Dialog */}
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent className="w-[calc(100vw-2rem)] max-w-sm sm:w-full">
+          <DialogTitle className="text-center text-lg font-semibold">アカウント削除の確認</DialogTitle>
+          <div className="space-y-4 pt-4">
+            <p className="text-sm text-gray-700 text-center leading-relaxed">
+              一度削除すると二度と同じアカウントは利用できません。
+              <br />
+              本当に削除しますか？
+            </p>
+            <div className="flex gap-3 pt-2">
+              <Button
+                onClick={() => setShowDeleteConfirm(false)}
+                variant="outline"
+                className="flex-1"
+                disabled={isDeleting}
+              >
+                キャンセル
+              </Button>
+              <Button
+                onClick={handleDeleteAccount}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                disabled={isDeleting}
+              >
+                {isDeleting ? '削除中...' : 'OK'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

@@ -694,3 +694,75 @@ export const deleteImage = async (path: string): Promise<boolean> => {
 
   return true;
 };
+
+// Account Deletion API
+export const deleteUserAccount = async (userId: string): Promise<boolean> => {
+  try {
+    console.log('=== deleteUserAccount called ===');
+    console.log('userId:', userId);
+
+    // 1. Delete from live_attendees
+    const { error: attendeesError } = await supabase
+      .from('live_attendees')
+      .delete()
+      .eq('user_id', userId);
+
+    if (attendeesError) {
+      console.error('Error deleting live_attendees:', attendeesError);
+      throw attendeesError;
+    }
+
+    // 2. Delete lives created by this user
+    const { error: livesError } = await supabase
+      .from('lives')
+      .delete()
+      .eq('created_by', userId);
+
+    if (livesError) {
+      console.error('Error deleting lives:', livesError);
+      throw livesError;
+    }
+
+    // 3. Delete from follows (as follower)
+    const { error: followersError } = await supabase
+      .from('follows')
+      .delete()
+      .eq('follower_id', userId);
+
+    if (followersError) {
+      console.error('Error deleting followers:', followersError);
+      throw followersError;
+    }
+
+    // 4. Delete from follows (as following)
+    const { error: followingError } = await supabase
+      .from('follows')
+      .delete()
+      .eq('following_id', userId);
+
+    if (followingError) {
+      console.error('Error deleting following:', followingError);
+      throw followingError;
+    }
+
+    // 5. Delete user profile
+    const { error: userError } = await supabase
+      .from('users')
+      .delete()
+      .eq('id', userId);
+
+    if (userError) {
+      console.error('Error deleting user:', userError);
+      throw userError;
+    }
+
+    // 6. Sign out from Supabase Auth
+    await supabase.auth.signOut();
+
+    console.log('Account deleted successfully');
+    return true;
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    return false;
+  }
+};

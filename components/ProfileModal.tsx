@@ -1696,7 +1696,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <DialogTitle className="text-center text-lg font-semibold">アカウント削除の確認</DialogTitle>
             <div className="space-y-4 pt-4">
               <p className="text-sm text-gray-700 text-center leading-relaxed">
-                １度削除すると同じアカウントは利用できなくなります。
+                １度削除すると同じアカウントは利用できません。
                 <br />
                 本当に削除しますか？
               </p>

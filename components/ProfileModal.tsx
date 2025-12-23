@@ -14,6 +14,7 @@ import {
   Edit2,
   MapPin,
   ArrowLeft,
+  MoreVertical,
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogPortal, DialogOverlay } from './ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
@@ -24,7 +25,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { useToast } from '../hooks/useToast';
-import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId, followUser, unfollowUser, isFollowing, getFollowerCount, getFollowingCount, deleteUserAccount } from '../lib/api';
+import { getUserByUserId, updateUserProfile, checkUserIdAvailability, getAttendedLivesByUserId, followUser, unfollowUser, isFollowing, getFollowerCount, getFollowingCount, deleteUserAccount, reportUser, blockUser, unblockUser, isUserBlocked } from '../lib/api';
 import { Icons } from './assets/Icons';
 import { LiveCard } from './LiveCard';
 import { SocialIcons } from './SocialIcons';
@@ -162,6 +163,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Report and Block state
+  const [showReportDialog, setShowReportDialog] = useState(false);
+  const [showBlockConfirm, setShowBlockConfirm] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [isReporting, setIsReporting] = useState(false);
+  const [isBlocking, setIsBlocking] = useState(false);
+  const [reportReason, setReportReason] = useState<string>('spam');
+  const [reportDescription, setReportDescription] = useState<string>('');
+
   const { toast } = useToast();
   const userIdCheckTimeout = useRef<NodeJS.Timeout>();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -265,8 +276,114 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   useEffect(() => {
     if (isOpen && !isOwnProfile && displayUser?.id && currentUserId && !loading) {
       loadFollowData();
+      loadBlockStatus();
     }
   }, [isOpen, isOwnProfile, displayUser?.id, currentUserId, loading]);
+
+  // Load block status
+  const loadBlockStatus = async () => {
+    if (!displayUser?.id || !currentUserId || isOwnProfile) return;
+
+    try {
+      const blocked = await isUserBlocked(currentUserId, displayUser.id);
+      setIsBlocked(blocked);
+    } catch (error) {
+      console.error('Error loading block status:', error);
+    }
+  };
+
+  // Handle report user
+  const handleReportUser = async () => {
+    if (!currentUserId || !displayUser?.id) return;
+
+    setIsReporting(true);
+    try {
+      const success = await reportUser(
+        currentUserId,
+        displayUser.id,
+        reportReason,
+        reportDescription
+      );
+
+      if (success) {
+        toast({
+          title: '通報しました',
+          description: 'ご報告ありがとうございます。内容を確認いたします。',
+        });
+        setShowReportDialog(false);
+        setReportReason('spam');
+        setReportDescription('');
+      } else {
+        toast({
+          title: 'エラー',
+          description: '通報に失敗しました',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error reporting user:', error);
+      toast({
+        title: 'エラー',
+        description: '通報中にエラーが発生しました',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsReporting(false);
+    }
+  };
+
+  // Handle block/unblock user
+  const handleBlockToggle = async () => {
+    if (!currentUserId || !displayUser?.id) return;
+
+    setIsBlocking(true);
+    try {
+      if (isBlocked) {
+        // Unblock
+        const success = await unblockUser(currentUserId, displayUser.id);
+        if (success) {
+          setIsBlocked(false);
+          toast({
+            title: 'ブロック解除しました',
+            description: `${displayUser.name}のブロックを解除しました`,
+          });
+        } else {
+          toast({
+            title: 'エラー',
+            description: 'ブロック解除に失敗しました',
+            variant: 'destructive',
+          });
+        }
+      } else {
+        // Block
+        const success = await blockUser(currentUserId, displayUser.id);
+        if (success) {
+          setIsBlocked(true);
+          toast({
+            title: 'ブロックしました',
+            description: `${displayUser.name}をブロックしました`,
+          });
+          setShowBlockConfirm(false);
+          onClose(); // Close profile modal after blocking
+        } else {
+          toast({
+            title: 'エラー',
+            description: 'ブロックに失敗しました',
+            variant: 'destructive',
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling block:', error);
+      toast({
+        title: 'エラー',
+        description: 'ブロック操作に失敗しました',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsBlocking(false);
+    }
+  };
 
   // Handle follow/unfollow action
   const handleFollowToggle = async () => {
@@ -906,24 +1023,78 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 </button>
               </div>
 
-              {/* Follow Button */}
-              <Button
-                onClick={handleFollowToggle}
-                disabled={isFollowLoading}
-                className={`w-full max-w-xs mx-auto rounded-full text-sm font-medium transition-all ${
-                  isFollowingUser
-                    ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                    : 'bg-primary text-white hover:bg-primary/90'
-                }`}
-              >
-                {isFollowLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : isFollowingUser ? (
-                  'フォロー中'
-                ) : (
-                  'フォロー'
-                )}
-              </Button>
+              {/* Follow Button and More Menu */}
+              <div className="flex gap-2 w-full max-w-xs mx-auto items-center">
+                <Button
+                  onClick={handleFollowToggle}
+                  disabled={isFollowLoading}
+                  className={`flex-1 rounded-full text-sm font-medium transition-all ${
+                    isFollowingUser
+                      ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                      : 'bg-primary text-white hover:bg-primary/90'
+                  }`}
+                >
+                  {isFollowLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : isFollowingUser ? (
+                    'フォロー中'
+                  ) : (
+                    'フォロー'
+                  )}
+                </Button>
+
+                {/* More Menu Button */}
+                <div className="relative">
+                  <Button
+                    onClick={() => setShowMoreMenu(!showMoreMenu)}
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full w-10 h-10 border-gray-300"
+                  >
+                    <MoreVertical className="w-5 h-5" />
+                  </Button>
+
+                  {/* Dropdown Menu */}
+                  {showMoreMenu && (
+                    <>
+                      {/* Overlay to close menu */}
+                      <div
+                        className="fixed inset-0 z-[9998]"
+                        onClick={() => setShowMoreMenu(false)}
+                      />
+                      {/* Menu Content */}
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-[9999]">
+                        <button
+                          onClick={() => {
+                            setShowMoreMenu(false);
+                            setShowReportDialog(true);
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors"
+                        >
+                          通報
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowMoreMenu(false);
+                            if (isBlocked) {
+                              handleBlockToggle();
+                            } else {
+                              setShowBlockConfirm(true);
+                            }
+                          }}
+                          disabled={isBlocking}
+                          className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors flex items-center justify-between ${
+                            isBlocked ? 'text-gray-600' : 'text-red-600'
+                          }`}
+                        >
+                          <span>{isBlocked ? 'ブロック解除' : 'ブロック'}</span>
+                          {isBlocking && <Loader2 className="w-4 h-4 animate-spin" />}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -1685,6 +1856,120 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           onUserClick={onViewProfile}
         />
       )}
+
+      {/* Report User Dialog */}
+      <Dialog open={showReportDialog} onOpenChange={setShowReportDialog}>
+        <DialogPortal>
+          <DialogOverlay className="z-[10000]" />
+          <DialogPrimitive.Content
+            className="fixed left-[50%] top-[50%] z-[10001] grid w-[calc(100vw-2rem)] max-w-sm sm:w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-2xl"
+          >
+            <DialogTitle className="text-center text-lg font-semibold">ユーザーを通報</DialogTitle>
+            <div className="space-y-4 pt-4">
+              <div className="space-y-2">
+                <Label htmlFor="report-reason" className="text-sm font-medium">
+                  通報理由
+                </Label>
+                <select
+                  id="report-reason"
+                  value={reportReason}
+                  onChange={(e) => setReportReason(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="spam">スパム</option>
+                  <option value="inappropriate">不適切な内容</option>
+                  <option value="harassment">ハラスメント</option>
+                  <option value="other">その他</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="report-description" className="text-sm font-medium">
+                  詳細（任意）
+                </Label>
+                <Textarea
+                  id="report-description"
+                  value={reportDescription}
+                  onChange={(e) => setReportDescription(e.target.value)}
+                  placeholder="詳しい内容をお書きください"
+                  className="min-h-[100px] resize-none"
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <Button
+                  onClick={() => {
+                    setShowReportDialog(false);
+                    setReportReason('spam');
+                    setReportDescription('');
+                  }}
+                  variant="outline"
+                  className="flex-1"
+                  disabled={isReporting}
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  onClick={handleReportUser}
+                  className="flex-1 bg-primary text-white hover:bg-primary/90"
+                  disabled={isReporting}
+                >
+                  {isReporting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    '通報する'
+                  )}
+                </Button>
+              </div>
+            </div>
+            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-gray-100">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          </DialogPrimitive.Content>
+        </DialogPortal>
+      </Dialog>
+
+      {/* Block Confirmation Dialog */}
+      <Dialog open={showBlockConfirm} onOpenChange={setShowBlockConfirm}>
+        <DialogPortal>
+          <DialogOverlay className="z-[10000]" />
+          <DialogPrimitive.Content
+            className="fixed left-[50%] top-[50%] z-[10001] grid w-[calc(100vw-2rem)] max-w-sm sm:w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 rounded-2xl"
+          >
+            <DialogTitle className="text-center text-lg font-semibold">ユーザーをブロック</DialogTitle>
+            <div className="space-y-4 pt-4">
+              <div className="text-sm text-gray-700 text-center leading-relaxed">
+                <p>{displayUser?.name}をブロックしますか？</p>
+                <p className="mt-2">ブロックすると、このユーザーの投稿が表示されなくなります。</p>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <Button
+                  onClick={() => setShowBlockConfirm(false)}
+                  variant="outline"
+                  className="flex-1"
+                  disabled={isBlocking}
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  onClick={handleBlockToggle}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                  disabled={isBlocking}
+                >
+                  {isBlocking ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    'ブロック'
+                  )}
+                </Button>
+              </div>
+            </div>
+            <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-gray-100">
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          </DialogPrimitive.Content>
+        </DialogPortal>
+      </Dialog>
 
       {/* Account Deletion Confirmation Dialog */}
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>

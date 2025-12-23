@@ -26,7 +26,7 @@ import {
   AccordionTrigger,
 } from './components/ui/accordion';
 import { Plus, User as UserIcon, LogOut, Calendar, Search } from 'lucide-react';
-import { deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId, getFollowerCount, getFollowingCount } from './lib/api';
+import { deleteLive, getUserByUserId, getUsersAttendingSameLive, getAttendedLivesByUserId, getFollowerCount, getFollowingCount, getBlockedUsers } from './lib/api';
 import { groupLivesByMonth } from './utils/liveGrouping';
 import { useToast } from './hooks/useToast';
 import { useProfileRouting } from './hooks/useProfileRouting';
@@ -282,10 +282,21 @@ const AppContent: React.FC = () => {
 
       console.log('Attended lives:', attendedLives.length);
 
-      // Sort by date (newest first)
-      attendedLives.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      // Get blocked users list
+      const blockedUserIds = await getBlockedUsers(user.id);
+      console.log('Blocked users:', blockedUserIds.length);
 
-      setLives(attendedLives);
+      // Filter out lives created by blocked users
+      const filteredLives = attendedLives.filter(
+        (live) => !blockedUserIds.includes(live.created_by)
+      );
+
+      console.log('Filtered lives (excluding blocked users):', filteredLives.length);
+
+      // Sort by date (newest first)
+      filteredLives.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+      setLives(filteredLives);
 
       // Load follower/following counts
       const [followers, following] = await Promise.all([

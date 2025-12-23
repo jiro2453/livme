@@ -766,3 +766,155 @@ export const deleteUserAccount = async (userId: string): Promise<boolean> => {
     return false;
   }
 };
+
+// Report User API
+export const reportUser = async (
+  reporterId: string,
+  reportedUserId: string,
+  reason: string,
+  description?: string
+): Promise<boolean> => {
+  try {
+    console.log('=== reportUser called ===');
+    console.log('reporterId:', reporterId);
+    console.log('reportedUserId:', reportedUserId);
+    console.log('reason:', reason);
+
+    const { error } = await supabase
+      .from('reports')
+      .insert({
+        reporter_id: reporterId,
+        reported_user_id: reportedUserId,
+        reason,
+        description: description || null,
+      });
+
+    if (error) {
+      console.error('Error reporting user:', error);
+      return false;
+    }
+
+    console.log('User reported successfully');
+    return true;
+  } catch (error) {
+    console.error('Error reporting user:', error);
+    return false;
+  }
+};
+
+// Block User API
+export const blockUser = async (
+  blockerId: string,
+  blockedUserId: string
+): Promise<boolean> => {
+  try {
+    console.log('=== blockUser called ===');
+    console.log('blockerId:', blockerId);
+    console.log('blockedUserId:', blockedUserId);
+
+    const { error } = await supabase
+      .from('blocks')
+      .insert({
+        blocker_id: blockerId,
+        blocked_user_id: blockedUserId,
+      });
+
+    if (error) {
+      console.error('Error blocking user:', error);
+      return false;
+    }
+
+    console.log('User blocked successfully');
+    return true;
+  } catch (error) {
+    console.error('Error blocking user:', error);
+    return false;
+  }
+};
+
+// Unblock User API
+export const unblockUser = async (
+  blockerId: string,
+  blockedUserId: string
+): Promise<boolean> => {
+  try {
+    console.log('=== unblockUser called ===');
+    console.log('blockerId:', blockerId);
+    console.log('blockedUserId:', blockedUserId);
+
+    const { error } = await supabase
+      .from('blocks')
+      .delete()
+      .eq('blocker_id', blockerId)
+      .eq('blocked_user_id', blockedUserId);
+
+    if (error) {
+      console.error('Error unblocking user:', error);
+      return false;
+    }
+
+    console.log('User unblocked successfully');
+    return true;
+  } catch (error) {
+    console.error('Error unblocking user:', error);
+    return false;
+  }
+};
+
+// Get Blocked Users API
+export const getBlockedUsers = async (userId: string): Promise<string[]> => {
+  try {
+    console.log('=== getBlockedUsers called ===');
+    console.log('userId:', userId);
+
+    const { data, error } = await supabase
+      .from('blocks')
+      .select('blocked_user_id')
+      .eq('blocker_id', userId);
+
+    if (error) {
+      console.error('Error getting blocked users:', error);
+      return [];
+    }
+
+    const blockedUserIds = data.map((block) => block.blocked_user_id);
+    console.log('Blocked users:', blockedUserIds.length);
+    return blockedUserIds;
+  } catch (error) {
+    console.error('Error getting blocked users:', error);
+    return [];
+  }
+};
+
+// Check if User is Blocked API
+export const isUserBlocked = async (
+  blockerId: string,
+  blockedUserId: string
+): Promise<boolean> => {
+  try {
+    console.log('=== isUserBlocked called ===');
+    console.log('blockerId:', blockerId);
+    console.log('blockedUserId:', blockedUserId);
+
+    const { data, error } = await supabase
+      .from('blocks')
+      .select('id')
+      .eq('blocker_id', blockerId)
+      .eq('blocked_user_id', blockedUserId)
+      .single();
+
+    if (error) {
+      // No block found
+      if (error.code === 'PGRST116') {
+        return false;
+      }
+      console.error('Error checking block status:', error);
+      return false;
+    }
+
+    return !!data;
+  } catch (error) {
+    console.error('Error checking block status:', error);
+    return false;
+  }
+};

@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 import { Button } from './ui/button';
-import { getFollowers, getFollowing, searchUsersByUserId, followUser, isFollowing } from '../lib/api';
+import { getFollowers, getFollowing, searchUsersByUserId, followUser, isFollowing, getBlockedUsers } from '../lib/api';
 import { useToast } from '../hooks/useToast';
 import type { User } from '../types';
 
@@ -72,7 +72,15 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
     setLoadingFollowers(true);
     try {
       const users = await getFollowers(userId);
-      setFollowers(users);
+
+      // Filter out blocked users if currentUserId is available
+      if (currentUserId) {
+        const blockedUserIds = await getBlockedUsers(currentUserId);
+        const filteredUsers = users.filter((user) => !blockedUserIds.includes(user.id));
+        setFollowers(filteredUsers);
+      } else {
+        setFollowers(users);
+      }
     } catch (error) {
       console.error('Error loading followers:', error);
     } finally {
@@ -84,7 +92,15 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
     setLoadingFollowing(true);
     try {
       const users = await getFollowing(userId);
-      setFollowing(users);
+
+      // Filter out blocked users if currentUserId is available
+      if (currentUserId) {
+        const blockedUserIds = await getBlockedUsers(currentUserId);
+        const filteredUsers = users.filter((user) => !blockedUserIds.includes(user.id));
+        setFollowing(filteredUsers);
+      } else {
+        setFollowing(users);
+      }
     } catch (error) {
       console.error('Error loading following:', error);
     } finally {
@@ -115,7 +131,13 @@ export const FollowListModal: React.FC<FollowListModalProps> = ({
       const users = await searchUsersByUserId(searchQuery.trim());
 
       // Filter out current user from results
-      const filteredUsers = users.filter(user => user.id !== currentUserId);
+      let filteredUsers = users.filter(user => user.id !== currentUserId);
+
+      // Filter out blocked users if currentUserId is available
+      if (currentUserId) {
+        const blockedUserIds = await getBlockedUsers(currentUserId);
+        filteredUsers = filteredUsers.filter((user) => !blockedUserIds.includes(user.id));
+      }
 
       if (filteredUsers.length === 0) {
         setSearchError('ユーザーが見つかりませんでした');

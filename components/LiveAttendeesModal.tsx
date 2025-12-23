@@ -7,7 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { SocialIcons } from './SocialIcons';
 import { MapPin } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
-import { getUsersByIds } from '../lib/api';
+import { getUsersByIds, getBlockedUsers } from '../lib/api';
 import type { Live, User } from '../types';
 
 interface LiveAttendeesModalProps {
@@ -80,6 +80,13 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
       console.log('LiveAttendeesModal: Received users:', users);
       console.log('LiveAttendeesModal: Number of users:', users.length);
 
+      // Get blocked users list if currentUserId is available
+      let blockedUserIds: string[] = [];
+      if (currentUserId) {
+        blockedUserIds = await getBlockedUsers(currentUserId);
+        console.log('LiveAttendeesModal: Blocked users:', blockedUserIds.length);
+      }
+
       // users.idで重複を除外
       const uniqueUsers = users.reduce((acc, user) => {
         if (!acc.some(u => u.id === user.id)) {
@@ -90,9 +97,16 @@ export const LiveAttendeesModal: React.FC<LiveAttendeesModalProps> = ({
 
       console.log('LiveAttendeesModal: Unique users:', uniqueUsers.length);
 
+      // Filter out blocked users
+      const nonBlockedUsers = uniqueUsers.filter(
+        (user) => !blockedUserIds.includes(user.id)
+      );
+
+      console.log('LiveAttendeesModal: Non-blocked users:', nonBlockedUsers.length);
+
       // attendeeUserIdsの順序に従ってソート（自分が1番目になるように）
       const sortedUsers = attendeeUserIds
-        .map(id => uniqueUsers.find(user => user.id === id))
+        .map(id => nonBlockedUsers.find(user => user.id === id))
         .filter((user): user is User => user !== undefined);
 
       console.log('LiveAttendeesModal: Sorted users (preserving order):', sortedUsers.map(u => u.id));

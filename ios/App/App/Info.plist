@@ -45,6 +45,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>プロフィール画像を撮影するためにカメラへのアクセスが必要です</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>プロフィール画像を選択するためにフォトライブラリへのアクセスが必要です</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>プロフィール画像を保存するためにフォトライブラリへのアクセスが必要です</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
